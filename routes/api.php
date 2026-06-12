@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('courses', CourseController::class);
     Route::apiResource('batches', BatchController::class);
     Route::apiResource('students', StudentController::class);
+    Route::post('students/{student}/batches', [StudentController::class, 'attachBatch']);
     Route::apiResource('mcq_papers', McqPaperController::class);
     Route::apiResource('mcq_questions', McqQuestionController::class);
 

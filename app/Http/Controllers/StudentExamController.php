@@ -17,8 +17,9 @@ class StudentExamController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Fetch papers for the student's batch
-        $papers = McqPaper::where('batch_id', $user->batch_id)
+        // Fetch papers for all the student's batches
+        $batchIds = $user->batches()->pluck('batches.id')->toArray();
+        $papers = McqPaper::whereIn('batch_id', $batchIds)
             ->where('is_active', true)
             ->get()
             ->map(function ($paper) use ($user) {
@@ -45,7 +46,8 @@ class StudentExamController extends Controller
     public function verifyPassword(Request $request, $id)
     {
         $user = Auth::user();
-        $paper = McqPaper::where('batch_id', $user->batch_id)->findOrFail($id);
+        $batchIds = $user->batches()->pluck('batches.id')->toArray();
+        $paper = McqPaper::whereIn('batch_id', $batchIds)->findOrFail($id);
 
         if (!empty($paper->exam_password)) {
             $validated = $request->validate([
@@ -86,7 +88,8 @@ class StudentExamController extends Controller
     public function submit(Request $request, $id)
     {
         $user = Auth::user();
-        $paper = McqPaper::where('batch_id', $user->batch_id)->findOrFail($id);
+        $batchIds = $user->batches()->pluck('batches.id')->toArray();
+        $paper = McqPaper::whereIn('batch_id', $batchIds)->findOrFail($id);
 
         // Check if already taken
         $exists = ExamResult::where('user_id', $user->id)->where('mcq_paper_id', $paper->id)->exists();

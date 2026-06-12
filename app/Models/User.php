@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'role', 'batch_id', 'is_active'])]
+#[Fillable(['name', 'email', 'password', 'role', 'is_active', 'father_name', 'phone', 'registration_id', 'address', 'dob', 'gender'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -32,8 +32,10 @@ class User extends Authenticatable
         ];
     }
 
-    public function batch()
+    public function batches()
     {
-        return $this->belongsTo(Batch::class);
+        return $this->belongsToMany(Batch::class)
+                    ->withPivot('amount_paid', 'transaction_id', 'status')
+                    ->withTimestamps();
     }
 }

@@ -15,7 +15,7 @@ class Batch extends Model
 
     public function students()
     {
-        return $this->hasMany(User::class, 'batch_id')->where('role', 'student');
+        return $this->belongsToMany(User::class)->where('role', 'student');
     }
 
     public function mcqPapers()
