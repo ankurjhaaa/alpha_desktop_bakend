@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExamResult extends Model
 {
-    protected $fillable = ['user_id', 'mcq_paper_id', 'score', 'total_questions', 'percentage'];
+    protected $fillable = ['user_id', 'mcq_paper_id', 'score', 'total_questions', 'percentage', 'student_answers'];
+
+    protected $casts = [
+        'student_answers' => 'array',
+    ];
 
     public function user()
     {

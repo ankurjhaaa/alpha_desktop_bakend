@@ -99,7 +99,7 @@ class StudentExamController extends Controller
 
         $validated = $request->validate([
             'answers' => 'required|array',
-            'answers.*' => 'nullable|in:A,B,C,D',
+            'answers.*' => 'nullable|in:A,B,C,D,a,b,c,d',
         ]);
 
         $answers = $validated['answers'];
@@ -108,7 +108,7 @@ class StudentExamController extends Controller
         $total = $questions->count();
 
         foreach ($questions as $qId => $question) {
-            if (isset($answers[$qId]) && $answers[$qId] === $question->correct_option) {
+            if (isset($answers[$qId]) && strtolower($answers[$qId]) === strtolower($question->correct_option)) {
                 $score++;
             }
         }
@@ -121,6 +121,7 @@ class StudentExamController extends Controller
             'score' => $score,
             'total_questions' => $total,
             'percentage' => round($percentage, 2),
+            'student_answers' => $answers,
         ]);
 
         return response()->json($result, 201);
@@ -144,5 +145,37 @@ class StudentExamController extends Controller
             });
 
         return response()->json($results);
+    }
+
+    public function viewAnswers($id)
+    {
+        $user = Auth::user();
+        $result = ExamResult::where('user_id', $user->id)
+            ->where('mcq_paper_id', $id)
+            ->firstOrFail();
+
+        $paper = McqPaper::with('questions')->findOrFail($id);
+        
+        $questions = $paper->questions->map(function ($q) {
+            return [
+                'id' => $q->id,
+                'question_text' => $q->question_text,
+                'option_a' => $q->option_a,
+                'option_b' => $q->option_b,
+                'option_c' => $q->option_c,
+                'option_d' => $q->option_d,
+                'correct_option' => $q->correct_option,
+            ];
+        });
+
+        return response()->json([
+            'result' => [
+                'score' => $result->score,
+                'total_questions' => $result->total_questions,
+                'percentage' => $result->percentage,
+                'student_answers' => $result->student_answers ?? [],
+            ],
+            'questions' => $questions,
+        ]);
     }
 }

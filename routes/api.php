@@ -29,4 +29,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/student/exams/{id}/verify', [App\Http\Controllers\StudentExamController::class, 'verifyPassword']);
     Route::post('/student/exams/{id}/submit', [App\Http\Controllers\StudentExamController::class, 'submit']);
     Route::get('/student/exams/{id}/leaderboard', [App\Http\Controllers\StudentExamController::class, 'leaderboard']);
+    Route::get('/student/exams/{id}/answers', [App\Http\Controllers\StudentExamController::class, 'viewAnswers']);
+
+    // Student Profile
+    Route::get('/student/profile', function (Request $request) {
+        $user = $request->user();
+        $user->load(['batches.course']);
+        return response()->json($user);
+    });
 });
