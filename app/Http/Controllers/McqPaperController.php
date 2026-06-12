@@ -39,6 +39,8 @@ class McqPaperController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'exam_date' => 'nullable|date',
+            'exam_password' => 'nullable|string|max:255',
         ]);
 
         $paper = McqPaper::create($validated);
@@ -54,6 +56,8 @@ class McqPaperController extends Controller
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'exam_date' => 'nullable|date',
+            'exam_password' => 'nullable|string|max:255',
         ]);
 
         $paper->update($validated);

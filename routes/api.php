@@ -22,4 +22,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('students', StudentController::class);
     Route::apiResource('mcq_papers', McqPaperController::class);
     Route::apiResource('mcq_questions', McqQuestionController::class);
+
+    // Student Exam Routes
+    Route::get('/student/exams', [App\Http\Controllers\StudentExamController::class, 'index']);
+    Route::post('/student/exams/{id}/verify', [App\Http\Controllers\StudentExamController::class, 'verifyPassword']);
+    Route::post('/student/exams/{id}/submit', [App\Http\Controllers\StudentExamController::class, 'submit']);
+    Route::get('/student/exams/{id}/leaderboard', [App\Http\Controllers\StudentExamController::class, 'leaderboard']);
 });
