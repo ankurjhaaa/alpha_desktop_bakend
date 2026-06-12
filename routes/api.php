@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('students', StudentController::class);
     Route::post('students/{student}/batches', [StudentController::class, 'attachBatch']);
     Route::apiResource('mcq_papers', McqPaperController::class);
+    Route::get('mcq_papers/{id}/results', [McqPaperController::class, 'results']);
+    Route::get('mcq_papers/{id}/results/{user_id}', [McqPaperController::class, 'studentAnswers']);
     Route::apiResource('mcq_questions', McqQuestionController::class);
 
     // Student Exam Routes

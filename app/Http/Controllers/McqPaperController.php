@@ -70,4 +70,58 @@ class McqPaperController extends Controller
         $paper->delete();
         return response()->json(null, 204);
     }
+
+    public function results($id)
+    {
+        $results = \App\Models\ExamResult::with('user:id,name,email')
+            ->where('mcq_paper_id', $id)
+            ->orderBy('score', 'desc')
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(function ($r) {
+                return [
+                    'user_id' => $r->user_id,
+                    'student_name' => $r->user->name ?? 'Unknown',
+                    'student_email' => $r->user->email ?? 'N/A',
+                    'score' => $r->score,
+                    'total_questions' => $r->total_questions,
+                    'percentage' => $r->percentage,
+                    'submitted_at' => $r->created_at,
+                ];
+            });
+
+        return response()->json($results);
+    }
+
+    public function studentAnswers($id, $user_id)
+    {
+        $result = \App\Models\ExamResult::where('user_id', $user_id)
+            ->where('mcq_paper_id', $id)
+            ->firstOrFail();
+
+        $paper = McqPaper::with('questions')->findOrFail($id);
+        
+        $questions = $paper->questions->map(function ($q) {
+            return [
+                'id' => $q->id,
+                'question_text' => $q->question_text,
+                'option_a' => $q->option_a,
+                'option_b' => $q->option_b,
+                'option_c' => $q->option_c,
+                'option_d' => $q->option_d,
+                'correct_option' => $q->correct_option,
+            ];
+        });
+
+        return response()->json([
+            'result' => [
+                'score' => $result->score,
+                'total_questions' => $result->total_questions,
+                'percentage' => $result->percentage,
+                'student_answers' => $result->student_answers ?? [],
+                'submitted_at' => $result->created_at,
+            ],
+            'questions' => $questions,
+        ]);
+    }
 }
