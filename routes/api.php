@@ -41,4 +41,12 @@ Route::middleware('auth:sanctum')->group(function () {
         $user->load(['batches.course']);
         return response()->json($user);
     });
+
+    // Global Leaderboard
+    Route::get('/leaderboard', [App\Http\Controllers\StudentExamController::class, 'globalLeaderboard']);
+
+    // Feedbacks
+    Route::get('/student/feedbacks', [App\Http\Controllers\FeedbackController::class, 'studentIndex']);
+    Route::post('/student/feedbacks', [App\Http\Controllers\FeedbackController::class, 'store']);
+    Route::get('/feedbacks', [App\Http\Controllers\FeedbackController::class, 'adminIndex']);
 });

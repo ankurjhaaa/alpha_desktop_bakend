@@ -179,4 +179,29 @@ class StudentExamController extends Controller
             'questions' => $questions,
         ]);
     }
+
+    public function globalLeaderboard()
+    {
+        $results = ExamResult::select('user_id')
+            ->selectRaw('COUNT(id) as total_exams')
+            ->selectRaw('ROUND(AVG(percentage), 2) as average_marks')
+            ->with('user:id,name,email')
+            ->groupBy('user_id')
+            ->orderByDesc('total_exams')
+            ->orderByDesc('average_marks')
+            ->take(10)
+            ->get();
+
+        $formatted = $results->map(function ($r) {
+            return [
+                'user_id' => $r->user_id,
+                'student_name' => $r->user->name ?? 'Unknown',
+                'student_email' => $r->user->email ?? 'Unknown',
+                'total_exams' => $r->total_exams,
+                'average_marks' => $r->average_marks,
+            ];
+        });
+
+        return response()->json($formatted);
+    }
 }
