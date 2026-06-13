@@ -9,6 +9,7 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\McqPaperController;
 use App\Http\Controllers\McqQuestionController;
+use App\Http\Controllers\MaterialController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('mcq_papers/{id}/results', [McqPaperController::class, 'results']);
     Route::get('mcq_papers/{id}/results/{user_id}', [McqPaperController::class, 'studentAnswers']);
     Route::apiResource('mcq_questions', McqQuestionController::class);
+    Route::apiResource('materials', MaterialController::class);
 
     // Student Exam Routes
     Route::get('/student/exams', [App\Http\Controllers\StudentExamController::class, 'index']);

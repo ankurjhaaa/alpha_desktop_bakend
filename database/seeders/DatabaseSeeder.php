@@ -155,6 +155,10 @@ class DatabaseSeeder extends Seeder
             'total_questions' => 2,
             'percentage' => 50.0,
         ]);
+
+        $this->call([
+            MaterialSeeder::class,
+        ]);
     }
 }
 
