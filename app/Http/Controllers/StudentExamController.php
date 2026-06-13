@@ -19,7 +19,7 @@ class StudentExamController extends Controller
 
         // Fetch papers for all the student's batches
         $batchIds = $user->batches()->pluck('batches.id')->toArray();
-        $papers = McqPaper::whereIn('batch_id', $batchIds)
+        $papers = McqPaper::with('batch')->whereIn('batch_id', $batchIds)
             ->where('is_active', true)
             ->get()
             ->map(function ($paper) use ($user) {
@@ -37,6 +37,7 @@ class StudentExamController extends Controller
                     'score' => $result ? $result->score : null,
                     'total_questions' => $result ? $result->total_questions : null,
                     'percentage' => $result ? $result->percentage : null,
+                    'batch' => $paper->batch ? ['id' => $paper->batch->id, 'name' => $paper->batch->name] : null,
                 ];
             });
 

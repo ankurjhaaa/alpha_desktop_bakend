@@ -71,6 +71,57 @@ class MaterialController extends Controller
         return response()->json($material, 201);
     }
 
+    public function update(Request $request, $id)
+    {
+        $material = Material::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'file' => 'nullable|file|max:10240', // optional file replacement
+        ]);
+
+        $updateData = [
+            'title' => $request->title,
+            'description' => $request->description,
+        ];
+
+        // If a new file is uploaded
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $imageKit = $this->getImageKit();
+
+            // 1. Upload new file to ImageKit
+            $base64 = base64_encode(file_get_contents($file->path()));
+            $uploadResponse = $imageKit->uploadFile([
+                'file' => $base64,
+                'fileName' => $file->getClientOriginalName(),
+                'folder' => '/study_materials'
+            ]);
+
+            if (isset($uploadResponse->error)) {
+                return response()->json(['message' => 'ImageKit Upload Failed: ' . $uploadResponse->error->message], 500);
+            }
+
+            // 2. Delete old file from ImageKit
+            if ($material->file_id) {
+                try {
+                    $imageKit->deleteFile($material->file_id);
+                } catch (\Exception $e) {
+                    // Ignore old file deletion error
+                }
+            }
+
+            // 3. Set new file details
+            $updateData['file_url'] = $uploadResponse->result->url;
+            $updateData['file_id'] = $uploadResponse->result->fileId;
+        }
+
+        $material->update($updateData);
+
+        return response()->json($material);
+    }
+
     public function destroy($id)
     {
         $material = Material::findOrFail($id);
