@@ -12,6 +12,8 @@ use App\Http\Controllers\McqQuestionController;
 use App\Http\Controllers\MaterialController;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'index']);
+Route::post('/settings', [\App\Http\Controllers\SettingController::class, 'update']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
@@ -25,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('mcq_papers', McqPaperController::class);
     Route::get('mcq_papers/{id}/results', [McqPaperController::class, 'results']);
     Route::get('mcq_papers/{id}/results/{user_id}', [McqPaperController::class, 'studentAnswers']);
+    Route::delete('mcq_papers/{id}/results/{user_id}', [McqPaperController::class, 'revokeResult']);
     Route::apiResource('mcq_questions', McqQuestionController::class);
     Route::apiResource('materials', MaterialController::class);
 

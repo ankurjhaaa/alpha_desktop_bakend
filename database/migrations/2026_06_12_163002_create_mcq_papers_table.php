@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->date('exam_date')->nullable();
+            $table->string('exam_password')->nullable();
+            $table->timestamp('start_time')->nullable();
+            $table->timestamp('end_time')->nullable();
+            $table->string('invigilators')->nullable();
             $table->timestamps();
         });
     }

@@ -76,6 +76,8 @@ class DatabaseSeeder extends Seeder
                 'registration_id' => 'REG2026' . str_pad($index + 1, 3, '0', STR_PAD_LEFT),
                 'dob' => Carbon::now()->subYears(20 + $index)->format('Y-m-d'),
                 'address' => '123 Fake Street, City ' . $index,
+                'profile_image' => 'https://ui-avatars.com/api/?name=' . urlencode($data['name']) . '&background=random&format=png',
+                'profile_image_file_id' => null,
             ]);
         }
 
@@ -95,6 +97,9 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
             'exam_date' => Carbon::now()->toDateString(),
             'exam_password' => '1234',
+            'start_time' => Carbon::now()->addHour(),
+            'end_time' => Carbon::now()->addHours(2),
+            'invigilators' => 'Admin Teacher',
         ]);
 
         $paper2 = McqPaper::create([
@@ -104,6 +109,9 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
             'exam_date' => Carbon::now()->addDays(2)->toDateString(),
             'exam_password' => 'python26',
+            'start_time' => Carbon::now()->addDays(2)->setTime(10, 0),
+            'end_time' => Carbon::now()->addDays(2)->setTime(12, 0),
+            'invigilators' => 'Admin Teacher',
         ]);
 
         // 7. Create MCQ Questions for Paper 1
@@ -155,6 +163,20 @@ class DatabaseSeeder extends Seeder
             'total_questions' => 2,
             'percentage' => 50.0,
         ]);
+
+        // 10. Seed Global Settings
+        $settings = [
+            'company_name' => 'ALPHA GRAPHICS',
+            'company_email' => 'contact@alphagraphics.com',
+            'company_phone' => '+91 9876543210',
+            'company_address' => '123 Main Street, Purnea',
+            'logo_url' => 'https://ui-avatars.com/api/?name=AG&background=random&color=fff&format=png',
+            'signature_url' => 'https://ui-avatars.com/api/?name=Sign&background=fff&color=000&format=png',
+        ];
+
+        foreach ($settings as $key => $value) {
+            \App\Models\Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
 
         $this->call([
             MaterialSeeder::class,

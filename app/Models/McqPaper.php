@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class McqPaper extends Model
 {
-    protected $fillable = ['batch_id', 'title', 'description', 'is_active', 'exam_date', 'exam_password'];
+    protected $fillable = ['batch_id', 'title', 'description', 'is_active', 'exam_date', 'exam_password', 'start_time', 'end_time', 'invigilators'];
 
     public function batch()
     {

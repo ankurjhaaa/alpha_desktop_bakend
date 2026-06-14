@@ -32,6 +32,8 @@ class StudentExamController extends Controller
                     'title' => $paper->title,
                     'description' => $paper->description,
                     'exam_date' => $paper->exam_date,
+                    'start_time' => $paper->start_time,
+                    'end_time' => $paper->end_time,
                     'requires_password' => !empty($paper->exam_password),
                     'is_completed' => $result !== null,
                     'score' => $result ? $result->score : null,
@@ -61,6 +63,14 @@ class StudentExamController extends Controller
 
         if ($paper->exam_date && $paper->exam_date !== date('Y-m-d')) {
              return response()->json(['message' => 'Exam is not scheduled for today'], 403);
+        }
+
+        if ($paper->start_time && now()->isBefore($paper->start_time)) {
+             return response()->json(['message' => 'Exam has not started yet'], 403);
+        }
+
+        if ($paper->end_time && now()->isAfter($paper->end_time)) {
+             return response()->json(['message' => 'Exam has already ended'], 403);
         }
 
         // Check if already taken

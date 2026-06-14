@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use ImageKit\ImageKit;
 
 class StudentController extends Controller
 {
@@ -53,7 +54,34 @@ class StudentController extends Controller
             'address' => 'nullable|string',
             'dob' => 'nullable|date',
             'gender' => 'nullable|string|max:20',
+            'profile_image' => 'nullable|image|max:2048',
         ]);
+
+        $profileImagePath = null;
+        $profileImageFileId = null;
+        if ($request->hasFile('profile_image')) {
+            try {
+                $imageKit = new ImageKit(
+                    env('IMAGEKIT_PUBLIC_KEY'),
+                    env('IMAGEKIT_PRIVATE_KEY'),
+                    env('IMAGEKIT_URL_ENDPOINT')
+                );
+
+                $uploadFile = $imageKit->uploadFile([
+                    'file' => base64_encode(file_get_contents($request->file('profile_image')->path())),
+                    'fileName' => $request->file('profile_image')->getClientOriginalName(),
+                    'folder' => '/students/profiles'
+                ]);
+
+                if (isset($uploadFile->result->url)) {
+                    $profileImagePath = $uploadFile->result->url;
+                    $profileImageFileId = $uploadFile->result->fileId;
+                }
+            } catch (\Exception $e) {
+                // fallback or handle error
+                \Log::error('ImageKit upload failed: ' . $e->getMessage());
+            }
+        }
 
         $student = User::create([
             'name' => $validated['name'],
@@ -67,6 +95,8 @@ class StudentController extends Controller
             'address' => $validated['address'] ?? null,
             'dob' => $validated['dob'] ?? null,
             'gender' => $validated['gender'] ?? null,
+            'profile_image' => $profileImagePath,
+            'profile_image_file_id' => $profileImageFileId,
         ]);
 
         if (!empty($validated['batch_ids'])) {
@@ -103,7 +133,34 @@ class StudentController extends Controller
             'address' => 'nullable|string',
             'dob' => 'nullable|date',
             'gender' => 'nullable|string|max:20',
+            'profile_image' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('profile_image')) {
+            try {
+                $imageKit = new ImageKit(
+                    env('IMAGEKIT_PUBLIC_KEY'),
+                    env('IMAGEKIT_PRIVATE_KEY'),
+                    env('IMAGEKIT_URL_ENDPOINT')
+                );
+
+                $uploadFile = $imageKit->uploadFile([
+                    'file' => base64_encode(file_get_contents($request->file('profile_image')->path())),
+                    'fileName' => $request->file('profile_image')->getClientOriginalName(),
+                    'folder' => '/students/profiles'
+                ]);
+
+                if (isset($uploadFile->result->url)) {
+                    if ($student->profile_image_file_id) {
+                        $this->deleteImageKitFile($student->profile_image_file_id);
+                    }
+                    $validated['profile_image'] = $uploadFile->result->url;
+                    $validated['profile_image_file_id'] = $uploadFile->result->fileId;
+                }
+            } catch (\Exception $e) {
+                \Log::error('ImageKit upload failed: ' . $e->getMessage());
+            }
+        }
 
         if (isset($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
@@ -149,7 +206,26 @@ class StudentController extends Controller
             return response()->json(['message' => 'Not a student'], 403);
         }
 
+        if ($student->profile_image_file_id) {
+            $this->deleteImageKitFile($student->profile_image_file_id);
+        }
+
         $student->delete();
         return response()->json(null, 204);
+    }
+
+    private function deleteImageKitFile($fileId)
+    {
+        if (!$fileId) return;
+        try {
+            $imageKit = new ImageKit(
+                env('IMAGEKIT_PUBLIC_KEY'),
+                env('IMAGEKIT_PRIVATE_KEY'),
+                env('IMAGEKIT_URL_ENDPOINT')
+            );
+            $imageKit->deleteFile($fileId);
+        } catch (\Exception $e) {
+            \Log::error('ImageKit delete failed: ' . $e->getMessage());
+        }
     }
 }

@@ -41,6 +41,9 @@ class McqPaperController extends Controller
             'is_active' => 'boolean',
             'exam_date' => 'nullable|date',
             'exam_password' => 'nullable|string|max:255',
+            'start_time' => 'nullable|date_format:Y-m-d H:i:s',
+            'end_time' => 'nullable|date_format:Y-m-d H:i:s',
+            'invigilators' => 'nullable|string',
         ]);
 
         $paper = McqPaper::create($validated);
@@ -58,6 +61,9 @@ class McqPaperController extends Controller
             'is_active' => 'boolean',
             'exam_date' => 'nullable|date',
             'exam_password' => 'nullable|string|max:255',
+            'start_time' => 'nullable|date_format:Y-m-d H:i:s',
+            'end_time' => 'nullable|date_format:Y-m-d H:i:s',
+            'invigilators' => 'nullable|string',
         ]);
 
         $paper->update($validated);
@@ -95,7 +101,8 @@ class McqPaperController extends Controller
 
     public function studentAnswers($id, $user_id)
     {
-        $result = \App\Models\ExamResult::where('user_id', $user_id)
+        $result = \App\Models\ExamResult::with('user:id,name,registration_id')
+            ->where('user_id', $user_id)
             ->where('mcq_paper_id', $id)
             ->firstOrFail();
 
@@ -115,6 +122,7 @@ class McqPaperController extends Controller
 
         return response()->json([
             'result' => [
+                'user' => $result->user,
                 'score' => $result->score,
                 'total_questions' => $result->total_questions,
                 'percentage' => $result->percentage,
@@ -123,5 +131,16 @@ class McqPaperController extends Controller
             ],
             'questions' => $questions,
         ]);
+    }
+
+    public function revokeResult($id, $user_id)
+    {
+        $result = \App\Models\ExamResult::where('user_id', $user_id)
+            ->where('mcq_paper_id', $id)
+            ->firstOrFail();
+            
+        $result->delete();
+        
+        return response()->json(null, 204);
     }
 }

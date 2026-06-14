@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('mcq_papers', function (Blueprint $table) {
-            $table->date('exam_date')->nullable();
-            $table->string('exam_password')->nullable();
+        Schema::create('settings', function (Blueprint $table) {
+            $table->id();
+            $table->string('key')->unique();
+            $table->text('value')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -22,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('mcq_papers', function (Blueprint $table) {
-            $table->dropColumn(['exam_date', 'exam_password']);
-        });
+        Schema::dropIfExists('settings');
     }
 };
