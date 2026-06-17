@@ -135,7 +135,12 @@ class StudentExamController extends Controller
             'student_answers' => $answers,
         ]);
 
-        return response()->json($result, 201);
+        
+        $resultArray = $result->toArray();
+        $resultArray['paper_title'] = $paper->title;
+        $resultArray['batch'] = $paper->batch ? ['id' => $paper->batch->id, 'name' => $paper->batch->name, 'schedule_time' => $paper->batch->schedule_time] : null;
+        $resultArray['course'] = $paper->batch && $paper->batch->course ? ['id' => $paper->batch->course->id, 'name' => $paper->batch->course->name] : null;
+        return response()->json($resultArray, 201);
     }
 
     public function leaderboard($id)
@@ -165,7 +170,7 @@ class StudentExamController extends Controller
             ->where('mcq_paper_id', $id)
             ->firstOrFail();
 
-        $paper = McqPaper::with('questions')->findOrFail($id);
+        $paper = McqPaper::with(['questions', 'batch.course'])->findOrFail($id);
         
         $questions = $paper->questions->map(function ($q) {
             return [
@@ -181,12 +186,20 @@ class StudentExamController extends Controller
 
         return response()->json([
             'result' => [
+                'user' => [
+                    'name' => $user->name,
+                    'registration_id' => $user->registration_id,
+                ],
                 'score' => $result->score,
                 'total_questions' => $result->total_questions,
                 'percentage' => $result->percentage,
                 'student_answers' => $result->student_answers ?? [],
+                'created_at' => $result->created_at,
+                'batch' => $paper->batch ? ['id' => $paper->batch->id, 'name' => $paper->batch->name, 'schedule_time' => $paper->batch->schedule_time] : null,
+                'course' => $paper->batch && $paper->batch->course ? ['id' => $paper->batch->course->id, 'name' => $paper->batch->course->name] : null,
             ],
             'questions' => $questions,
+            'paper_title' => $paper->title,
         ]);
     }
 

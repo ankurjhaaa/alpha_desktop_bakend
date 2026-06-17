@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('mcq_papers/{id}/results', [McqPaperController::class, 'results']);
     Route::get('mcq_papers/{id}/results/{user_id}', [McqPaperController::class, 'studentAnswers']);
     Route::delete('mcq_papers/{id}/results/{user_id}', [McqPaperController::class, 'revokeResult']);
+    Route::post('mcq_questions/bulk', [McqQuestionController::class, 'bulkStore']);
     Route::apiResource('mcq_questions', McqQuestionController::class);
     Route::apiResource('materials', MaterialController::class);
 

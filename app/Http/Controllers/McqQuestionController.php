@@ -68,4 +68,29 @@ class McqQuestionController extends Controller
         $question->delete();
         return response()->json(null, 204);
     }
+
+    public function bulkStore(Request $request)
+    {
+        $validated = $request->validate([
+            'questions' => 'required|array',
+            'questions.*.mcq_paper_id' => 'required|exists:mcq_papers,id',
+            'questions.*.question_text' => 'required|string',
+            'questions.*.option_a' => 'required|string',
+            'questions.*.option_b' => 'required|string',
+            'questions.*.option_c' => 'required|string',
+            'questions.*.option_d' => 'required|string',
+            'questions.*.correct_option' => 'required|in:a,b,c,d,A,B,C,D',
+            'questions.*.is_active' => 'boolean',
+        ]);
+
+        $inserted = [];
+        foreach ($validated['questions'] as $qData) {
+            if(!isset($qData['is_active'])) $qData['is_active'] = true;
+            $qData['correct_option'] = strtolower($qData['correct_option']);
+            $inserted[] = McqQuestion::create($qData);
+        }
+
+        return response()->json(['message' => 'Questions imported successfully', 'count' => count($inserted)], 201);
+    }
 }
+
