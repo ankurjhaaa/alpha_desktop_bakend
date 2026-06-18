@@ -9,7 +9,7 @@ class CourseController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Course::with('batches');
+        $query = Course::with(['batches', 'topics']);
         
         if ($request->has('search')) {
             $search = $request->search;
@@ -29,10 +29,23 @@ class CourseController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'topics' => 'nullable|array',
+            'topics.*' => 'required|string|max:255',
         ]);
 
-        $course = Course::create($validated);
-        return response()->json($course, 201);
+        $course = Course::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'is_active' => $validated['is_active'] ?? true,
+        ]);
+
+        if (!empty($validated['topics'])) {
+            foreach ($validated['topics'] as $topicTitle) {
+                $course->topics()->create(['title' => $topicTitle]);
+            }
+        }
+
+        return response()->json($course->load('topics'), 201);
     }
 
     public function update(Request $request, Course $course)
@@ -41,10 +54,24 @@ class CourseController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'topics' => 'nullable|array',
+            'topics.*' => 'required|string|max:255',
         ]);
 
-        $course->update($validated);
-        return response()->json($course);
+        $course->update([
+            'name' => $validated['name'] ?? $course->name,
+            'description' => array_key_exists('description', $validated) ? $validated['description'] : $course->description,
+            'is_active' => $validated['is_active'] ?? $course->is_active,
+        ]);
+
+        if (isset($validated['topics'])) {
+            $course->topics()->delete();
+            foreach ($validated['topics'] as $topicTitle) {
+                $course->topics()->create(['title' => $topicTitle]);
+            }
+        }
+
+        return response()->json($course->load('topics'));
     }
 
     public function destroy(Course $course)

@@ -12,4 +12,9 @@ class Course extends Model
     {
         return $this->hasMany(Batch::class);
     }
+
+    public function topics()
+    {
+        return $this->hasMany(Topic::class);
+    }
 }
