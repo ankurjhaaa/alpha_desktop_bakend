@@ -35,7 +35,6 @@ class User extends Authenticatable
     public function batches()
     {
         return $this->belongsToMany(Batch::class)
-                    ->withPivot('amount_paid', 'transaction_id', 'status')
                     ->withTimestamps();
     }
 }

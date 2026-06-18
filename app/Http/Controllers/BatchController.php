@@ -36,8 +36,9 @@ class BatchController extends Controller
         $validated = $request->validate([
             'course_id' => 'required|exists:courses,id',
             'name' => 'required|string|max:255',
-            'fee' => 'required|numeric',
             'schedule_time' => 'nullable|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
             'is_active' => 'boolean',
             'is_hidden' => 'boolean',
         ]);
@@ -51,8 +52,9 @@ class BatchController extends Controller
         $validated = $request->validate([
             'course_id' => 'sometimes|required|exists:courses,id',
             'name' => 'sometimes|required|string|max:255',
-            'fee' => 'sometimes|required|numeric',
             'schedule_time' => 'nullable|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
             'is_active' => 'boolean',
             'is_hidden' => 'boolean',
         ]);

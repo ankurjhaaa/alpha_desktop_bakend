@@ -42,10 +42,10 @@ class DatabaseSeeder extends Seeder
 
         // 3. Create Batches
         $batchesData = [
-            ['course_id' => $courses[0]->id, 'name' => 'Web Morning 2026', 'fee' => 5000, 'schedule_time' => '09:00 AM - 11:00 AM'],
-            ['course_id' => $courses[0]->id, 'name' => 'Web Evening 2026', 'fee' => 5000, 'schedule_time' => '06:00 PM - 08:00 PM'],
-            ['course_id' => $courses[1]->id, 'name' => 'Data Sci Weekend', 'fee' => 8000, 'schedule_time' => '10:00 AM - 02:00 PM'],
-            ['course_id' => $courses[2]->id, 'name' => 'Flutter FastTrack', 'fee' => 6000, 'schedule_time' => '04:00 PM - 06:00 PM'],
+            ['course_id' => $courses[0]->id, 'name' => 'Web Morning 2026', 'schedule_time' => '09:00 AM - 11:00 AM', 'start_date' => '2026-06-01', 'end_date' => '2026-12-01'],
+            ['course_id' => $courses[0]->id, 'name' => 'Web Evening 2026', 'schedule_time' => '06:00 PM - 08:00 PM', 'start_date' => '2026-07-01', 'end_date' => '2027-01-01'],
+            ['course_id' => $courses[1]->id, 'name' => 'Data Sci Weekend', 'schedule_time' => '10:00 AM - 02:00 PM', 'start_date' => '2026-06-15', 'end_date' => '2026-09-15'],
+            ['course_id' => $courses[2]->id, 'name' => 'Flutter FastTrack', 'schedule_time' => '04:00 PM - 06:00 PM', 'start_date' => '2026-08-01', 'end_date' => '2026-10-31'],
         ];
 
         $batches = [];
@@ -81,13 +81,13 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 5. Enroll Students in Batches with Pivot Data
-        $students[0]->batches()->attach($batches[0]->id, ['amount_paid' => 5000, 'status' => 'paid', 'transaction_id' => 'TXN1001']);
-        $students[1]->batches()->attach($batches[0]->id, ['amount_paid' => 2500, 'status' => 'partial', 'transaction_id' => 'TXN1002']);
-        $students[2]->batches()->attach($batches[1]->id, ['amount_paid' => 0, 'status' => 'unpaid']);
-        $students[3]->batches()->attach($batches[2]->id, ['amount_paid' => 8000, 'status' => 'paid', 'transaction_id' => 'TXN1003']);
-        $students[4]->batches()->attach($batches[0]->id, ['amount_paid' => 5000, 'status' => 'paid', 'transaction_id' => 'TXN1004']);
-        $students[4]->batches()->attach($batches[3]->id, ['amount_paid' => 3000, 'status' => 'partial', 'transaction_id' => 'TXN1005']);
+        // 5. Enroll Students in Batches
+        $students[0]->batches()->attach($batches[0]->id);
+        $students[1]->batches()->attach($batches[0]->id);
+        $students[2]->batches()->attach($batches[1]->id);
+        $students[3]->batches()->attach($batches[2]->id);
+        $students[4]->batches()->attach($batches[0]->id);
+        $students[4]->batches()->attach($batches[3]->id);
 
         // 6. Create MCQ Papers
         $paper1 = McqPaper::create([

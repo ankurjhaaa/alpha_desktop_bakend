@@ -183,18 +183,11 @@ class StudentController extends Controller
 
         $validated = $request->validate([
             'batch_id' => 'required|exists:batches,id',
-            'amount_paid' => 'nullable|numeric|min:0',
-            'transaction_id' => 'nullable|string|max:255',
-            'status' => 'required|string|in:paid,partial,unpaid',
         ]);
 
         // Attach without detaching others
         $student->batches()->syncWithoutDetaching([
-            $validated['batch_id'] => [
-                'amount_paid' => $validated['amount_paid'],
-                'transaction_id' => $validated['transaction_id'],
-                'status' => $validated['status'],
-            ]
+            $validated['batch_id']
         ]);
 
         return response()->json($student->load('batches.course'));

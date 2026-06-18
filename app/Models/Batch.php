@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Batch extends Model
 {
-    protected $fillable = ['course_id', 'name', 'fee', 'schedule_time', 'is_active', 'is_hidden'];
+    protected $fillable = ['course_id', 'name', 'schedule_time', 'start_date', 'end_date', 'is_active', 'is_hidden'];
 
     public function course()
     {

@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->decimal('fee', 10, 2)->default(0);
             $table->string('schedule_time')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_hidden')->default(false);
             $table->timestamps();
