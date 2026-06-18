@@ -44,6 +44,8 @@ class McqPaperController extends Controller
             'start_time' => 'nullable|date_format:Y-m-d H:i:s',
             'end_time' => 'nullable|date_format:Y-m-d H:i:s',
             'invigilators' => 'nullable|string',
+            'selected_student_ids' => 'nullable|array',
+            'selected_student_ids.*' => 'integer',
         ]);
 
         $paper = McqPaper::create($validated);
@@ -64,6 +66,8 @@ class McqPaperController extends Controller
             'start_time' => 'nullable|date_format:Y-m-d H:i:s',
             'end_time' => 'nullable|date_format:Y-m-d H:i:s',
             'invigilators' => 'nullable|string',
+            'selected_student_ids' => 'nullable|array',
+            'selected_student_ids.*' => 'integer',
         ]);
 
         $paper->update($validated);

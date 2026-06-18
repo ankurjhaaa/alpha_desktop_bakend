@@ -22,6 +22,14 @@ class StudentExamController extends Controller
         $papers = McqPaper::with('batch')->whereIn('batch_id', $batchIds)
             ->where('is_active', true)
             ->get()
+            ->filter(function ($paper) use ($user) {
+                // If selected_student_ids is null, assume all students in the batch are eligible.
+                if ($paper->selected_student_ids === null) {
+                    return true;
+                }
+                // If it is an array, only include the student if their ID is in the array.
+                return in_array($user->id, collect($paper->selected_student_ids)->map(fn($id) => (int)$id)->toArray(), true);
+            })
             ->map(function ($paper) use ($user) {
                 $result = ExamResult::where('user_id', $user->id)
                     ->where('mcq_paper_id', $paper->id)
@@ -41,7 +49,7 @@ class StudentExamController extends Controller
                     'percentage' => $result ? $result->percentage : null,
                     'batch' => $paper->batch ? ['id' => $paper->batch->id, 'name' => $paper->batch->name] : null,
                 ];
-            });
+            })->values();
 
         return response()->json($papers);
     }
@@ -51,6 +59,13 @@ class StudentExamController extends Controller
         $user = Auth::user();
         $batchIds = $user->batches()->pluck('batches.id')->toArray();
         $paper = McqPaper::whereIn('batch_id', $batchIds)->findOrFail($id);
+
+        if ($paper->selected_student_ids !== null) {
+            $eligibleIds = collect($paper->selected_student_ids)->map(fn($sid) => (int)$sid)->toArray();
+            if (!in_array($user->id, $eligibleIds, true)) {
+                return response()->json(['message' => 'You are not authorized to take this exam'], 403);
+            }
+        }
 
         if (!empty($paper->exam_password)) {
             $validated = $request->validate([
@@ -101,6 +116,13 @@ class StudentExamController extends Controller
         $user = Auth::user();
         $batchIds = $user->batches()->pluck('batches.id')->toArray();
         $paper = McqPaper::whereIn('batch_id', $batchIds)->findOrFail($id);
+
+        if ($paper->selected_student_ids !== null) {
+            $eligibleIds = collect($paper->selected_student_ids)->map(fn($sid) => (int)$sid)->toArray();
+            if (!in_array($user->id, $eligibleIds, true)) {
+                return response()->json(['message' => 'You are not authorized to take this exam'], 403);
+            }
+        }
 
         // Check if already taken
         $exists = ExamResult::where('user_id', $user->id)->where('mcq_paper_id', $paper->id)->exists();
