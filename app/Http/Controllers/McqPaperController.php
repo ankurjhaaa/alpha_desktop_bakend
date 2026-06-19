@@ -36,6 +36,7 @@ class McqPaperController extends Controller
     {
         $validated = $request->validate([
             'batch_id' => 'required|exists:batches,id',
+            'topic_id' => 'nullable|exists:topics,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
@@ -58,6 +59,7 @@ class McqPaperController extends Controller
 
         $validated = $request->validate([
             'batch_id' => 'sometimes|required|exists:batches,id',
+            'topic_id' => 'nullable|exists:topics,id',
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
@@ -72,6 +74,67 @@ class McqPaperController extends Controller
 
         $paper->update($validated);
         return response()->json($paper);
+    }
+
+    public function importQuestionsFromBank(Request $request, $id)
+    {
+        $paper = McqPaper::with('batch')->findOrFail($id);
+        
+        $request->validate([
+            'start_number' => 'required|integer|min:1',
+            'end_number' => 'required|integer|gte:start_number',
+        ]);
+
+        if (!$paper->topic_id) {
+            return response()->json(['message' => 'This exam does not have a topic assigned. Please assign a topic first.'], 400);
+        }
+
+        $course_id = $paper->batch->course_id;
+        
+        // Fetch questions from bank
+        $questions = \App\Models\QuestionBank::where('course_id', $course_id)
+            ->where('topic_id', $paper->topic_id)
+            ->orderBy('id', 'asc') // Assuming order is by ID
+            ->skip($request->start_number - 1)
+            ->take($request->end_number - $request->start_number + 1)
+            ->get();
+
+        if ($questions->isEmpty()) {
+            return response()->json(['message' => 'No questions found in the specified range.'], 404);
+        }
+
+        $importedCount = 0;
+        foreach ($questions as $q) {
+            $options = $q->options ?? [];
+            $correctOptionStr = strtolower(trim($q->correct_answer));
+            
+            if (!in_array($correctOptionStr, ['a', 'b', 'c', 'd'])) {
+                $mapped = 'a';
+                if (!empty($options)) {
+                    foreach ($options as $idx => $opt) {
+                        if (strtolower(trim($opt)) === $correctOptionStr) {
+                            $mapped = ['a', 'b', 'c', 'd'][$idx] ?? 'a';
+                            break;
+                        }
+                    }
+                }
+                $correctOptionStr = $mapped;
+            }
+
+            \App\Models\McqQuestion::create([
+                'mcq_paper_id' => $paper->id,
+                'question_text' => $q->question_text,
+                'option_a' => $options[0] ?? '',
+                'option_b' => $options[1] ?? '',
+                'option_c' => $options[2] ?? '',
+                'option_d' => $options[3] ?? '',
+                'correct_option' => $correctOptionStr,
+                'is_active' => true,
+            ]);
+            $importedCount++;
+        }
+
+        return response()->json(['message' => "$importedCount questions imported successfully to the exam."]);
     }
 
     public function destroy($id)

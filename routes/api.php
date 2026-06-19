@@ -21,16 +21,25 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::apiResource('courses', CourseController::class);
+    Route::get('/topics', [\App\Http\Controllers\TopicController::class, 'index']);
     Route::apiResource('batches', BatchController::class);
     Route::apiResource('students', StudentController::class);
     Route::post('students/{student}/batches', [StudentController::class, 'attachBatch']);
     Route::apiResource('mcq_papers', McqPaperController::class);
+    Route::post('mcq_papers/{id}/import-questions', [McqPaperController::class, 'importQuestionsFromBank']);
     Route::get('mcq_papers/{id}/results', [McqPaperController::class, 'results']);
     Route::get('mcq_papers/{id}/results/{user_id}', [McqPaperController::class, 'studentAnswers']);
     Route::delete('mcq_papers/{id}/results/{user_id}', [McqPaperController::class, 'revokeResult']);
     Route::post('mcq_questions/bulk', [McqQuestionController::class, 'bulkStore']);
     Route::apiResource('mcq_questions', McqQuestionController::class);
     Route::apiResource('materials', MaterialController::class);
+    
+    // Question Bank
+    Route::get('/question-bank', [\App\Http\Controllers\QuestionBankController::class, 'index']);
+    Route::post('/question-bank', [\App\Http\Controllers\QuestionBankController::class, 'store']);
+    Route::post('/question-bank/import', [\App\Http\Controllers\QuestionBankController::class, 'importJson']);
+    Route::put('/question-bank/{id}', [\App\Http\Controllers\QuestionBankController::class, 'update']);
+    Route::delete('/question-bank/{id}', [\App\Http\Controllers\QuestionBankController::class, 'destroy']);
 
     // Student Exam Routes
     Route::get('/student/exams', [App\Http\Controllers\StudentExamController::class, 'index']);
