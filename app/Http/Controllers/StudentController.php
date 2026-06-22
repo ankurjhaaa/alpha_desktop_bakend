@@ -136,6 +136,10 @@ class StudentController extends Controller
             'profile_image' => 'nullable|image|max:2048',
         ]);
 
+        if (array_key_exists('profile_image', $validated)) {
+            unset($validated['profile_image']);
+        }
+
         if ($request->hasFile('profile_image')) {
             try {
                 $imageKit = new ImageKit(
