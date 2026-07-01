@@ -125,9 +125,9 @@ export default function McqPaperResultsPage({ examId }) {
  <tr key={result.id || index} className="hover:bg-bg-base transition-colors">
  <td className="px-6 py-4 whitespace-nowrap">
  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
- rank === 1 ? 'bg-yellow-100 text-yellow-700' : 
+ rank === 1 ? 'bg-primary-light text-primary-hover' : 
  rank === 2 ? 'bg-bg-hover text-text-base' : 
- rank === 3 ? 'bg-amber-100 text-amber-700' : 
+ rank === 3 ? 'bg-primary-light text-primary-hover' : 
  'bg-bg-hover text-text-muted '
  }`}>
  {rank}
@@ -149,7 +149,7 @@ export default function McqPaperResultsPage({ examId }) {
  <span className="text-lg font-bold text-text-base ">{score}</span>
  <div className={`mt-1 w-24 h-1.5 rounded-full bg-bg-hover overflow-hidden`}>
  <div 
- className={`h-full ${percentage >= 80 ? 'bg-green-500' : percentage >= 50 ? 'bg-yellow-500' : 'bg-danger'}`} 
+ className={`h-full ${percentage >= 80 ? 'bg-primary' : percentage >= 50 ? 'bg-primary' : 'bg-danger'}`} 
  style={{ width: `${percentage}%` }}
  ></div>
  </div>

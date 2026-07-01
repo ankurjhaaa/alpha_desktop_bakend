@@ -29,16 +29,16 @@ export default function Leaderboard() {
  }, []);
 
  const getRankColor = (rank) => {
- if (rank === 1) return 'bg-yellow-100 text-yellow-700 border-yellow-300 ';
+ if (rank === 1) return 'bg-primary-light text-primary-hover border-primary-light-hover ';
  if (rank === 2) return 'bg-bg-hover text-text-base border-border-base ';
- if (rank === 3) return 'bg-amber-100 text-amber-800 border-amber-300 ';
+ if (rank === 3) return 'bg-primary-light text-primary-hover border-primary-light-hover ';
  return 'bg-bg-card text-text-base border-border-base ';
  };
 
  const getRankIcon = (rank) => {
- if (rank === 1) return <Trophy className="w-6 h-6 text-yellow-500" />;
+ if (rank === 1) return <Trophy className="w-6 h-6 text-primary" />;
  if (rank === 2) return <Medal className="w-6 h-6 text-text-muted" />;
- if (rank === 3) return <Medal className="w-6 h-6 text-amber-600" />;
+ if (rank === 3) return <Medal className="w-6 h-6 text-primary" />;
  return <span className="text-lg font-bold w-6 text-center">{rank}</span>;
  };
 
@@ -54,7 +54,7 @@ export default function Leaderboard() {
  <h2 className="text-3xl font-bold mb-2">Student Leaderboard</h2>
  <p className="text-primary-light opacity-90">See how you rank among your peers.</p>
  </div>
- <Trophy className="w-16 h-16 text-yellow-300 opacity-80 hidden md:block" />
+ <Trophy className="w-16 h-16 text-primary-light-hover opacity-80 hidden md:block" />
  </div>
  </div>
 
@@ -91,7 +91,7 @@ export default function Leaderboard() {
  </div>
  )}
  {isTop3 && (
- <div className="absolute -bottom-1 -right-1 bg-yellow-400 rounded-full p-0.5 border-2 border-white ">
+ <div className="absolute -bottom-1 -right-1 bg-primary-light-hover rounded-full p-0.5 border-2 border-white ">
  <Star className="w-3 h-3 text-white fill-current" />
  </div>
  )}

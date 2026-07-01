@@ -3,7 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import {
  LayoutDashboard, BookOpen, Trophy, BookText,
  MessageSquare, Info, LogOut, Menu, Bell, Code,
- Plus, Minus, User, Laptop
+ Plus, Minus, User, Laptop, Palette
 } from 'lucide-react';
 import { cn } from '../Core/utils';
 
@@ -45,6 +45,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
  { title: 'Feedbacks', icon: MessageSquare, href: '/student/feedbacks' },
  { title: 'Leaderboard', icon: Trophy, href: '/student/leaderboard' },
  { title: 'My Profile', icon: User, href: '/student/profile' },
+ { title: 'Themes', icon: Palette, href: '/student/themes' },
  { title: 'About Us', icon: Info, href: '/student/about' },
  ];
 

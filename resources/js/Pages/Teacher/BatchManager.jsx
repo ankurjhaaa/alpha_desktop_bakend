@@ -207,10 +207,10 @@ export default function BatchManager() {
  <Link href={`/teacher/students?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="View Students">
  <Users className="w-4 h-4" />
  </Link>
- <Link href={`/teacher/mcq-papers?batch_id=${batch.id}`} className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors" title="View MCQ Papers">
+ <Link href={`/teacher/mcq-papers?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="View MCQ Papers">
  <FileQuestion className="w-4 h-4" />
  </Link>
- <Link href={`/teacher/materials?batch_id=${batch.id}`} className="p-2 text-green-600 hover:bg-emerald-500/10 text-emerald-600 rounded-lg transition-colors" title="View Materials">
+ <Link href={`/teacher/materials?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-lg transition-colors" title="View Materials">
  <BookOpen className="w-4 h-4" />
  </Link>
  <div className="w-px h-4 bg-bg-hover mx-1"></div>

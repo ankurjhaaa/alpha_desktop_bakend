@@ -242,7 +242,7 @@ export default function McqManagerPage() {
  <tr key={paper.id} className="border-b border-border-base hover:bg-bg-base">
  <td className="px-6 py-4">
  <div className="flex items-center">
- <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600 ">
+ <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary-light flex items-center justify-center text-primary ">
  <FileText className="w-5 h-5" />
  </div>
  <div className="ml-4">
@@ -274,7 +274,7 @@ export default function McqManagerPage() {
  </td>
  <td className="px-6 py-4 text-right">
  <div className="flex items-center justify-end space-x-2">
- <Link href={`/teacher/mcq-questions/${paper.id}`} className="p-2 text-green-600 hover:bg-emerald-500/10 text-emerald-600 rounded-lg transition-colors" title="Manage Questions">
+ <Link href={`/teacher/mcq-questions/${paper.id}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-lg transition-colors" title="Manage Questions">
  <CheckCircle className="w-4 h-4" />
  </Link>
  <button onClick={() => openModal(paper)} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="Edit Paper">

@@ -46,11 +46,11 @@ export default function ExamsPage() {
  }, [searchQuery, filter]);
 
  const getExamStatus = (paper) => {
- if (paper.submission) return { label: 'Completed', color: 'text-green-600 bg-green-100 ' };
+ if (paper.submission) return { label: 'Completed', color: 'text-primary bg-primary-light ' };
  
  const now = new Date();
  if (paper.start_time && new Date(paper.start_time) > now) {
- return { label: 'Upcoming', color: 'text-orange-600 bg-orange-100 ' };
+ return { label: 'Upcoming', color: 'text-primary bg-primary-light ' };
  }
  if (paper.end_time && new Date(paper.end_time) < now) {
  return { label: 'Missed', color: 'text-danger-text bg-danger-light ' };
@@ -136,7 +136,7 @@ export default function ExamsPage() {
  </span>
  </div>
  {paper.exam_password && (
- <div className="flex items-center text-amber-600 ">
+ <div className="flex items-center text-primary ">
  <Lock className="w-4 h-4 mr-2" />
  <span>Password protected</span>
  </div>
@@ -145,7 +145,7 @@ export default function ExamsPage() {
 
  <div className="pt-4 border-t border-border-base ">
  {isCompleted ? (
- <Link href={`/student/exams/${paper.id}/result`} className="flex items-center justify-center w-full py-2 px-4 bg-emerald-500/10 text-emerald-600 hover:bg-green-100 text-green-700 rounded-lg font-medium transition-colors">
+ <Link href={`/student/exams/${paper.id}/result`} className="flex items-center justify-center w-full py-2 px-4 bg-emerald-500/10 text-emerald-600 hover:bg-primary-light text-primary-hover rounded-lg font-medium transition-colors">
  <CheckCircle className="w-4 h-4 mr-2" />
  View Results
  </Link>

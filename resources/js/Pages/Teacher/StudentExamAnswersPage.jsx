@@ -88,7 +88,7 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
  return (
  <div key={q.id} className="bg-bg-card rounded-2xl shadow-sm border border-border-base overflow-hidden transition-colors">
  <div className={`p-4 border-b flex items-center font-bold ${
- isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-green-100 ' :
+ isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-primary-light ' :
  isUnattempted ? 'bg-bg-base border-border-base text-text-base ' :
  'bg-danger-light border-danger-light text-danger-text '
  }`}>
@@ -123,10 +123,10 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
  let icon = null;
  
  if (isActualCorrect) {
- borderClass = 'border-green-500';
+ borderClass = 'border-primary';
  bgClass = 'bg-emerald-500/10 text-emerald-600 ';
- textClass = 'text-green-900 font-medium';
- icon = <Check className="w-5 h-5 text-green-500 ml-auto" />;
+ textClass = 'text-primary-hover font-medium';
+ icon = <Check className="w-5 h-5 text-primary ml-auto" />;
  } else if (isSelected && !isCorrect) {
  borderClass = 'border-danger';
  bgClass = 'bg-danger-light ';
@@ -137,7 +137,7 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
  return (
  <div key={optLabel} className={`p-4 rounded-xl border-2 flex items-center ${borderClass} ${bgClass} transition-colors`}>
  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 ${
- isActualCorrect ? 'bg-green-500 text-white' :
+ isActualCorrect ? 'bg-primary text-white' :
  (isSelected && !isCorrect) ? 'bg-danger text-white' :
  'bg-bg-hover text-text-muted '
  }`}>

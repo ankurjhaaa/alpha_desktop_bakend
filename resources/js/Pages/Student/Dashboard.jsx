@@ -45,8 +45,8 @@ export default function StudentDashboard() {
 
  const getStatusColor = (status) => {
  switch (status?.toLowerCase()) {
- case 'paid': return 'text-green-600 bg-green-100 ';
- case 'partial': return 'text-orange-600 bg-orange-100 ';
+ case 'paid': return 'text-primary bg-primary-light ';
+ case 'partial': return 'text-primary bg-primary-light ';
  case 'unpaid': return 'text-danger-text bg-danger-light ';
  default: return 'text-text-muted bg-bg-hover ';
  }
@@ -77,8 +77,8 @@ export default function StudentDashboard() {
  {/* Stat Cards */}
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
  <StatCard title="Enrolled Batches" value={batches.length} icon={Layers} colorClass="text-primary " bgClass="bg-primary-light-hover " />
- <StatCard title="Exams Taken" value={completedExams.length} icon={CheckCircle} colorClass="text-green-600 " bgClass="bg-green-100 " />
- <StatCard title="Pending Exams" value={pendingExams.length} icon={Clock} colorClass="text-orange-600 " bgClass="bg-orange-100 " />
+ <StatCard title="Exams Taken" value={completedExams.length} icon={CheckCircle} colorClass="text-primary " bgClass="bg-primary-light " />
+ <StatCard title="Pending Exams" value={pendingExams.length} icon={Clock} colorClass="text-primary " bgClass="bg-primary-light " />
  <StatCard title="Avg. Score" value={completedExams.length === 0 ? 'N/A' : `${avgPercentage.toFixed(1)}%`} icon={TrendingUp} colorClass="text-primary " bgClass="bg-primary-light " />
  </div>
 

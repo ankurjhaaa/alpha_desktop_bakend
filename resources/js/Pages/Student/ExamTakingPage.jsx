@@ -234,7 +234,7 @@ export default function ExamTakingPage({ paperId }) {
  <button
  onClick={() => submitExam()}
  disabled={isSubmitting}
- className="px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold flex items-center transition-colors disabled:opacity-70"
+ className="px-8 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold flex items-center transition-colors disabled:opacity-70"
  >
  {isSubmitting ? 'Submitting...' : 'Submit Exam'}
  <CheckCircle className="w-5 h-5 ml-2" />

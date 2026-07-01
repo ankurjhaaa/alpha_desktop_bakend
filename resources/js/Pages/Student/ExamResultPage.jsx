@@ -54,9 +54,9 @@ export default function ExamResultPage({ paperId }) {
  
  let grade = 'Needs Improvement';
  let gradeColor = 'text-danger';
- if (percentage >= 90) { grade = 'Excellent'; gradeColor = 'text-green-500'; }
+ if (percentage >= 90) { grade = 'Excellent'; gradeColor = 'text-primary'; }
  else if (percentage >= 75) { grade = 'Good'; gradeColor = 'text-primary'; }
- else if (percentage >= 50) { grade = 'Average'; gradeColor = 'text-yellow-500'; }
+ else if (percentage >= 50) { grade = 'Average'; gradeColor = 'text-primary'; }
 
  return (
  <StudentLayout title="Exam Result">
@@ -111,7 +111,7 @@ export default function ExamResultPage({ paperId }) {
 
  <div className="grid grid-cols-3 gap-4 mb-10 border-y border-border-base py-6">
  <div className="text-center">
- <div className="flex items-center justify-center text-green-500 mb-2">
+ <div className="flex items-center justify-center text-primary mb-2">
  <CheckCircle className="w-5 h-5 mr-1" />
  </div>
  <div className="text-2xl font-bold text-text-base ">{result.correct_answers}</div>

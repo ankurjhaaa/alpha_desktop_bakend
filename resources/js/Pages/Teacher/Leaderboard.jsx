@@ -29,16 +29,16 @@ export default function Leaderboard() {
  }, []);
 
  const getRankColor = (rank) => {
- if (rank === 1) return 'bg-yellow-100 text-yellow-700 border-yellow-300 ';
+ if (rank === 1) return 'bg-primary-light text-primary-hover border-primary-light-hover ';
  if (rank === 2) return 'bg-bg-hover text-text-base border-border-base ';
- if (rank === 3) return 'bg-amber-100 text-amber-800 border-amber-300 ';
+ if (rank === 3) return 'bg-primary-light text-primary-hover border-primary-light-hover ';
  return 'bg-bg-card text-text-base border-border-base ';
  };
 
  const getRankIcon = (rank) => {
- if (rank === 1) return <Trophy className="w-6 h-6 text-yellow-500" />;
+ if (rank === 1) return <Trophy className="w-6 h-6 text-primary" />;
  if (rank === 2) return <Medal className="w-6 h-6 text-text-muted" />;
- if (rank === 3) return <Medal className="w-6 h-6 text-amber-600" />;
+ if (rank === 3) return <Medal className="w-6 h-6 text-primary" />;
  return <span className="text-lg font-bold w-6 text-center">{rank}</span>;
  };
 
@@ -55,7 +55,7 @@ export default function Leaderboard() {
  <p className="text-primary-light opacity-90">Top performing students across all courses and batches.</p>
  </div>
  <div className="mt-6 md:mt-0 p-4 bg-bg-card/10 backdrop-blur-sm rounded-xl border border-white/20 flex items-center space-x-3">
- <TrendingUp className="w-8 h-8 text-yellow-300" />
+ <TrendingUp className="w-8 h-8 text-primary-light-hover" />
  <div>
  <div className="text-sm text-primary-light uppercase tracking-wider font-semibold">Total Students</div>
  <div className="text-2xl font-bold">{leaderboard.length} Ranked</div>
@@ -96,7 +96,7 @@ export default function Leaderboard() {
  </div>
  )}
  {isTop3 && (
- <div className="absolute -bottom-1 -right-1 bg-yellow-400 rounded-full p-0.5 border-2 border-white ">
+ <div className="absolute -bottom-1 -right-1 bg-primary-light-hover rounded-full p-0.5 border-2 border-white ">
  <Star className="w-3 h-3 text-white fill-current" />
  </div>
  )}

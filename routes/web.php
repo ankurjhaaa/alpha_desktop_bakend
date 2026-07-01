@@ -110,3 +110,7 @@ Route::get('/student/profile', function () {
 Route::get('/student/about', function () {
     return Inertia::render('Student/AboutUs');
 });
+
+Route::get('/student/themes', function () {
+    return Inertia::render('Student/ThemeSettings');
+});

@@ -61,7 +61,7 @@ export default function TeacherDashboard() {
  <div className={`p-3 rounded-lg ${bgClass}`}>
  <Icon className={`w-6 h-6 ${colorClass}`} />
  </div>
- <div className="flex items-center text-green-600 font-bold text-sm bg-emerald-500/10 text-emerald-600 px-2.5 py-1 rounded-md">
+ <div className="flex items-center text-primary font-bold text-sm bg-emerald-500/10 text-emerald-600 px-2.5 py-1 rounded-md">
  <ArrowUp className="w-4 h-4 mr-1" />
  Live
  </div>
@@ -90,8 +90,8 @@ export default function TeacherDashboard() {
  {/* Stats Grid */}
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
  <StatCard title="Total Students" value={stats.totalStudents} icon={Users} colorClass="text-primary " bgClass="bg-primary-light-hover " />
- <StatCard title="Total Courses" value={stats.totalCourses} icon={BookOpen} colorClass="text-green-600 " bgClass="bg-green-100 " />
- <StatCard title="Total Batches" value={stats.totalBatches} icon={Layers} colorClass="text-orange-600 " bgClass="bg-orange-100 " />
+ <StatCard title="Total Courses" value={stats.totalCourses} icon={BookOpen} colorClass="text-primary " bgClass="bg-primary-light " />
+ <StatCard title="Total Batches" value={stats.totalBatches} icon={Layers} colorClass="text-primary " bgClass="bg-primary-light " />
  <StatCard title="Total MCQ Papers" value={stats.totalMcqPapers} icon={FileQuestion} colorClass="text-primary " bgClass="bg-primary-light " />
  </div>
 
