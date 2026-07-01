@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import {
     LayoutDashboard, BookOpen, Trophy, BookText,
@@ -14,6 +14,147 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
         const saved = localStorage.getItem('app_zoom');
         return saved ? parseInt(saved, 10) : 100;
     });
+    const [sidebarWidth, setSidebarWidth] = useState(() => {
+        const saved = typeof window !== 'undefined' ? localStorage.getItem('sidebar_width') : null;
+        return saved ? parseInt(saved, 10) : 288;
+    });
+    const [navbarHeight, setNavbarHeight] = useState(() => {
+        const saved = typeof window !== 'undefined' ? localStorage.getItem('navbar_height') : null;
+        return saved ? parseInt(saved, 10) : 70;
+    });
+    const [logoHeight, setLogoHeight] = useState(() => {
+        const saved = typeof window !== 'undefined' ? localStorage.getItem('logo_height') : null;
+        return saved ? parseInt(saved, 10) : 230;
+    });
+    const [footerHeight, setFooterHeight] = useState(() => {
+        const saved = typeof window !== 'undefined' ? localStorage.getItem('footer_height') : null;
+        return saved ? parseInt(saved, 10) : 40;
+    });
+    const [linkHeight, setLinkHeight] = useState(() => {
+        const saved = typeof window !== 'undefined' ? localStorage.getItem('link_height') : null;
+        return saved ? parseInt(saved, 10) : 48;
+    });
+
+    const isDraggingRef = useRef(false);
+    const isDraggingNavbarRef = useRef(false);
+    const isDraggingLogoRef = useRef(false);
+    const complexDragRef = useRef({ type: null, startY: 0, startHeight: 0 });
+
+    useEffect(() => {
+        localStorage.setItem('sidebar_width', sidebarWidth);
+    }, [sidebarWidth]);
+
+    useEffect(() => {
+        localStorage.setItem('navbar_height', navbarHeight);
+    }, [navbarHeight]);
+
+    useEffect(() => {
+        localStorage.setItem('logo_height', logoHeight);
+    }, [logoHeight]);
+
+    useEffect(() => {
+        localStorage.setItem('footer_height', footerHeight);
+    }, [footerHeight]);
+
+    useEffect(() => {
+        localStorage.setItem('link_height', linkHeight);
+    }, [linkHeight]);
+
+    const handleMouseDown = (e) => {
+        e.preventDefault();
+        isDraggingRef.current = true;
+        document.body.style.cursor = 'col-resize';
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDraggingRef.current) return;
+        const newWidth = Math.min(Math.max(200, e.clientX), 600);
+        setSidebarWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+        isDraggingRef.current = false;
+        document.body.style.cursor = '';
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleNavbarMouseDown = (e) => {
+        e.preventDefault();
+        isDraggingNavbarRef.current = true;
+        document.body.style.cursor = 'row-resize';
+        document.addEventListener('mousemove', handleNavbarMouseMove);
+        document.addEventListener('mouseup', handleNavbarMouseUp);
+    };
+
+    const handleNavbarMouseMove = (e) => {
+        if (!isDraggingNavbarRef.current) return;
+        const newHeight = Math.min(Math.max(50, e.clientY), 300);
+        setNavbarHeight(newHeight);
+    };
+
+    const handleNavbarMouseUp = () => {
+        isDraggingNavbarRef.current = false;
+        document.body.style.cursor = '';
+        document.removeEventListener('mousemove', handleNavbarMouseMove);
+        document.removeEventListener('mouseup', handleNavbarMouseUp);
+    };
+
+    const handleLogoMouseDown = (e) => {
+        e.preventDefault();
+        isDraggingLogoRef.current = true;
+        document.body.style.cursor = 'row-resize';
+        document.addEventListener('mousemove', handleLogoMouseMove);
+        document.addEventListener('mouseup', handleLogoMouseUp);
+    };
+
+    const handleLogoMouseMove = (e) => {
+        if (!isDraggingLogoRef.current) return;
+        const newHeight = Math.min(Math.max(80, e.clientY), 500);
+        setLogoHeight(newHeight);
+    };
+
+    const handleLogoMouseUp = () => {
+        isDraggingLogoRef.current = false;
+        document.body.style.cursor = '';
+        document.removeEventListener('mousemove', handleLogoMouseMove);
+        document.removeEventListener('mouseup', handleLogoMouseUp);
+    };
+
+    const handleFooterMouseDown = (e) => {
+        e.preventDefault();
+        complexDragRef.current = { type: 'footer', startY: e.clientY, startHeight: footerHeight };
+        document.body.style.cursor = 'row-resize';
+        document.addEventListener('mousemove', handleComplexMouseMove);
+        document.addEventListener('mouseup', handleComplexMouseUp);
+    };
+
+    const handleLinkMouseDown = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        complexDragRef.current = { type: 'link', startY: e.clientY, startHeight: linkHeight };
+        document.body.style.cursor = 'row-resize';
+        document.addEventListener('mousemove', handleComplexMouseMove);
+        document.addEventListener('mouseup', handleComplexMouseUp);
+    };
+
+    const handleComplexMouseMove = (e) => {
+        const { type, startY, startHeight } = complexDragRef.current;
+        if (type === 'footer') {
+            setFooterHeight(Math.max(30, startHeight - (e.clientY - startY)));
+        } else if (type === 'link') {
+            setLinkHeight(Math.max(30, startHeight + (e.clientY - startY)));
+        }
+    };
+
+    const handleComplexMouseUp = () => {
+        complexDragRef.current = { type: null };
+        document.body.style.cursor = '';
+        document.removeEventListener('mousemove', handleComplexMouseMove);
+        document.removeEventListener('mouseup', handleComplexMouseUp);
+    };
 
     useEffect(() => {
         localStorage.setItem('app_zoom', zoom);
@@ -55,34 +196,46 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
     };
 
     const Sidebar = () => (
-        <div className="w-72 bg-bg-card border-r border-border-base h-full flex flex-col transition-colors">
-            <div className="py-8 border-b border-border-base flex flex-col items-center">
-                <div className="w-40 h-40 flex items-center justify-center overflow-hidden mb-4">
-                    <img src="/assets/images/logo.png" alt="Logo" className="w-full h-full object-contain" onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'block';
-                    }} />
-                    <User className="w-16 h-16 text-primary hidden" />
+        <div className="w-full bg-bg-card border-r border-border-base h-full flex flex-col transition-colors">
+            <div className="border-b border-border-base flex flex-col items-center justify-center relative shrink-0" style={{ height: logoHeight }}>
+                <div className="w-full h-full p-6 flex flex-col items-center justify-center overflow-hidden">
+                    <div className="w-40 h-40 flex items-center justify-center overflow-hidden mb-4 shrink-0">
+                        <img src="/assets/images/logo.png" alt="Logo" className="w-full h-full object-contain" onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'block';
+                        }} />
+                        <User className="w-16 h-16 text-primary hidden" />
+                    </div>
+                    <h2 className="text-xl font-bold text-text-base">Alpha Graphics</h2>
                 </div>
-                <h2 className="text-xl font-bold text-text-base ">Alpha Graphics</h2>
+                <div 
+                    className="absolute bottom-0 -mb-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"
+                    onMouseDown={handleLogoMouseDown}
+                />
             </div>
             <div className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
                 {menuItems.map((item) => {
                     const active = isActive(item.href);
                     return (
-                        <Link
-                            key={item.title}
-                            href={item.href}
-                            className={cn(
-                                "flex items-center space-x-4 px-4 py-3 rounded-lg transition-colors",
-                                active
-                                    ? "bg-primary-light text-primary-hover font-semibold"
-                                    : "text-text-muted hover:bg-bg-base hover:text-text-base font-medium"
-                            )}
-                        >
-                            <item.icon className="w-5 h-5" />
-                            <span>{item.title}</span>
-                        </Link>
+                        <div key={item.title} className="relative group">
+                            <Link
+                                href={item.href}
+                                style={{ height: linkHeight }}
+                                className={cn(
+                                    "flex items-center space-x-4 px-4 rounded-lg transition-colors",
+                                    active
+                                        ? "bg-primary-light text-primary-hover font-semibold"
+                                        : "text-text-muted hover:bg-bg-base hover:text-text-base font-medium"
+                                )}
+                            >
+                                <item.icon className="w-5 h-5 shrink-0" />
+                                <span>{item.title}</span>
+                            </Link>
+                            <div 
+                                className="absolute bottom-0 left-0 w-full h-2 cursor-row-resize opacity-0 group-hover:opacity-100 group-hover:delay-[5000ms] transition-opacity duration-300 bg-primary/20 hover:bg-primary/50 z-50"
+                                onMouseDown={handleLinkMouseDown}
+                            />
+                        </div>
                     );
                 })}
             </div>
@@ -100,8 +253,12 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
 
     return (
         <div className="flex h-screen bg-bg-base [#0F172A] overflow-hidden transition-colors">
-            <div className="hidden lg:block h-full">
+            <div className="hidden lg:block h-full relative shrink-0" style={{ width: sidebarWidth }}>
                 <Sidebar />
+                <div 
+                    className="absolute top-0 -right-1 w-2 h-full cursor-col-resize hover:bg-primary/50 z-50 transition-colors"
+                    onMouseDown={handleMouseDown}
+                />
             </div>
 
             {isSidebarOpen && (
@@ -114,7 +271,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
             )}
 
             <div className="flex-1 flex flex-col h-full overflow-hidden">
-                <header className="h-[70px] bg-bg-card border-b border-border-base flex items-center justify-between px-6 shrink-0 transition-colors">
+                <header className="bg-bg-card border-b border-border-base flex items-center justify-between px-6 shrink-0 transition-colors relative" style={{ height: navbarHeight }}>
                     <div className="flex items-center space-x-4">
                         <button className="lg:hidden text-text-muted " onClick={() => setIsSidebarOpen(true)}>
                             <Menu className="w-6 h-6" />
@@ -131,13 +288,21 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                             {initial}
                         </div>
                     </div>
+                    <div 
+                        className="absolute bottom-0 -mb-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"
+                        onMouseDown={handleNavbarMouseDown}
+                    />
                 </header>
 
                 <main className="flex-1 overflow-y-auto p-6" style={{ zoom: `${zoom}%` }}>
                     {children}
                 </main>
 
-                <footer className="h-10 bg-bg-card border-t border-border-base flex items-center justify-between px-6 shrink-0 text-sm text-text-muted transition-colors">
+                <footer className="bg-bg-card border-t border-border-base flex items-center justify-between px-6 shrink-0 text-sm text-text-muted transition-colors relative" style={{ height: footerHeight }}>
+                    <div 
+                        className="absolute top-0 -mt-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"
+                        onMouseDown={handleFooterMouseDown}
+                    />
                     <div className="w-24 hidden md:block" />
                     <div className="flex items-center space-x-2 font-medium">
                         <Code className="w-4 h-4" />
