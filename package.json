@@ -14,9 +14,14 @@
         "vite": "^8.0.0"
     },
     "dependencies": {
+        "@headlessui/react": "^2.2.10",
         "@inertiajs/react": "^3.5.0",
         "@vitejs/plugin-react": "^6.0.3",
+        "axios": "^1.18.1",
+        "clsx": "^2.1.1",
+        "lucide-react": "^1.23.0",
         "react": "^19.2.7",
-        "react-dom": "^19.2.7"
+        "react-dom": "^19.2.7",
+        "tailwind-merge": "^3.6.0"
     }
 }
