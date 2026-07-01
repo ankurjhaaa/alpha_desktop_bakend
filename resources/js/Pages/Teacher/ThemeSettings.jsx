@@ -71,7 +71,7 @@ export default function ThemeSettings() {
                                         </div>
                                     )}
                                 </div>
-                                
+
                                 {/* Label */}
                                 <div className="p-4 bg-bg-card flex items-center justify-between w-full">
                                     <span className="font-semibold text-text-base capitalize flex items-center space-x-2">
