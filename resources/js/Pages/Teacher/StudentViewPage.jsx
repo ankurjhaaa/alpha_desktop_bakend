@@ -78,7 +78,7 @@ export default function StudentViewPage({ studentId }) {
 
                 {/* Profile Card */}
                 <div className="lg:col-span-1">
-                    <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base p-6 text-center transition-colors">
+                    <div className="bg-bg-card rounded-md shadow-sm border border-border-base p-6 text-center transition-colors">
                         <div className="w-32 h-32 mx-auto rounded-full bg-primary-light-hover flex items-center justify-center text-primary-hover text-4xl font-bold mb-4 border-4 border-white shadow-md">
                             {student.name.charAt(0).toUpperCase()}
                         </div>
@@ -86,11 +86,11 @@ export default function StudentViewPage({ studentId }) {
                         <p className="text-text-muted text-sm mb-6">Enrolled {new Date(student.enrollment_date || Date.now()).toLocaleDateString()}</p>
 
                         <div className="space-y-3 text-left">
-                            <div className="flex items-center p-3 rounded-lg bg-bg-base ">
+                            <div className="flex items-center p-3 rounded-md bg-bg-base ">
                                 <Mail className="w-5 h-5 text-text-muted mr-3" />
                                 <span className="text-text-base ">{student.email}</span>
                             </div>
-                            <div className="flex items-center p-3 rounded-lg bg-bg-base ">
+                            <div className="flex items-center p-3 rounded-md bg-bg-base ">
                                 <Phone className="w-5 h-5 text-text-muted mr-3" />
                                 <span className="text-text-base ">{student.phone || 'N/A'}</span>
                             </div>
@@ -102,7 +102,7 @@ export default function StudentViewPage({ studentId }) {
                 <div className="lg:col-span-2 space-y-6">
 
                     {/* Courses */}
-                    <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base p-6 transition-colors">
+                    <div className="bg-bg-card rounded-md shadow-sm border border-border-base p-6 transition-colors">
                         <h3 className="text-lg font-bold text-text-base mb-4 flex items-center">
                             <BookOpen className="w-5 h-5 mr-2 text-primary" />
                             Enrolled Courses
@@ -110,7 +110,7 @@ export default function StudentViewPage({ studentId }) {
 
                         <div className="space-y-4">
                             {student.courses && student.courses.length > 0 ? student.courses.map(course => (
-                                <div key={course.id} className="border border-border-base p-4 rounded-xl">
+                                <div key={course.id} className="border border-border-base p-4 rounded-md">
                                     <div className="flex justify-between items-center mb-2">
                                         <h4 className="font-bold text-text-base ">{course.name}</h4>
                                         <span className="text-sm font-semibold text-primary ">{course.progress}%</span>
@@ -126,7 +126,7 @@ export default function StudentViewPage({ studentId }) {
                     </div>
 
                     {/* Recent Exams */}
-                    <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base p-6 transition-colors">
+                    <div className="bg-bg-card rounded-md shadow-sm border border-border-base p-6 transition-colors">
                         <h3 className="text-lg font-bold text-text-base mb-4 flex items-center">
                             <Award className="w-5 h-5 mr-2 text-primary" />
                             Recent Exam Performances
@@ -158,7 +158,7 @@ export default function StudentViewPage({ studentId }) {
                                                     </div>
                                                 </td>
                                                 <td className="py-4 text-right font-bold text-text-base ">
-                                                    <span className={`px-2.5 py-1 rounded-lg text-sm ${percentage >= 75 ? 'bg-primary-light text-primary-hover ' : percentage >= 50 ? 'bg-primary-light text-primary-hover ' : 'bg-danger-light text-danger-text '}`}>
+                                                    <span className={`px-2.5 py-1 rounded-md text-sm ${percentage >= 75 ? 'bg-primary-light text-primary-hover ' : percentage >= 50 ? 'bg-primary-light text-primary-hover ' : 'bg-danger-light text-danger-text '}`}>
                                                         {exam.score}/{exam.total} ({percentage}%)
                                                     </span>
                                                 </td>

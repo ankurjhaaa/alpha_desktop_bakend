@@ -36,7 +36,7 @@ export default function ThemeSettings() {
                                 key={theme}
                                 onClick={() => setThemeName(theme)}
                                 className={cn(
-                                    "flex flex-col text-left rounded-2xl border-2 transition-all overflow-hidden bg-bg-card hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-primary/20",
+                                    "flex flex-col text-left rounded-md border-2 transition-all overflow-hidden bg-bg-card hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-primary/20",
                                     isSelected ? "border-primary shadow-md" : "border-border-base hover:border-primary-light-hover"
                                 )}
                             >
@@ -44,10 +44,10 @@ export default function ThemeSettings() {
                                 <div className="h-40 w-full relative border-b border-border-base" style={{ backgroundColor: colors.base }}>
                                     {/* Sidebar mock */}
                                     <div className="absolute top-0 left-0 bottom-0 w-1/4 border-r" style={{ backgroundColor: colors.sidebar, borderColor: 'rgba(0,0,0,0.05)' }}>
-                                        <div className="w-1/2 h-4 mx-auto mt-4 rounded" style={{ backgroundColor: colors.primary, opacity: 0.8 }} />
-                                        <div className="w-2/3 h-2 mx-auto mt-6 rounded" style={{ backgroundColor: colors.muted, opacity: 0.3 }} />
-                                        <div className="w-2/3 h-2 mx-auto mt-2 rounded" style={{ backgroundColor: colors.muted, opacity: 0.3 }} />
-                                        <div className="w-2/3 h-2 mx-auto mt-2 rounded" style={{ backgroundColor: colors.muted, opacity: 0.3 }} />
+                                        <div className="w-1/2 h-4 mx-auto mt-4 rounded-md" style={{ backgroundColor: colors.primary, opacity: 0.8 }} />
+                                        <div className="w-2/3 h-2 mx-auto mt-6 rounded-md" style={{ backgroundColor: colors.muted, opacity: 0.3 }} />
+                                        <div className="w-2/3 h-2 mx-auto mt-2 rounded-md" style={{ backgroundColor: colors.muted, opacity: 0.3 }} />
+                                        <div className="w-2/3 h-2 mx-auto mt-2 rounded-md" style={{ backgroundColor: colors.muted, opacity: 0.3 }} />
                                     </div>
                                     {/* Header mock */}
                                     <div className="absolute top-0 right-0 h-6 w-3/4 border-b flex items-center justify-end px-2" style={{ backgroundColor: colors.card, borderColor: 'rgba(0,0,0,0.05)' }}>
@@ -55,17 +55,17 @@ export default function ThemeSettings() {
                                     </div>
                                     {/* Content mock */}
                                     <div className="absolute top-8 left-1/4 ml-2 right-2 space-y-2">
-                                        <div className="h-4 w-1/3 rounded" style={{ backgroundColor: colors.text, opacity: 0.8 }} />
+                                        <div className="h-4 w-1/3 rounded-md" style={{ backgroundColor: colors.text, opacity: 0.8 }} />
                                         <div className="flex space-x-2">
-                                            <div className="flex-1 h-12 rounded shadow-sm border" style={{ backgroundColor: colors.card, borderColor: 'rgba(0,0,0,0.05)' }} />
-                                            <div className="flex-1 h-12 rounded shadow-sm border" style={{ backgroundColor: colors.card, borderColor: 'rgba(0,0,0,0.05)' }} />
-                                            <div className="flex-1 h-12 rounded shadow-sm" style={{ backgroundColor: colors.primary }} />
+                                            <div className="flex-1 h-12 rounded-md shadow-sm border" style={{ backgroundColor: colors.card, borderColor: 'rgba(0,0,0,0.05)' }} />
+                                            <div className="flex-1 h-12 rounded-md shadow-sm border" style={{ backgroundColor: colors.card, borderColor: 'rgba(0,0,0,0.05)' }} />
+                                            <div className="flex-1 h-12 rounded-md shadow-sm" style={{ backgroundColor: colors.primary }} />
                                         </div>
                                     </div>
                                     {/* Overlay if selected */}
                                     {isSelected && (
                                         <div className="absolute inset-0 bg-black/5 flex items-center justify-center backdrop-blur-[1px]">
-                                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: colors.primary }}>
+                                            <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: colors.primary, color: colors.card }}>
                                                 <Check className="w-6 h-6" />
                                             </div>
                                         </div>

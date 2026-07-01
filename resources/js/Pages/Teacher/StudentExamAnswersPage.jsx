@@ -69,7 +69,7 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
                     Back to Leaderboard
                 </Link>
 
-                <div className="flex items-center bg-bg-card px-4 py-2 rounded-lg shadow-sm border border-border-base ">
+                <div className="flex items-center bg-bg-card px-4 py-2 rounded-md shadow-sm border border-border-base ">
                     <User className="w-4 h-4 mr-2 text-text-muted" />
                     <span className="font-bold text-text-base ">{studentData?.name}</span>
                 </div>
@@ -77,7 +77,7 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
 
             <div className="max-w-7xl mx-auto space-y-6">
                 {questions.length === 0 ? (
-                    <div className="bg-bg-card rounded-2xl p-12 text-center text-text-muted border border-border-base ">
+                    <div className="bg-bg-card rounded-md p-12 text-center text-text-muted border border-border-base ">
                         No answers found for this student.
                     </div>
                 ) : (
@@ -86,7 +86,7 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
                         const isUnattempted = !q.selected_answer;
 
                         return (
-                            <div key={q.id} className="bg-bg-card rounded-2xl shadow-sm border border-border-base overflow-hidden transition-colors">
+                            <div key={q.id} className="bg-bg-card rounded-md shadow-sm border border-border-base overflow-hidden transition-colors">
                                 <div className={`p-4 border-b flex items-center font-bold ${isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-primary-light ' :
                                         isUnattempted ? 'bg-bg-base border-border-base text-text-base ' :
                                             'bg-danger-light border-danger-light text-danger-text '
@@ -134,7 +134,7 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
                                             }
 
                                             return (
-                                                <div key={optLabel} className={`p-4 rounded-xl border-2 flex items-center ${borderClass} ${bgClass} transition-colors`}>
+                                                <div key={optLabel} className={`p-4 rounded-md border-2 flex items-center ${borderClass} ${bgClass} transition-colors`}>
                                                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 ${isActualCorrect ? 'bg-primary text-white' :
                                                             (isSelected && !isCorrect) ? 'bg-danger text-white' :
                                                                 'bg-bg-hover text-text-muted '

@@ -162,7 +162,7 @@ export default function McqQuestionManager({ paperId }) {
                 </Link>
             </div>
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <h2 className="text-lg font-bold text-text-base ">
                         Total Questions: {questions.length}
@@ -184,7 +184,7 @@ export default function McqQuestionManager({ paperId }) {
                     ) : (
                         <div className="space-y-4">
                             {questions.map((q, index) => (
-                                <div key={q.id} className="border border-border-base rounded-lg p-5 hover:border-primary-light-hover transition-colors">
+                                <div key={q.id} className="border border-border-base rounded-md p-5 hover:border-primary-light-hover transition-colors">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex-1">
                                             <div className="flex items-start">
@@ -193,18 +193,18 @@ export default function McqQuestionManager({ paperId }) {
                                             </div>
                                             {q.image_url && (
                                                 <div className="mt-3 ml-7">
-                                                    <img src={q.image_url} alt="Question" className="max-h-32 rounded-lg border border-border-base " />
+                                                    <img src={q.image_url} alt="Question" className="max-h-32 rounded-md border border-border-base " />
                                                 </div>
                                             )}
                                         </div>
                                         <div className="flex items-center space-x-2 ml-4">
-                                            <span className="px-2 py-1 bg-bg-hover text-text-muted text-xs rounded font-medium">
+                                            <span className="px-2 py-1 bg-bg-hover text-text-muted text-xs rounded-md font-medium">
                                                 {q.marks} Mark{q.marks !== 1 && 's'}
                                             </span>
-                                            <button onClick={() => openModal(q)} className="p-1.5 text-primary hover:bg-primary-light rounded transition-colors" title="Edit Question">
+                                            <button onClick={() => openModal(q)} className="p-1.5 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Question">
                                                 <Edit2 className="w-4 h-4" />
                                             </button>
-                                            <button onClick={() => handleDelete(q.id)} className="p-1.5 text-danger-text hover:bg-danger-light rounded transition-colors" title="Delete Question">
+                                            <button onClick={() => handleDelete(q.id)} className="p-1.5 text-danger-text hover:bg-danger-light rounded-md transition-colors" title="Delete Question">
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
@@ -217,7 +217,7 @@ export default function McqQuestionManager({ paperId }) {
 
                                             const isCorrect = q.correct_option === opt;
                                             return (
-                                                <div key={opt} className={`p-2 rounded-lg text-sm border ${isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium' : 'bg-bg-base border-border-base text-text-muted '}`}>
+                                                <div key={opt} className={`p-2 rounded-md text-sm border ${isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium' : 'bg-bg-base border-border-base text-text-muted '}`}>
                                                     <span className="font-bold mr-2">{opt}.</span>
                                                     {optText}
                                                 </div>
@@ -226,7 +226,7 @@ export default function McqQuestionManager({ paperId }) {
                                     </div>
 
                                     {q.explanation && (
-                                        <div className="mt-4 ml-7 p-3 bg-primary-light border border-primary-light rounded-lg text-sm text-text-base ">
+                                        <div className="mt-4 ml-7 p-3 bg-primary-light border border-primary-light rounded-md text-sm text-text-base ">
                                             <span className="font-semibold mr-1">Explanation:</span> {q.explanation}
                                         </div>
                                     )}
@@ -244,7 +244,7 @@ export default function McqQuestionManager({ paperId }) {
                     <div>
                         <label className="block text-sm font-medium text-text-base mb-1.5">Question Text</label>
                         <textarea
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             rows="3"
                             value={formData.question_text}
                             onChange={(e) => setFormData({ ...formData, question_text: e.target.value })}
@@ -259,11 +259,11 @@ export default function McqQuestionManager({ paperId }) {
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageChange}
-                                className="w-full px-3 py-1.5 text-sm bg-bg-base border border-border-base rounded-lg file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-primary-hover hover:file:bg-primary-light-hover"
+                                className="w-full px-3 py-1.5 text-sm bg-bg-base border border-border-base rounded-md file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-primary-hover hover:file:bg-primary-light-hover"
                             />
                         </div>
                         {imagePreview && (
-                            <div className="relative w-24 h-24 rounded border border-border-base overflow-hidden bg-bg-hover flex items-center justify-center">
+                            <div className="relative w-24 h-24 rounded-md border border-border-base overflow-hidden bg-bg-hover flex items-center justify-center">
                                 <img src={imagePreview} alt="Preview" className="max-w-full max-h-full object-contain" />
                             </div>
                         )}
@@ -300,7 +300,7 @@ export default function McqQuestionManager({ paperId }) {
                             <select
                                 value={formData.correct_option}
                                 onChange={(e) => setFormData({ ...formData, correct_option: e.target.value })}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                                 required
                             >
                                 <option value="A">Option A</option>
@@ -321,7 +321,7 @@ export default function McqQuestionManager({ paperId }) {
                     <div>
                         <label className="block text-sm font-medium text-text-base mb-1.5">Explanation (Optional)</label>
                         <textarea
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             rows="2"
                             value={formData.explanation}
                             onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}

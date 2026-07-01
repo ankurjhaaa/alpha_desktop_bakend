@@ -260,7 +260,7 @@ export default function QuestionBankPage() {
         <TeacherLayout title="Question Bank">
             <Head title="Question Bank" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex flex-col sm:flex-row gap-4 flex-1">
                         <div className="relative max-w-xs">
@@ -270,7 +270,7 @@ export default function QuestionBankPage() {
                             <select
                                 value={courseFilter}
                                 onChange={(e) => setCourseFilter(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                             >
                                 <option value="">Select Course</option>
                                 {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -281,7 +281,7 @@ export default function QuestionBankPage() {
                                 <select
                                     value={topicFilter}
                                     onChange={(e) => setTopicFilter(e.target.value)}
-                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                                 >
                                     <option value="">Select Topic</option>
                                     {topics.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
@@ -325,7 +325,7 @@ export default function QuestionBankPage() {
                                 const correctAns = q.correct_answer || 'A';
 
                                 return (
-                                    <div key={q.id} className="border border-border-base rounded-lg p-5 hover:border-primary-light-hover transition-colors">
+                                    <div key={q.id} className="border border-border-base rounded-md p-5 hover:border-primary-light-hover transition-colors">
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex-1">
                                                 <div className="flex items-start">
@@ -334,10 +334,10 @@ export default function QuestionBankPage() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center space-x-2 ml-4">
-                                                <button onClick={() => openModal(q)} className="p-1.5 text-primary hover:bg-primary-light rounded transition-colors" title="Edit Question">
+                                                <button onClick={() => openModal(q)} className="p-1.5 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Question">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
-                                                <button onClick={() => handleDelete(q.id)} className="p-1.5 text-danger-text hover:bg-danger-light rounded transition-colors" title="Delete Question">
+                                                <button onClick={() => handleDelete(q.id)} className="p-1.5 text-danger-text hover:bg-danger-light rounded-md transition-colors" title="Delete Question">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -350,7 +350,7 @@ export default function QuestionBankPage() {
                                                 const isCorrect = (correctAns.toUpperCase() === optLetter) || (correctAns === optText);
 
                                                 return (
-                                                    <div key={i} className={`p-2 rounded-lg text-sm border ${isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium' : 'bg-bg-base border-border-base text-text-muted '}`}>
+                                                    <div key={i} className={`p-2 rounded-md text-sm border ${isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium' : 'bg-bg-base border-border-base text-text-muted '}`}>
                                                         <span className="font-bold mr-2">{optLetter}.</span>
                                                         {optText}
                                                     </div>
@@ -371,7 +371,7 @@ export default function QuestionBankPage() {
                     <div>
                         <label className="block text-sm font-medium text-text-base mb-1.5">Question Text</label>
                         <textarea
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             rows="3"
                             value={formData.question_text}
                             onChange={(e) => setFormData({ ...formData, question_text: e.target.value })}
@@ -409,7 +409,7 @@ export default function QuestionBankPage() {
                         <select
                             value={formData.correct_answer}
                             onChange={(e) => setFormData({ ...formData, correct_answer: e.target.value })}
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             required
                         >
                             <option value="A">Option A</option>
@@ -436,7 +436,7 @@ export default function QuestionBankPage() {
                         </button>
                     </div>
                     <textarea
-                        className="w-full px-4 py-3 bg-bg-base border border-border-base rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                        className="w-full px-4 py-3 bg-bg-base border border-border-base rounded-md font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                         rows="15"
                         placeholder={`[
  {

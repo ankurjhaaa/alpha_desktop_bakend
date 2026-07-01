@@ -47,7 +47,7 @@ export default function Leaderboard() {
             <Head title="Leaderboard" />
 
             <div className="max-w-7xl mx-auto">
-                <div className="bg-gradient-to-r from-primary to-primary-hover rounded-2xl p-8 mb-8 text-white shadow-lg relative overflow-hidden">
+                <div className="bg-gradient-to-r from-primary to-primary-hover rounded-md p-8 mb-8 text-white shadow-lg relative overflow-hidden">
                     <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-bg-card opacity-10 rounded-full blur-2xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
                         <div>
@@ -58,7 +58,7 @@ export default function Leaderboard() {
                     </div>
                 </div>
 
-                <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors overflow-hidden">
+                <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors overflow-hidden">
                     {isLoading ? (
                         <div className="flex justify-center items-center py-24">
                             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>

@@ -78,7 +78,7 @@ export default function SettingsPage() {
                 ) : (
                     <form onSubmit={handleSave} className="space-y-6">
 
-                        <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base overflow-hidden transition-colors">
+                        <div className="bg-bg-card rounded-md shadow-sm border border-border-base overflow-hidden transition-colors">
                             <div className="p-6 border-b border-border-base bg-bg-base flex items-center">
                                 <Briefcase className="w-5 h-5 mr-3 text-primary " />
                                 <div>
@@ -108,7 +108,7 @@ export default function SettingsPage() {
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-medium text-text-base mb-1.5">Company Address</label>
                                         <textarea
-                                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                                             rows="2"
                                             value={settings.company_address}
                                             onChange={(e) => setSettings({ ...settings, company_address: e.target.value })}
@@ -118,7 +118,7 @@ export default function SettingsPage() {
                             </div>
                         </div>
 
-                        <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base overflow-hidden transition-colors">
+                        <div className="bg-bg-card rounded-md shadow-sm border border-border-base overflow-hidden transition-colors">
                             <div className="p-6 border-b border-border-base bg-bg-base flex items-center">
                                 <ImageIcon className="w-5 h-5 mr-3 text-primary " />
                                 <div>

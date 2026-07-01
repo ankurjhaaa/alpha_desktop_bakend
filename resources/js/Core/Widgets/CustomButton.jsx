@@ -10,10 +10,10 @@ export default function CustomButton({
  icon: Icon,
  ...props
 }) {
- const baseStyles = "inline-flex items-center justify-center rounded-lg px-6 py-4 font-semibold transition-all duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
+ const baseStyles = "inline-flex items-center justify-center rounded-md px-6 py-4 font-semibold transition-all duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
  
  const variants = {
-  primary: "bg-primary text-white hover:bg-primary-hover hover:shadow-lg",
+  primary: "bg-primary text-bg-card hover:bg-primary-hover hover:shadow-lg",
   secondary: "bg-bg-hover text-text-base hover:bg-border-base border border-transparent hover:border-border-base",
   danger: "bg-danger text-white hover:bg-danger-hover hover:shadow-lg",
   outline: "border border-border-base bg-transparent text-text-base hover:bg-bg-hover"

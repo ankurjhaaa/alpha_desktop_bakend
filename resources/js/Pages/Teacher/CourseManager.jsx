@@ -149,7 +149,7 @@ export default function CourseManager() {
         <TeacherLayout title="Courses">
             <Head title="Course Manager" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="relative flex-1 max-w-md">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
@@ -158,7 +158,7 @@ export default function CourseManager() {
                             placeholder="Search courses..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
+                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
                         />
                     </div>
                     <CustomButton onPressed={() => openCourseModal()} icon={Plus} className="py-2 px-4 whitespace-nowrap">
@@ -206,13 +206,13 @@ export default function CourseManager() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
-                                                <button onClick={() => openTopicsModal(course)} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="Manage Topics">
+                                                <button onClick={() => openTopicsModal(course)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Manage Topics">
                                                     <ListTree className="w-4 h-4" />
                                                 </button>
-                                                <button onClick={() => openCourseModal(course)} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="Edit Course">
+                                                <button onClick={() => openCourseModal(course)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Course">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
-                                                <button onClick={() => handleDelete(course.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-lg transition-colors" title="Delete Course">
+                                                <button onClick={() => handleDelete(course.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-md transition-colors" title="Delete Course">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -238,7 +238,7 @@ export default function CourseManager() {
                     <div>
                         <label className="block text-sm font-medium text-text-base mb-1.5">Description (Optional)</label>
                         <textarea
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors min-h-[100px]"
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors min-h-[100px]"
                             placeholder="Enter course description..."
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -257,9 +257,9 @@ export default function CourseManager() {
                                         value={topicInput}
                                         onChange={(e) => setTopicInput(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTopic())}
-                                        className="flex-1 px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
+                                        className="flex-1 px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
                                     />
-                                    <button type="button" onClick={addTopic} className="px-4 py-2 bg-bg-hover text-text-base rounded-lg hover:bg-bg-hover font-medium transition-colors">
+                                    <button type="button" onClick={addTopic} className="px-4 py-2 bg-bg-hover text-text-base rounded-md hover:bg-bg-hover font-medium transition-colors">
                                         Add
                                     </button>
                                 </div>
@@ -268,7 +268,7 @@ export default function CourseManager() {
                                         <p className="text-sm text-text-muted italic">No topics added yet.</p>
                                     ) : (
                                         formData.topics.map((topic, i) => (
-                                            <div key={i} className="flex items-center justify-between p-3 bg-bg-base border border-border-base rounded-lg">
+                                            <div key={i} className="flex items-center justify-between p-3 bg-bg-base border border-border-base rounded-md">
                                                 <div className="flex items-center">
                                                     <div className="w-6 h-6 rounded-full bg-primary-light-hover text-primary flex items-center justify-center text-xs font-bold mr-3">{i + 1}</div>
                                                     <span className="text-sm font-medium text-text-base ">{topic}</span>
@@ -304,9 +304,9 @@ export default function CourseManager() {
                                 value={topicInput}
                                 onChange={(e) => setTopicInput(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTopic())}
-                                className="flex-1 px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
+                                className="flex-1 px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
                             />
-                            <button type="button" onClick={addTopic} className="px-4 py-2 bg-bg-hover text-text-base rounded-lg hover:bg-bg-hover font-medium flex items-center transition-colors">
+                            <button type="button" onClick={addTopic} className="px-4 py-2 bg-bg-hover text-text-base rounded-md hover:bg-bg-hover font-medium flex items-center transition-colors">
                                 <Plus className="w-4 h-4 mr-1" /> Add
                             </button>
                         </div>
@@ -316,12 +316,12 @@ export default function CourseManager() {
                                 <p className="text-sm text-text-muted italic text-center py-4">No topics added yet.</p>
                             ) : (
                                 formData.topics.map((topic, i) => (
-                                    <div key={i} className="flex items-center justify-between p-3 bg-bg-base border border-border-base rounded-lg">
+                                    <div key={i} className="flex items-center justify-between p-3 bg-bg-base border border-border-base rounded-md">
                                         <div className="flex items-center">
                                             <div className="w-6 h-6 rounded-full bg-primary-light-hover text-primary flex items-center justify-center text-xs font-bold mr-3">{i + 1}</div>
                                             <span className="text-sm font-medium text-text-base ">{topic}</span>
                                         </div>
-                                        <button type="button" onClick={() => removeTopic(i)} className="text-danger hover:bg-danger-light hover:text-danger-text p-1.5 rounded transition-colors">
+                                        <button type="button" onClick={() => removeTopic(i)} className="text-danger hover:bg-danger-light hover:text-danger-text p-1.5 rounded-md transition-colors">
                                             <Trash2 className="w-4 h-4" />
                                         </button>
                                     </div>

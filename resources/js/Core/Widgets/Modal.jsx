@@ -41,7 +41,7 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'md
  leaveTo="opacity-0 scale-95"
  >
  <Dialog.Panel className={cn(
- "w-full transform overflow-hidden rounded-2xl bg-bg-card p-6 text-left align-middle shadow-2xl transition-all border border-border-base ",
+ "w-full transform overflow-hidden rounded-md bg-bg-card p-6 text-left align-middle shadow-2xl transition-all border border-border-base ",
  maxWidthClass
  )}>
  {title && (

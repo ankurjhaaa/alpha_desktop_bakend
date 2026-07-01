@@ -47,14 +47,14 @@ export default function Leaderboard() {
             <Head title="Leaderboard" />
 
             <div className="max-w-7xl mx-auto">
-                <div className="bg-gradient-to-r from-primary to-primary-hover rounded-2xl p-8 mb-8 text-white shadow-lg relative overflow-hidden">
+                <div className="bg-gradient-to-r from-primary to-primary-hover rounded-md p-8 mb-8 text-white shadow-lg relative overflow-hidden">
                     <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-bg-card opacity-10 rounded-full blur-2xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
                         <div>
                             <h2 className="text-3xl font-bold mb-2">Global Leaderboard</h2>
                             <p className="text-primary-light opacity-90">Top performing students across all courses and batches.</p>
                         </div>
-                        <div className="mt-6 md:mt-0 p-4 bg-bg-card/10 backdrop-blur-sm rounded-xl border border-white/20 flex items-center space-x-3">
+                        <div className="mt-6 md:mt-0 p-4 bg-bg-card/10 backdrop-blur-sm rounded-md border border-white/20 flex items-center space-x-3">
                             <TrendingUp className="w-8 h-8 text-primary-light-hover" />
                             <div>
                                 <div className="text-sm text-primary-light uppercase tracking-wider font-semibold">Total Students</div>
@@ -64,7 +64,7 @@ export default function Leaderboard() {
                     </div>
                 </div>
 
-                <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors overflow-hidden">
+                <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors overflow-hidden">
                     {isLoading ? (
                         <div className="flex justify-center items-center py-24">
                             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>

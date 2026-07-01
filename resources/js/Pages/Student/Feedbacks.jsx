@@ -35,7 +35,7 @@ export default function Feedbacks() {
             <Head title="Feedbacks" />
 
             <div className="max-w-7xl mx-auto mt-8">
-                <div className="bg-bg-card rounded-2xl shadow-lg border border-border-base overflow-hidden transition-colors">
+                <div className="bg-bg-card rounded-md shadow-lg border border-border-base overflow-hidden transition-colors">
 
                     <div className="bg-gradient-to-r from-primary to-primary-hover p-8 text-white text-center">
                         <div className="w-16 h-16 bg-bg-card/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 border border-white/30">
@@ -57,7 +57,7 @@ export default function Feedbacks() {
                         <div>
                             <label className="block text-sm font-medium text-text-base mb-2">Your Message</label>
                             <textarea
-                                className="w-full px-4 py-3 bg-bg-base border border-border-base rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-text-base min-h-[150px]"
+                                className="w-full px-4 py-3 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base min-h-[150px]"
                                 placeholder="Describe your issue or suggestion in detail..."
                                 value={formData.message}
                                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}

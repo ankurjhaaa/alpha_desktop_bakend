@@ -9,10 +9,10 @@ export default function AboutUs() {
             <Head title="About Us" />
 
             <div className="max-w-7xl mx-auto">
-                <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base overflow-hidden transition-colors">
+                <div className="bg-bg-card rounded-md shadow-sm border border-border-base overflow-hidden transition-colors">
 
                     <div className="h-48 bg-gradient-to-r from-primary to-primary-hover flex flex-col items-center justify-center text-white p-6 text-center">
-                        <div className="w-20 h-20 bg-bg-card p-2 rounded-2xl shadow-lg mb-4 flex items-center justify-center">
+                        <div className="w-20 h-20 bg-bg-card p-2 rounded-md shadow-lg mb-4 flex items-center justify-center">
                             <img src="/assets/images/logo.png" alt="Alpha Graphics" className="max-w-full max-h-full object-contain" onError={(e) => {
                                 e.target.style.display = 'none';
                             }} />
@@ -40,7 +40,7 @@ export default function AboutUs() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8 border-t border-border-base ">
                             <div className="flex items-start space-x-4">
-                                <div className="w-12 h-12 bg-primary-light rounded-xl flex items-center justify-center text-primary flex-shrink-0">
+                                <div className="w-12 h-12 bg-primary-light rounded-md flex items-center justify-center text-primary flex-shrink-0">
                                     <MapPin className="w-6 h-6" />
                                 </div>
                                 <div>
@@ -50,7 +50,7 @@ export default function AboutUs() {
                             </div>
 
                             <div className="flex items-start space-x-4">
-                                <div className="w-12 h-12 bg-primary-light rounded-xl flex items-center justify-center text-primary flex-shrink-0">
+                                <div className="w-12 h-12 bg-primary-light rounded-md flex items-center justify-center text-primary flex-shrink-0">
                                     <Phone className="w-6 h-6" />
                                 </div>
                                 <div>
@@ -60,7 +60,7 @@ export default function AboutUs() {
                             </div>
 
                             <div className="flex items-start space-x-4">
-                                <div className="w-12 h-12 bg-primary-light rounded-xl flex items-center justify-center text-primary flex-shrink-0">
+                                <div className="w-12 h-12 bg-primary-light rounded-md flex items-center justify-center text-primary flex-shrink-0">
                                     <Mail className="w-6 h-6" />
                                 </div>
                                 <div>
@@ -70,7 +70,7 @@ export default function AboutUs() {
                             </div>
 
                             <div className="flex items-start space-x-4">
-                                <div className="w-12 h-12 bg-primary-light rounded-xl flex items-center justify-center text-primary flex-shrink-0">
+                                <div className="w-12 h-12 bg-primary-light rounded-md flex items-center justify-center text-primary flex-shrink-0">
                                     <Globe className="w-6 h-6" />
                                 </div>
                                 <div>

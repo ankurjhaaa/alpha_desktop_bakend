@@ -188,7 +188,7 @@ export default function MaterialManagerPage() {
         <TeacherLayout title="Study Materials">
             <Head title="Materials Manager" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex flex-col sm:flex-row gap-4 flex-1">
                         <div className="relative max-w-xs">
@@ -198,7 +198,7 @@ export default function MaterialManagerPage() {
                             <select
                                 value={courseFilter}
                                 onChange={(e) => { setCourseFilter(e.target.value); setTopicFilter(''); }}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                             >
                                 <option value="">All Courses</option>
                                 {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -209,7 +209,7 @@ export default function MaterialManagerPage() {
                                 <select
                                     value={topicFilter}
                                     onChange={(e) => setTopicFilter(e.target.value)}
-                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                                 >
                                     <option value="">All Topics</option>
                                     {topics.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
@@ -223,7 +223,7 @@ export default function MaterialManagerPage() {
                                 placeholder="Search materials..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             />
                         </div>
                     </div>
@@ -258,7 +258,7 @@ export default function MaterialManagerPage() {
                                     <tr key={item.id} className="border-b border-border-base hover:bg-bg-base">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary-light-hover flex items-center justify-center text-primary ">
+                                                <div className="h-10 w-10 flex-shrink-0 rounded-md bg-primary-light-hover flex items-center justify-center text-primary ">
                                                     <FileText className="w-5 h-5" />
                                                 </div>
                                                 <div className="ml-4">
@@ -281,14 +281,14 @@ export default function MaterialManagerPage() {
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
                                                 {item.url && (
-                                                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="View/Download">
+                                                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View/Download">
                                                         {item.material_type === 'video' ? <ExternalLink className="w-4 h-4" /> : <Download className="w-4 h-4" />}
                                                     </a>
                                                 )}
-                                                <button onClick={() => openModal(item)} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="Edit Material">
+                                                <button onClick={() => openModal(item)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Material">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
-                                                <button onClick={() => handleDelete(item.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-lg transition-colors" title="Delete Material">
+                                                <button onClick={() => handleDelete(item.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-md transition-colors" title="Delete Material">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -311,7 +311,7 @@ export default function MaterialManagerPage() {
                             <select
                                 value={formData.course_id}
                                 onChange={(e) => handleCourseChangeForm(e.target.value)}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                                 required
                             >
                                 <option value="">Select Course</option>
@@ -323,7 +323,7 @@ export default function MaterialManagerPage() {
                             <select
                                 value={formData.topic_id}
                                 onChange={(e) => setFormData({ ...formData, topic_id: e.target.value })}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             >
                                 <option value="">No Topic</option>
                                 {topics.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
@@ -342,7 +342,7 @@ export default function MaterialManagerPage() {
                     <div>
                         <label className="block text-sm font-medium text-text-base mb-1.5">Description (Optional)</label>
                         <textarea
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             rows="2"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -354,7 +354,7 @@ export default function MaterialManagerPage() {
                         <select
                             value={formData.material_type}
                             onChange={(e) => setFormData({ ...formData, material_type: e.target.value })}
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             required
                         >
                             <option value="pdf">PDF Document</option>
@@ -378,7 +378,7 @@ export default function MaterialManagerPage() {
                             <input
                                 type="file"
                                 onChange={(e) => setFile(e.target.files[0])}
-                                className="w-full px-3 py-1.5 text-sm bg-bg-base border border-border-base rounded-lg file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-primary-hover hover:file:bg-primary-light-hover"
+                                className="w-full px-3 py-1.5 text-sm bg-bg-base border border-border-base rounded-md file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-primary-hover hover:file:bg-primary-light-hover"
                             />
                         </div>
                     )}

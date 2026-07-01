@@ -32,7 +32,7 @@ export default function Feedbacks() {
         <TeacherLayout title="Student Feedbacks">
             <Head title="Feedbacks" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors p-6">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors p-6">
 
                 {isLoading ? (
                     <div className="flex justify-center items-center py-24">
@@ -46,7 +46,7 @@ export default function Feedbacks() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {feedbacks.map((item) => (
-                            <div key={item.id} className="bg-bg-base rounded-xl border border-border-base p-5 hover:shadow-md transition-shadow">
+                            <div key={item.id} className="bg-bg-base rounded-md border border-border-base p-5 hover:shadow-md transition-shadow">
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="flex items-center space-x-3">
                                         <div className="w-10 h-10 rounded-full bg-primary-light-hover flex items-center justify-center text-primary-hover ">

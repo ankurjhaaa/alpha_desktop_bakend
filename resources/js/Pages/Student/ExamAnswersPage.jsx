@@ -61,7 +61,7 @@ export default function ExamAnswersPage({ paperId }) {
 
             <div className="max-w-7xl mx-auto space-y-6">
                 {isLoading ? (
-                    <div className="flex justify-center items-center py-24 bg-bg-card rounded-2xl border border-border-base ">
+                    <div className="flex justify-center items-center py-24 bg-bg-card rounded-md border border-border-base ">
                         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
                     </div>
                 ) : (
@@ -70,7 +70,7 @@ export default function ExamAnswersPage({ paperId }) {
                         const isUnattempted = !q.selected_answer;
 
                         return (
-                            <div key={q.id} className="bg-bg-card rounded-2xl shadow-sm border border-border-base overflow-hidden transition-colors">
+                            <div key={q.id} className="bg-bg-card rounded-md shadow-sm border border-border-base overflow-hidden transition-colors">
                                 <div className={`p-4 border-b flex items-center font-bold ${isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-primary-light ' :
                                         isUnattempted ? 'bg-bg-base border-border-base text-text-base ' :
                                             'bg-danger-light border-danger-light text-danger-text '
@@ -118,7 +118,7 @@ export default function ExamAnswersPage({ paperId }) {
                                             }
 
                                             return (
-                                                <div key={optLabel} className={`p-4 rounded-xl border-2 flex items-center ${borderClass} ${bgClass} transition-colors`}>
+                                                <div key={optLabel} className={`p-4 rounded-md border-2 flex items-center ${borderClass} ${bgClass} transition-colors`}>
                                                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 ${isActualCorrect ? 'bg-primary text-white' :
                                                             (isSelected && !isCorrect) ? 'bg-danger text-white' :
                                                                 'bg-bg-hover text-text-muted '
@@ -133,7 +133,7 @@ export default function ExamAnswersPage({ paperId }) {
                                     </div>
 
                                     {q.explanation && (
-                                        <div className="mt-6 p-4 bg-primary-light border border-primary-light rounded-xl">
+                                        <div className="mt-6 p-4 bg-primary-light border border-primary-light rounded-md">
                                             <h4 className="font-bold text-primary-hover mb-1">Explanation:</h4>
                                             <p className="text-primary-hover text-sm leading-relaxed">
                                                 {q.explanation}

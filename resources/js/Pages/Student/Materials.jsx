@@ -39,7 +39,7 @@ export default function Materials() {
         <StudentLayout title="Study Materials">
             <Head title="Materials" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="relative flex-1 max-w-md">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
@@ -48,7 +48,7 @@ export default function Materials() {
                             placeholder="Search materials..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                         />
                     </div>
                     <div className="relative max-w-xs">
@@ -58,7 +58,7 @@ export default function Materials() {
                         <select
                             value={typeFilter}
                             onChange={(e) => setTypeFilter(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                         >
                             <option value="">All Types</option>
                             <option value="pdf">PDFs</option>
@@ -81,9 +81,9 @@ export default function Materials() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {materials.map((item) => (
-                                <div key={item.id} className="bg-bg-base border border-border-base rounded-xl p-5 hover:shadow-md transition-shadow group flex flex-col">
+                                <div key={item.id} className="bg-bg-base border border-border-base rounded-md p-5 hover:shadow-md transition-shadow group flex flex-col">
                                     <div className="flex items-start mb-4">
-                                        <div className="w-12 h-12 rounded-lg bg-primary-light-hover flex items-center justify-center text-primary flex-shrink-0">
+                                        <div className="w-12 h-12 rounded-md bg-primary-light-hover flex items-center justify-center text-primary flex-shrink-0">
                                             <FileText className="w-6 h-6" />
                                         </div>
                                         <div className="ml-4 flex-1">
@@ -104,7 +104,7 @@ export default function Materials() {
                                                 href={item.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center justify-center w-full py-2.5 px-4 bg-bg-card border border-border-base hover:bg-bg-base text-primary rounded-lg font-medium transition-colors"
+                                                className="flex items-center justify-center w-full py-2.5 px-4 bg-bg-card border border-border-base hover:bg-bg-base text-primary rounded-md font-medium transition-colors"
                                             >
                                                 {item.material_type === 'video' ? (
                                                     <><ExternalLink className="w-4 h-4 mr-2" /> Watch Video</>

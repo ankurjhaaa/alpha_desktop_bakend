@@ -70,10 +70,10 @@ export default function McqPaperResultsPage({ examId }) {
                 </Link>
             </div>
 
-            <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base transition-colors overflow-hidden">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors overflow-hidden">
                 <div className="p-6 md:p-8 bg-gradient-to-r from-bg-base to-white border-b border-border-base flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center mb-4 md:mb-0">
-                        <div className="w-14 h-14 bg-primary-light-hover rounded-2xl flex items-center justify-center text-primary mr-5">
+                        <div className="w-14 h-14 bg-primary-light-hover rounded-md flex items-center justify-center text-primary mr-5">
                             <Trophy className="w-8 h-8" />
                         </div>
                         <div>
@@ -92,7 +92,7 @@ export default function McqPaperResultsPage({ examId }) {
                             placeholder="Search students..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-bg-card border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base shadow-sm"
+                            className="w-full pl-10 pr-4 py-2 bg-bg-card border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base shadow-sm"
                         />
                     </div>
                 </div>
@@ -157,7 +157,7 @@ export default function McqPaperResultsPage({ examId }) {
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <Link
                                                     href={`/teacher/exams/${examId}/student/${result.student?.id || 1}`}
-                                                    className="inline-flex items-center px-4 py-2 bg-bg-card border border-border-base rounded-lg text-sm font-medium text-primary hover:bg-bg-base transition-colors"
+                                                    className="inline-flex items-center px-4 py-2 bg-bg-card border border-border-base rounded-md text-sm font-medium text-primary hover:bg-bg-base transition-colors"
                                                 >
                                                     View Answers
                                                     <CheckCircle className="w-4 h-4 ml-2" />

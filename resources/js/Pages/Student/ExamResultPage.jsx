@@ -63,7 +63,7 @@ export default function ExamResultPage({ paperId }) {
             <Head title="Result" />
 
             <div className="max-w-7xl mx-auto">
-                <div className="bg-bg-card rounded-3xl shadow-lg border border-border-base p-8 sm:p-12 text-center transition-colors relative overflow-hidden">
+                <div className="bg-bg-card rounded-md shadow-lg border border-border-base p-8 sm:p-12 text-center transition-colors relative overflow-hidden">
 
                     {/* Decorative Background Elements */}
                     <div className="absolute top-0 left-0 w-64 h-64 bg-primary opacity-5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -134,10 +134,10 @@ export default function ExamResultPage({ paperId }) {
                         </div>
 
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <Link href="/student/exams" className="px-6 py-3 bg-bg-hover hover:bg-bg-hover text-text-base font-bold rounded-xl transition-colors">
+                            <Link href="/student/exams" className="px-6 py-3 bg-bg-hover hover:bg-bg-hover text-text-base font-bold rounded-md transition-colors">
                                 Back to Exams
                             </Link>
-                            <Link href={`/student/exams/${paperId}/answers`} className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl flex items-center justify-center transition-colors">
+                            <Link href={`/student/exams/${paperId}/answers`} className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-md flex items-center justify-center transition-colors">
                                 View Detailed Answers
                                 <ArrowRight className="w-4 h-4 ml-2" />
                             </Link>

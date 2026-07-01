@@ -63,14 +63,14 @@ export default function ExamsPage() {
         <StudentLayout title="My Exams">
             <Head title="Exams" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex space-x-2">
                         {['all', 'upcoming', 'past'].map(f => (
                             <button
                                 key={f}
                                 onClick={() => setFilter(f)}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === f
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filter === f
                                         ? 'bg-primary-light-hover text-primary-hover '
                                         : 'bg-bg-hover text-text-muted hover:bg-bg-hover '
                                     }`}
@@ -86,7 +86,7 @@ export default function ExamsPage() {
                             placeholder="Search exams..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                         />
                     </div>
                 </div>
@@ -108,14 +108,14 @@ export default function ExamsPage() {
                                 const isCompleted = status.label === 'Completed';
 
                                 return (
-                                    <div key={paper.id} className="bg-bg-card border border-border-base rounded-xl p-5 hover:shadow-md transition-shadow relative overflow-hidden">
+                                    <div key={paper.id} className="bg-bg-card border border-border-base rounded-md p-5 hover:shadow-md transition-shadow relative overflow-hidden">
                                         {/* Status Badge */}
                                         <div className={`absolute top-4 right-4 px-2.5 py-1 rounded-full text-xs font-semibold ${status.color}`}>
                                             {status.label}
                                         </div>
 
                                         <div className="flex items-start mb-4 mt-2">
-                                            <div className="w-12 h-12 rounded-lg bg-primary-light flex items-center justify-center text-primary flex-shrink-0">
+                                            <div className="w-12 h-12 rounded-md bg-primary-light flex items-center justify-center text-primary flex-shrink-0">
                                                 <FileText className="w-6 h-6" />
                                             </div>
                                             <div className="ml-4 pr-16">
@@ -144,17 +144,17 @@ export default function ExamsPage() {
 
                                         <div className="pt-4 border-t border-border-base ">
                                             {isCompleted ? (
-                                                <Link href={`/student/exams/${paper.id}/result`} className="flex items-center justify-center w-full py-2 px-4 bg-emerald-500/10 text-emerald-600 hover:bg-primary-light text-primary-hover rounded-lg font-medium transition-colors">
+                                                <Link href={`/student/exams/${paper.id}/result`} className="flex items-center justify-center w-full py-2 px-4 bg-emerald-500/10 text-emerald-600 hover:bg-primary-light text-primary-hover rounded-md font-medium transition-colors">
                                                     <CheckCircle className="w-4 h-4 mr-2" />
                                                     View Results
                                                 </Link>
                                             ) : isAvailable ? (
-                                                <Link href={`/student/exams/${paper.id}/take`} className="flex items-center justify-center w-full py-2 px-4 bg-primary hover:bg-primary-hover text-white rounded-lg font-medium transition-colors">
+                                                <Link href={`/student/exams/${paper.id}/take`} className="flex items-center justify-center w-full py-2 px-4 bg-primary hover:bg-primary-hover text-white rounded-md font-medium transition-colors">
                                                     <PlayCircle className="w-4 h-4 mr-2" />
                                                     Start Exam
                                                 </Link>
                                             ) : (
-                                                <button disabled className="flex items-center justify-center w-full py-2 px-4 bg-bg-hover text-text-muted rounded-lg font-medium cursor-not-allowed">
+                                                <button disabled className="flex items-center justify-center w-full py-2 px-4 bg-bg-hover text-text-muted rounded-md font-medium cursor-not-allowed">
                                                     <Lock className="w-4 h-4 mr-2" />
                                                     Exam Unavailable
                                                 </button>

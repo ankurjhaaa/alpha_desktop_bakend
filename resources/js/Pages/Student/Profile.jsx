@@ -99,7 +99,7 @@ export default function Profile() {
             <div className="max-w-7xl mx-auto space-y-6">
 
                 {/* Profile Information */}
-                <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base overflow-hidden transition-colors">
+                <div className="bg-bg-card rounded-md shadow-sm border border-border-base overflow-hidden transition-colors">
                     <div className="p-6 border-b border-border-base bg-bg-base flex items-center">
                         <User className="w-5 h-5 mr-3 text-primary " />
                         <h2 className="text-xl font-bold text-text-base ">Personal Information</h2>
@@ -146,7 +146,7 @@ export default function Profile() {
                 </div>
 
                 {/* Password Change */}
-                <div className="bg-bg-card rounded-2xl shadow-sm border border-border-base overflow-hidden transition-colors">
+                <div className="bg-bg-card rounded-md shadow-sm border border-border-base overflow-hidden transition-colors">
                     <div className="p-6 border-b border-border-base bg-bg-base flex items-center">
                         <KeyRound className="w-5 h-5 mr-3 text-danger-text " />
                         <h2 className="text-xl font-bold text-text-base ">Security & Password</h2>

@@ -126,7 +126,7 @@ export default function BatchManager() {
         <TeacherLayout title="Batches">
             <Head title="Batch Manager" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex flex-col sm:flex-row gap-4 flex-1">
                         <div className="relative max-w-xs">
@@ -136,7 +136,7 @@ export default function BatchManager() {
                             <select
                                 value={courseFilter}
                                 onChange={(e) => setCourseFilter(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors appearance-none"
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors appearance-none"
                             >
                                 <option value="">All Courses</option>
                                 {courses.map(course => (
@@ -151,7 +151,7 @@ export default function BatchManager() {
                                 placeholder="Search batches..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
                             />
                         </div>
                     </div>
@@ -204,20 +204,20 @@ export default function BatchManager() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-1.5">
-                                                <Link href={`/teacher/students?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="View Students">
+                                                <Link href={`/teacher/students?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View Students">
                                                     <Users className="w-4 h-4" />
                                                 </Link>
-                                                <Link href={`/teacher/mcq-papers?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="View MCQ Papers">
+                                                <Link href={`/teacher/mcq-papers?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View MCQ Papers">
                                                     <FileQuestion className="w-4 h-4" />
                                                 </Link>
-                                                <Link href={`/teacher/materials?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-lg transition-colors" title="View Materials">
+                                                <Link href={`/teacher/materials?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-md transition-colors" title="View Materials">
                                                     <BookOpen className="w-4 h-4" />
                                                 </Link>
                                                 <div className="w-px h-4 bg-bg-hover mx-1"></div>
-                                                <button onClick={() => openModal(batch)} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="Edit Batch">
+                                                <button onClick={() => openModal(batch)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Batch">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
-                                                <button onClick={() => handleDelete(batch.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-lg transition-colors" title="Delete Batch">
+                                                <button onClick={() => handleDelete(batch.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-md transition-colors" title="Delete Batch">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -240,7 +240,7 @@ export default function BatchManager() {
                             required
                             value={formData.course_id}
                             onChange={(e) => setFormData({ ...formData, course_id: e.target.value })}
-                            className="w-full px-4 py-2.5 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
+                            className="w-full px-4 py-2.5 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
                         >
                             {courses.length === 0 && <option value="">No courses available</option>}
                             {courses.map(course => (
@@ -271,7 +271,7 @@ export default function BatchManager() {
                                 type="date"
                                 value={formData.start_date}
                                 onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
                             />
                         </div>
                         <div>
@@ -280,7 +280,7 @@ export default function BatchManager() {
                                 type="date"
                                 value={formData.end_date}
                                 onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
                             />
                         </div>
                     </div>

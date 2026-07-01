@@ -148,7 +148,7 @@ export default function StudentsPage() {
         <TeacherLayout title="Students">
             <Head title="Students Management" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex flex-col sm:flex-row gap-4 flex-1">
                         <div className="relative max-w-xs">
@@ -158,7 +158,7 @@ export default function StudentsPage() {
                             <select
                                 value={courseFilter}
                                 onChange={(e) => { setCourseFilter(e.target.value); setBatchFilter(''); }}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                             >
                                 <option value="">All Courses</option>
                                 {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -171,7 +171,7 @@ export default function StudentsPage() {
                             <select
                                 value={batchFilter}
                                 onChange={(e) => setBatchFilter(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                             >
                                 <option value="">All Batches</option>
                                 {batches.filter(b => !courseFilter || b.course_id.toString() === courseFilter).map(b => (
@@ -186,7 +186,7 @@ export default function StudentsPage() {
                                 placeholder="Search students..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             />
                         </div>
                     </div>
@@ -261,10 +261,10 @@ export default function StudentsPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
-                                                <button onClick={() => openModal(student)} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="Edit Student">
+                                                <button onClick={() => openModal(student)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Student">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
-                                                <button onClick={() => handleDelete(student.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-lg transition-colors" title="Delete Student">
+                                                <button onClick={() => handleDelete(student.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-md transition-colors" title="Delete Student">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -337,7 +337,7 @@ export default function StudentsPage() {
                                 <select
                                     value={formData.gender}
                                     onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                                 >
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -355,7 +355,7 @@ export default function StudentsPage() {
                                 <select
                                     value={formData.batch_id}
                                     onChange={(e) => setFormData({ ...formData, batch_id: e.target.value })}
-                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                                 >
                                     <option value="">None (No Batch)</option>
                                     {batches.map(b => (

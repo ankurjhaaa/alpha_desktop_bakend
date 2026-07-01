@@ -222,7 +222,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                                 href={item.href}
                                 style={{ height: linkHeight }}
                                 className={cn(
-                                    "flex items-center space-x-4 px-4 rounded-lg transition-colors",
+                                    "flex items-center space-x-4 px-4 rounded-md transition-colors",
                                     active
                                         ? "bg-primary-light text-primary-hover font-semibold"
                                         : "text-text-muted hover:bg-bg-base hover:text-text-base font-medium"
@@ -242,7 +242,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
             <div className="p-4">
                 <button
                     onClick={handleLogout}
-                    className="w-full flex items-center space-x-4 px-4 py-3 rounded-lg bg-danger-light text-danger-text font-medium hover:bg-danger-hover hover:text-white transition-colors"
+                    className="w-full flex items-center space-x-4 px-4 py-3 rounded-md bg-danger-light text-danger-text font-medium hover:bg-danger-hover hover:text-white transition-colors"
                 >
                     <LogOut className="w-5 h-5" />
                     <span>Logout</span>

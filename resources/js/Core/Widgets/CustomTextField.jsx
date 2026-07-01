@@ -36,7 +36,7 @@ export default function CustomTextField({
  onChange={onChange}
  placeholder={hintText}
  className={cn(
- "w-full rounded-lg border border-border-base bg-bg-card px-4 py-3.5 text-text-base focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors",
+ "w-full rounded-md border border-border-base bg-bg-card px-4 py-3.5 text-text-base focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors",
  PrefixIcon ? "pl-11" : "",
  (isPassword || SuffixIcon) ? "pr-11" : "",
  error ? "border-danger focus:border-danger focus:ring-danger " : ""

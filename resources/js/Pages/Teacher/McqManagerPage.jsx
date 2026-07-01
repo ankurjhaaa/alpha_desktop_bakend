@@ -182,7 +182,7 @@ export default function McqManagerPage() {
         <TeacherLayout title="MCQ Papers">
             <Head title="MCQ Papers Management" />
 
-            <div className="bg-bg-card rounded-xl shadow-sm border border-border-base transition-colors">
+            <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors">
                 <div className="p-6 border-b border-border-base flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex flex-col sm:flex-row gap-4 flex-1">
                         <div className="relative max-w-xs">
@@ -192,7 +192,7 @@ export default function McqManagerPage() {
                             <select
                                 value={batchFilter}
                                 onChange={(e) => setBatchFilter(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                             >
                                 <option value="">All Batches</option>
                                 {batches.map(b => (
@@ -207,7 +207,7 @@ export default function McqManagerPage() {
                                 placeholder="Search papers..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             />
                         </div>
                     </div>
@@ -242,7 +242,7 @@ export default function McqManagerPage() {
                                     <tr key={paper.id} className="border-b border-border-base hover:bg-bg-base">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0 rounded-lg bg-primary-light flex items-center justify-center text-primary ">
+                                                <div className="h-10 w-10 flex-shrink-0 rounded-md bg-primary-light flex items-center justify-center text-primary ">
                                                     <FileText className="w-5 h-5" />
                                                 </div>
                                                 <div className="ml-4">
@@ -274,13 +274,13 @@ export default function McqManagerPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
-                                                <Link href={`/teacher/mcq-questions/${paper.id}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-lg transition-colors" title="Manage Questions">
+                                                <Link href={`/teacher/mcq-questions/${paper.id}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-md transition-colors" title="Manage Questions">
                                                     <CheckCircle className="w-4 h-4" />
                                                 </Link>
-                                                <button onClick={() => openModal(paper)} className="p-2 text-primary hover:bg-primary-light rounded-lg transition-colors" title="Edit Paper">
+                                                <button onClick={() => openModal(paper)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Paper">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
-                                                <button onClick={() => handleDelete(paper.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-lg transition-colors" title="Delete Paper">
+                                                <button onClick={() => handleDelete(paper.id)} className="p-2 text-danger-text hover:bg-danger-light rounded-md transition-colors" title="Delete Paper">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -302,7 +302,7 @@ export default function McqManagerPage() {
                             <select
                                 value={formData.batch_id}
                                 onChange={(e) => handleBatchChange(e.target.value)}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                                 required
                             >
                                 <option value="">Select Batch</option>
@@ -316,7 +316,7 @@ export default function McqManagerPage() {
                             <select
                                 value={formData.topic_id}
                                 onChange={(e) => setFormData({ ...formData, topic_id: e.target.value })}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             >
                                 <option value="">No Topic</option>
                                 {topics.map(t => (
@@ -337,7 +337,7 @@ export default function McqManagerPage() {
                     <div>
                         <label className="block text-sm font-medium text-text-base mb-1.5">Description (Optional)</label>
                         <textarea
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             rows="3"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -376,15 +376,15 @@ export default function McqManagerPage() {
 
                     <div>
                         <label className="block text-sm font-medium text-text-base mb-1.5">Eligible Students</label>
-                        <div className="border border-border-base rounded-lg max-h-48 overflow-y-auto p-4 bg-bg-base ">
+                        <div className="border border-border-base rounded-md max-h-48 overflow-y-auto p-4 bg-bg-base ">
                             {students.length === 0 ? (
                                 <p className="text-sm text-text-muted italic text-center py-4">No students found in this batch.</p>
                             ) : (
                                 <div className="space-y-2">
-                                    <label className="flex items-center p-2 rounded hover:bg-bg-hover transition-colors font-medium border-b border-border-base pb-3 mb-2">
+                                    <label className="flex items-center p-2 rounded-md hover:bg-bg-hover transition-colors font-medium border-b border-border-base pb-3 mb-2">
                                         <input
                                             type="checkbox"
-                                            className="w-4 h-4 rounded text-primary focus:ring-primary border-border-base mr-3"
+                                            className="w-4 h-4 rounded-md text-primary focus:ring-primary border-border-base mr-3"
                                             checked={formData.selected_student_ids.length === students.length && students.length > 0}
                                             onChange={(e) => {
                                                 if (e.target.checked) {
@@ -397,10 +397,10 @@ export default function McqManagerPage() {
                                         Select All
                                     </label>
                                     {students.map(student => (
-                                        <label key={student.id} className="flex items-center p-2 rounded hover:bg-bg-hover transition-colors">
+                                        <label key={student.id} className="flex items-center p-2 rounded-md hover:bg-bg-hover transition-colors">
                                             <input
                                                 type="checkbox"
-                                                className="w-4 h-4 rounded text-primary focus:ring-primary border-border-base mr-3"
+                                                className="w-4 h-4 rounded-md text-primary focus:ring-primary border-border-base mr-3"
                                                 checked={formData.selected_student_ids.includes(student.id)}
                                                 onChange={(e) => {
                                                     const ids = formData.selected_student_ids;

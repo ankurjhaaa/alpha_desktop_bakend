@@ -46,7 +46,7 @@ export default function LoginPage() {
 
  const FeatureRow = ({ icon: Icon, text }) => (
  <div className="flex items-center space-x-6">
- <div className="p-3 rounded-xl bg-primary-light-hover/50 border border-primary-light-hover/50 text-primary-hover ">
+ <div className="p-3 rounded-md bg-primary-light-hover/50 border border-primary-light-hover/50 text-primary-hover ">
  <Icon className="w-7 h-7" />
  </div>
  <p className="text-xl font-semibold text-text-base tracking-tight">
@@ -106,7 +106,7 @@ export default function LoginPage() {
 
  {/* Form Section */}
  <div className="w-full lg:w-1/2 flex justify-center">
- <div className="w-full max-w-[560px] bg-bg-card/80 backdrop-blur-xl rounded-[24px] border border-border-base p-10 lg:p-14 shadow-2xl">
+ <div className="w-full max-w-[560px] bg-bg-card/80 backdrop-blur-xl rounded-md border border-border-base p-10 lg:p-14 shadow-2xl">
  
  <h2 className="text-3xl lg:text-4xl font-black text-text-base tracking-tight mb-3">
  Welcome Back
@@ -116,7 +116,7 @@ export default function LoginPage() {
  </p>
 
  {error && (
- <div className="mb-6 p-4 rounded-lg bg-danger-light text-danger-text text-sm font-medium">
+ <div className="mb-6 p-4 rounded-md bg-danger-light text-danger-text text-sm font-medium">
  {error}
  </div>
  )}

@@ -56,9 +56,9 @@ export default function TeacherDashboard() {
     }, []);
 
     const StatCard = ({ title, value, icon: Icon, colorClass, bgClass }) => (
-        <div className="bg-bg-card p-6 rounded-xl border border-border-base shadow-sm flex flex-col justify-center transition-colors">
+        <div className="bg-bg-card p-6 rounded-md border border-border-base shadow-sm flex flex-col justify-center transition-colors">
             <div className="flex justify-between items-start mb-4">
-                <div className={`p-3 rounded-lg ${bgClass}`}>
+                <div className={`p-3 rounded-md ${bgClass}`}>
                     <Icon className={`w-6 h-6 ${colorClass}`} />
                 </div>
                 <div className="flex items-center text-primary font-bold text-sm bg-emerald-500/10 text-emerald-600 px-2.5 py-1 rounded-md">
@@ -97,7 +97,7 @@ export default function TeacherDashboard() {
 
                     <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
                         {/* Recent Activity */}
-                        <div className="xl:col-span-7 bg-bg-card rounded-xl border border-border-base shadow-sm p-6 transition-colors">
+                        <div className="xl:col-span-7 bg-bg-card rounded-md border border-border-base shadow-sm p-6 transition-colors">
                             <h2 className="text-lg font-bold text-text-base mb-6">Recent Enrollments</h2>
                             {recentStudents.length === 0 ? (
                                 <p className="text-text-muted text-center py-8">No recent students found.</p>
@@ -126,7 +126,7 @@ export default function TeacherDashboard() {
                         </div>
 
                         {/* Upcoming Batches */}
-                        <div className="xl:col-span-5 bg-bg-card rounded-xl border border-border-base shadow-sm p-6 transition-colors">
+                        <div className="xl:col-span-5 bg-bg-card rounded-md border border-border-base shadow-sm p-6 transition-colors">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-lg font-bold text-text-base ">Upcoming Batches</h2>
                                 <Link href="/teacher/batches" className="text-primary text-sm font-semibold hover:underline">View All</Link>
@@ -136,7 +136,7 @@ export default function TeacherDashboard() {
                             ) : (
                                 <div className="space-y-4">
                                     {upcomingBatches.map((batch, i) => (
-                                        <div key={i} className="flex p-4 rounded-xl border border-primary-light bg-primary-light/50 ">
+                                        <div key={i} className="flex p-4 rounded-md border border-primary-light bg-primary-light/50 ">
                                             <div className="w-1 h-auto bg-primary rounded-full mr-4" />
                                             <div>
                                                 <h4 className="font-bold text-text-base mb-1.5">{batch.name}</h4>
