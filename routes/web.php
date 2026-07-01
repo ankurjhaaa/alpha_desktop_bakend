@@ -55,6 +55,10 @@ Route::get('/teacher/settings', function () {
     return Inertia::render('Teacher/SettingsPage');
 });
 
+Route::get('/teacher/themes', function () {
+    return Inertia::render('Teacher/ThemeSettings');
+});
+
 Route::get('/teacher/students/{id}', function ($id) {
     return Inertia::render('Teacher/StudentViewPage', ['studentId' => $id]);
 });
