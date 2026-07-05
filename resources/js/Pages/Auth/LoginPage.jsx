@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, router } from '@inertiajs/react';
 import { Mail, Lock, BookOpen, LineChart, Laptop, ArrowRight } from 'lucide-react';
 import CustomTextField from '../../Core/Widgets/CustomTextField';
@@ -10,6 +10,18 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem('auth_token');
+        const role = localStorage.getItem('user_role');
+        if (token) {
+            if (role === 'teacher') {
+                router.visit('/teacher');
+            } else if (role === 'student') {
+                router.visit('/student');
+            }
+        }
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();

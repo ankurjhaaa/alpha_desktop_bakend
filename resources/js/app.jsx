@@ -2,6 +2,7 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from './Core/Providers/ThemeProvider';
+import GlobalSplash from './Core/Widgets/GlobalSplash';
 import axios from 'axios';
 
 // Override PUT and DELETE methods to use POST for shared hosting compatibility
@@ -24,6 +25,7 @@ createInertiaApp({
  setup({ el, App, props }) {
  createRoot(el).render(
  <ThemeProvider>
+ <GlobalSplash />
  <App {...props} />
  </ThemeProvider>
  );
