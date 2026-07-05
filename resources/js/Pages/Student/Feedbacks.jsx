@@ -34,17 +34,21 @@ export default function Feedbacks() {
         <StudentLayout title="Submit Feedback">
             <Head title="Feedbacks" />
 
-            <div className="max-w-7xl mx-auto mt-8">
-                <div className="bg-bg-card rounded-md shadow-lg border border-border-base overflow-hidden transition-colors">
-
-                    <div className="bg-gradient-to-r from-primary to-primary-hover p-8 text-white text-center">
-                        <div className="w-16 h-16 bg-bg-card/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 border border-white/30">
-                            <MessageSquare className="w-8 h-8 text-white" />
+            <div className="max-w-7xl mx-auto">
+                <div className="bg-bg-card border border-border-base rounded-md p-6 mb-6 text-text-base shadow-sm relative overflow-hidden transition-colors">
+                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-primary opacity-10 rounded-full blur-2xl"></div>
+                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
+                        <div>
+                            <h2 className="text-2xl font-bold mb-1">Submit Feedback</h2>
+                            <p className="text-text-muted opacity-90 text-sm">Let us know if you have any issues, suggestions, or questions.</p>
                         </div>
-                        <h2 className="text-2xl font-bold mb-2">We value your feedback!</h2>
-                        <p className="text-primary-light">Let us know if you have any issues, suggestions, or questions for your teachers.</p>
+                        <div className="mt-4 md:mt-0 p-3 bg-bg-hover rounded-md border border-border-base flex items-center space-x-3 transition-colors hidden md:flex">
+                            <MessageSquare className="w-6 h-6 text-primary" />
+                        </div>
                     </div>
+                </div>
 
+                <div className="bg-bg-card rounded-md shadow-sm border border-border-base overflow-hidden transition-colors">
                     <form onSubmit={handleSubmit} className="p-8 space-y-6">
                         <CustomTextField
                             label="Subject"

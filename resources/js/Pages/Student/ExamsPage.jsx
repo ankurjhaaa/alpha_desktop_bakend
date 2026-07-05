@@ -149,7 +149,7 @@ export default function ExamsPage() {
                                                     View Results
                                                 </Link>
                                             ) : isAvailable ? (
-                                                <Link href={`/student/exams/${paper.id}/take`} className="flex items-center justify-center w-full py-2 px-4 bg-primary hover:bg-primary-hover text-white rounded-md font-medium transition-colors">
+                                                <Link href={`/student/exams/${paper.id}/take`} className="flex items-center justify-center w-full py-2 px-4 bg-primary hover:bg-primary-hover text-primary-text rounded-md font-medium transition-colors">
                                                     <PlayCircle className="w-4 h-4 mr-2" />
                                                     Start Exam
                                                 </Link>

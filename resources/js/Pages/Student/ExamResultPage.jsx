@@ -137,7 +137,7 @@ export default function ExamResultPage({ paperId }) {
                             <Link href="/student/exams" className="px-6 py-3 bg-bg-hover hover:bg-bg-hover text-text-base font-bold rounded-md transition-colors">
                                 Back to Exams
                             </Link>
-                            <Link href={`/student/exams/${paperId}/answers`} className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-md flex items-center justify-center transition-colors">
+                            <Link href={`/student/exams/${paperId}/answers`} className="px-6 py-3 bg-primary hover:bg-primary-hover text-primary-text font-bold rounded-md flex items-center justify-center transition-colors">
                                 View Detailed Answers
                                 <ArrowRight className="w-4 h-4 ml-2" />
                             </Link>

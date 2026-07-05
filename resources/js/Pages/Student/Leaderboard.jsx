@@ -47,14 +47,20 @@ export default function Leaderboard() {
             <Head title="Leaderboard" />
 
             <div className="max-w-7xl mx-auto">
-                <div className="bg-gradient-to-r from-primary to-primary-hover rounded-md p-8 mb-8 text-white shadow-lg relative overflow-hidden">
-                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-bg-card opacity-10 rounded-full blur-2xl"></div>
+                <div className="bg-bg-card border border-border-base rounded-md p-6 mb-6 text-text-base shadow-sm relative overflow-hidden transition-colors">
+                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-primary opacity-10 rounded-full blur-2xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
                         <div>
-                            <h2 className="text-3xl font-bold mb-2">Student Leaderboard</h2>
-                            <p className="text-primary-light opacity-90">See how you rank among your peers.</p>
+                            <h2 className="text-2xl font-bold mb-1">Student Leaderboard</h2>
+                            <p className="text-text-muted opacity-90 text-sm">See how you rank among your peers.</p>
                         </div>
-                        <Trophy className="w-16 h-16 text-primary-light-hover opacity-80 hidden md:block" />
+                        <div className="mt-4 md:mt-0 p-3 bg-bg-hover rounded-md border border-border-base flex items-center space-x-3 transition-colors">
+                            <Trophy className="w-6 h-6 text-primary" />
+                            <div>
+                                <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Total Students</div>
+                                <div className="text-xl font-bold">{leaderboard.length} Ranked</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -92,7 +98,7 @@ export default function Leaderboard() {
                                                 )}
                                                 {isTop3 && (
                                                     <div className="absolute -bottom-1 -right-1 bg-primary-light-hover rounded-full p-0.5 border-2 border-white ">
-                                                        <Star className="w-3 h-3 text-white fill-current" />
+                                                        <Star className="w-3 h-3 text-primary-text fill-current" />
                                                     </div>
                                                 )}
                                             </div>

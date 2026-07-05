@@ -123,7 +123,7 @@ export default function ExamTakingPage({ paperId }) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-bg-base text-text-base ">
                 <h2 className="text-2xl font-bold mb-4">No Questions Found</h2>
-                <button onClick={() => router.visit('/student/exams')} className="px-4 py-2 bg-primary text-white rounded-md">Go Back</button>
+                <button onClick={() => router.visit('/student/exams')} className="px-4 py-2 bg-primary text-primary-text rounded-md">Go Back</button>
             </div>
         );
     }
@@ -206,7 +206,7 @@ export default function ExamTakingPage({ paperId }) {
                                             }`}
                                     >
                                         <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg mr-4 transition-colors ${isSelected
-                                                ? 'bg-primary text-white '
+                                                ? 'bg-primary text-primary-text '
                                                 : 'bg-bg-hover text-text-muted group-hover:bg-primary-light-hover '
                                             }`}>
                                             {optLabel}
@@ -232,7 +232,7 @@ export default function ExamTakingPage({ paperId }) {
                                 <button
                                     onClick={() => submitExam()}
                                     disabled={isSubmitting}
-                                    className="px-8 py-3 rounded-md bg-primary hover:bg-primary-hover text-white font-bold flex items-center transition-colors disabled:opacity-70"
+                                    className="px-8 py-3 rounded-md bg-primary hover:bg-primary-hover text-primary-text font-bold flex items-center transition-colors disabled:opacity-70"
                                 >
                                     {isSubmitting ? 'Submitting...' : 'Submit Exam'}
                                     <CheckCircle className="w-5 h-5 ml-2" />
@@ -240,7 +240,7 @@ export default function ExamTakingPage({ paperId }) {
                             ) : (
                                 <button
                                     onClick={() => setCurrentIndex(prev => prev + 1)}
-                                    className="px-8 py-3 rounded-md bg-primary hover:bg-primary-hover text-white font-bold flex items-center transition-colors"
+                                    className="px-8 py-3 rounded-md bg-primary hover:bg-primary-hover text-primary-text font-bold flex items-center transition-colors"
                                 >
                                     Next
                                     <ArrowRight className="w-5 h-5 ml-2" />

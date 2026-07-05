@@ -119,8 +119,8 @@ export default function ExamAnswersPage({ paperId }) {
 
                                             return (
                                                 <div key={optLabel} className={`p-4 rounded-md border-2 flex items-center ${borderClass} ${bgClass} transition-colors`}>
-                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 ${isActualCorrect ? 'bg-primary text-white' :
-                                                            (isSelected && !isCorrect) ? 'bg-danger text-white' :
+                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 ${isActualCorrect ? 'bg-primary text-primary-text' :
+                                                            (isSelected && !isCorrect) ? 'bg-danger text-danger-text' :
                                                                 'bg-bg-hover text-text-muted '
                                                         }`}>
                                                         {optLabel}

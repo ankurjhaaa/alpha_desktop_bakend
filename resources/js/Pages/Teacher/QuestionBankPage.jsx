@@ -296,6 +296,7 @@ export default function QuestionBankPage() {
                             onPressed={openImportModal}
                             icon={Upload}
                             disabled={!courseFilter || !topicFilter || isLoading}
+                            className="py-2 px-4 whitespace-nowrap"
                         >
                             Import JSON
                         </CustomButton>
@@ -303,6 +304,7 @@ export default function QuestionBankPage() {
                             onPressed={() => openModal()}
                             icon={Plus}
                             disabled={!courseFilter || !topicFilter || isLoading}
+                            className="py-2 px-4 whitespace-nowrap"
                         >
                             Add Manual
                         </CustomButton>

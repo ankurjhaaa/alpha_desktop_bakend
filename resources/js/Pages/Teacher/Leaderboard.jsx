@@ -47,18 +47,18 @@ export default function Leaderboard() {
             <Head title="Leaderboard" />
 
             <div className="max-w-7xl mx-auto">
-                <div className="bg-bg-card border border-border-base rounded-md p-8 mb-8 text-text-base shadow-sm relative overflow-hidden transition-colors">
+                <div className="bg-bg-card border border-border-base rounded-md p-6 mb-6 text-text-base shadow-sm relative overflow-hidden transition-colors">
                     <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-primary opacity-10 rounded-full blur-2xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
                         <div>
-                            <h2 className="text-3xl font-bold mb-2">Global Leaderboard</h2>
-                            <p className="text-text-muted opacity-90">Top performing students across all courses and batches.</p>
+                            <h2 className="text-2xl font-bold mb-1">Global Leaderboard</h2>
+                            <p className="text-text-muted opacity-90 text-sm">Top performing students across all courses and batches.</p>
                         </div>
-                        <div className="mt-6 md:mt-0 p-4 bg-bg-hover rounded-md border border-border-base flex items-center space-x-3 transition-colors">
-                            <TrendingUp className="w-8 h-8 text-primary" />
+                        <div className="mt-4 md:mt-0 p-3 bg-bg-hover rounded-md border border-border-base flex items-center space-x-3 transition-colors">
+                            <TrendingUp className="w-6 h-6 text-primary" />
                             <div>
-                                <div className="text-sm text-text-muted uppercase tracking-wider font-semibold">Total Students</div>
-                                <div className="text-2xl font-bold">{leaderboard.length} Ranked</div>
+                                <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Total Students</div>
+                                <div className="text-xl font-bold">{leaderboard.length} Ranked</div>
                             </div>
                         </div>
                     </div>
