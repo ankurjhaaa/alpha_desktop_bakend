@@ -14,6 +14,13 @@ axios.interceptors.request.use(config => {
         config.method = 'post';
         config.headers['X-HTTP-Method-Override'] = 'DELETE';
     }
+    
+    // Shared Hosting Bypass: Send token in a custom header that Apache won't block
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+        config.headers['X-Authorization'] = `Bearer ${token}`;
+    }
+    
     return config;
 });
 
