@@ -35,7 +35,8 @@ export default function CourseManager() {
             setCourses(res.data);
         } catch (error) {
             console.error("Error fetching courses", error);
-            alert("Failed to fetch courses");
+            const errorMsg = error.response ? `Status: ${error.response.status} - ${JSON.stringify(error.response.data)}` : error.message;
+            alert("Failed to fetch courses. Error: " + errorMsg);
         } finally {
             setIsLoading(false);
         }
