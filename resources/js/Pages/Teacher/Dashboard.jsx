@@ -77,7 +77,7 @@ export default function TeacherDashboard() {
 
             <div className="flex justify-end mb-6">
                 <CustomButton onPressed={fetchDashboardData} icon={RefreshCw} className="py-2 px-4 text-sm" variant="secondary">
-                    Refresh Data
+                    Refresh 
                 </CustomButton>
             </div>
 
