@@ -6,166 +6,162 @@ import CustomButton from '../../Core/Widgets/CustomButton';
 import axios from 'axios';
 
 export default function LoginPage() {
- const [email, setEmail] = useState('');
- const [password, setPassword] = useState('');
- const [isLoading, setIsLoading] = useState(false);
- const [error, setError] = useState(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
- const handleLogin = async (e) => {
- e.preventDefault();
- if (!email || !password) {
- setError('Please enter email and password');
- return;
- }
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        if (!email || !password) {
+            setError('Please enter email and password');
+            return;
+        }
 
- setIsLoading(true);
- setError(null);
- 
- try {
- const response = await axios.post('/api/login', { email, password });
- if (response.data.token) {
- localStorage.setItem('auth_token', response.data.token);
- localStorage.setItem('user_role', response.data.role);
- localStorage.setItem('user_name', response.data.user?.name || '');
- localStorage.setItem('user_email', response.data.user?.email || '');
+        setIsLoading(true);
+        setError(null);
 
- if (response.data.role === 'teacher') {
- router.visit('/teacher');
- } else {
- router.visit('/student');
- }
- } else {
- setError('Invalid credentials');
- }
- } catch (err) {
- setError(err.response?.data?.message || 'Connection error. Please try again.');
- } finally {
- setIsLoading(false);
- }
- };
+        try {
+            const response = await axios.post('/api/login', { email, password });
+            if (response.data.token) {
+                localStorage.setItem('auth_token', response.data.token);
+                localStorage.setItem('user_role', response.data.role);
+                localStorage.setItem('user_name', response.data.user?.name || '');
+                localStorage.setItem('user_email', response.data.user?.email || '');
 
- const FeatureRow = ({ icon: Icon, text }) => (
- <div className="flex items-center space-x-6">
- <div className="p-3 rounded-md bg-primary-light-hover/50 border border-primary-light-hover/50 text-primary-hover ">
- <Icon className="w-7 h-7" />
- </div>
- <p className="text-xl font-semibold text-text-base tracking-tight">
- {text}
- </p>
- </div>
- );
+                if (response.data.role === 'teacher') {
+                    router.visit('/teacher');
+                } else {
+                    router.visit('/student');
+                }
+            } else {
+                setError('Invalid credentials');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Connection error. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
- return (
- <>
- <Head title="Login - Alpha Graphics" />
- 
- <div className="min-h-screen relative overflow-hidden bg-bg-card [#0F172A] [#1A1A2E] [#0F172A] transition-colors duration-300 flex items-center justify-center">
- {/* Background Decorators */}
- <div className="absolute -top-40 -left-20 w-96 h-96 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
- <div className="absolute -bottom-20 -right-10 w-[500px] h-[500px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
- 
- {/* Theme Toggle */}
- <div className="absolute top-6 right-6 z-10 flex space-x-2">
- </div>
+    const FeatureRow = ({ icon: Icon, text }) => (
+        <div className="flex items-center space-x-4">
+            <div className="p-2.5 rounded-md bg-primary-light-hover/50 border border-primary-light-hover/50 text-primary-hover ">
+                <Icon className="w-5 h-5" />
+            </div>
+            <p className="text-lg font-semibold text-text-base tracking-tight">
+                {text}
+            </p>
+        </div>
+    );
 
- <div className="container mx-auto px-6 h-full flex flex-col lg:flex-row items-center justify-center lg:py-0 py-12 relative z-10 w-full">
- 
- {/* Hero Section */}
- <div className="w-full lg:w-1/2 flex flex-col items-start justify-center lg:pr-20 mb-16 lg:mb-0">
- <div className="p-1.5 rounded-full bg-bg-card shadow-xl mb-14">
- <div className="w-40 h-40 rounded-full bg-bg-base flex items-center justify-center overflow-hidden">
- <img 
- src="/assets/images/logo.png" 
- alt="Logo"
- className="w-full h-full object-contain p-4"
- onError={(e) => {
- e.target.style.display = 'none';
- e.target.nextSibling.style.display = 'block';
- }}
- />
- <BookOpen className="w-20 h-20 text-primary-hover hidden" />
- </div>
- </div>
- 
- <h2 className="text-2xl font-semibold text-text-base mb-1">
- Welcome to
- </h2>
- <h1 className="text-5xl lg:text-7xl font-black text-[#1E1E1E] leading-tight tracking-tight mb-6">
- Alpha Graphics
- </h1>
- <p className="text-lg lg:text-xl text-text-base leading-relaxed font-medium mb-14 max-w-2xl">
- Your gateway to interactive learning and creative excellence with our Test Series App. Sign in to access your personalized dashboard, practice with tailored test series, track your progress, and explore endless possibilities for academic and competitive success.
- </p>
- 
- <div className="flex flex-col space-y-6">
- <FeatureRow icon={BookOpen} text="Comprehensive Test Series" />
- <FeatureRow icon={LineChart} text="In-Depth Performance Analytics" />
- <FeatureRow icon={Laptop} text="Interactive Online Exam" />
- </div>
- </div>
+    return (
+        <>
+            <Head title="Login - Alpha Graphics" />
 
- {/* Form Section */}
- <div className="w-full lg:w-1/2 flex justify-center">
- <div className="w-full max-w-[560px] bg-bg-card/80 backdrop-blur-xl rounded-md border border-border-base p-10 lg:p-14 shadow-2xl">
- 
- <h2 className="text-3xl lg:text-4xl font-black text-text-base tracking-tight mb-3">
- Welcome Back
- </h2>
- <p className="text-text-muted text-lg font-medium mb-12">
- Please enter your credentials to access your account
- </p>
+            <div className="min-h-screen relative overflow-hidden bg-bg-base transition-colors duration-300 flex items-center justify-center">
+                {/* Background Decorators */}
+                <div className="absolute -top-40 -left-20 w-96 h-96 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+                <div className="absolute -bottom-20 -right-10 w-[500px] h-[500px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
 
- {error && (
- <div className="mb-6 p-4 rounded-md bg-danger-light text-danger-text text-sm font-medium">
- {error}
- </div>
- )}
+                {/* Theme Toggle */}
+                <div className="absolute top-6 right-6 z-10 flex space-x-2">
+                </div>
 
- <form onSubmit={handleLogin} className="flex flex-col gap-6">
- <CustomTextField
- label="Email Address"
- hintText="name@example.com"
- prefixIcon={Mail}
- value={email}
- onChange={(e) => setEmail(e.target.value)}
- required
- />
+                <div className="max-w-7xl mx-auto px-6 h-full flex flex-col lg:flex-row items-center justify-center lg:py-0 py-12 relative z-10 w-full">
 
- <CustomTextField
- label="Password"
- hintText="••••••••"
- isPassword={true}
- prefixIcon={Lock}
- value={password}
- onChange={(e) => setPassword(e.target.value)}
- required
- />
+                    {/* Hero Section */}
+                    <div className="w-full lg:w-1/2 flex flex-col items-start justify-center lg:pr-12 mb-10 lg:mb-0">
+                        <img
+                            src="/assets/images/logo.png"
+                            alt="Logo"
+                            className="w-48 h-48 object-contain mb-8"
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'block';
+                            }}
+                        />
+                        <BookOpen className="w-48 h-48 text-primary-hover mb-8 hidden" />
 
- <div className="flex justify-end mt-2">
- <button
- type="button"
- className="text-primary-hover font-bold hover:underline"
- >
- Forgot Password?
- </button>
- </div>
+                        <h2 className="text-xl font-semibold text-text-muted mb-1">
+                            Welcome to
+                        </h2>
+                        <h1 className="text-4xl lg:text-5xl font-black text-text-base leading-tight tracking-tight mb-4">
+                            Alpha Graphics
+                        </h1>
+                        <p className="text-base text-text-muted leading-relaxed font-medium mb-8 max-w-2xl">
+                            Your gateway to interactive learning and creative excellence with our Test Series App. Sign in to access your personalized dashboard, practice with tailored test series, track your progress, and explore endless possibilities for academic and competitive success.
+                        </p>
 
- <div className="mt-8">
- <CustomButton 
- type="submit" 
- isLoading={isLoading}
- className="w-full text-lg py-5"
- >
- Sign In to Dashboard
- <ArrowRight className="ml-3 w-6 h-6" />
- </CustomButton>
- </div>
- </form>
- </div>
- </div>
+                        <div className="flex flex-col space-y-4">
+                            <FeatureRow icon={BookOpen} text="Comprehensive Test Series" />
+                            <FeatureRow icon={LineChart} text="In-Depth Performance Analytics" />
+                            <FeatureRow icon={Laptop} text="Interactive Online Exam" />
+                        </div>
+                    </div>
 
- </div>
- </div>
- </>
- );
+                    {/* Form Section */}
+                    <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+                        <div className="w-full max-w-[460px] bg-bg-card/90 backdrop-blur-xl rounded-md border border-border-base p-8 lg:p-10 shadow-xl">
+
+                            <h2 className="text-2xl lg:text-3xl font-black text-text-base tracking-tight mb-2">
+                                Welcome Back
+                            </h2>
+                            <p className="text-text-muted text-base font-medium mb-8">
+                                Please enter your credentials to access your account
+                            </p>
+
+                            {error && (
+                                <div className="mb-6 p-4 rounded-md bg-danger-light text-danger-text text-sm font-medium">
+                                    {error}
+                                </div>
+                            )}
+
+                            <form onSubmit={handleLogin} className="flex flex-col gap-5">
+                                <CustomTextField
+                                    label="Email Address"
+                                    hintText="name@example.com"
+                                    prefixIcon={Mail}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+
+                                <CustomTextField
+                                    label="Password"
+                                    hintText="••••••••"
+                                    isPassword={true}
+                                    prefixIcon={Lock}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+
+                                <div className="flex justify-end mt-1">
+                                    <button
+                                        type="button"
+                                        className="text-primary font-bold hover:underline text-sm"
+                                    >
+                                        Forgot Password?
+                                    </button>
+                                </div>
+
+                                <div className="mt-6">
+                                    <CustomButton
+                                        type="submit"
+                                        isLoading={isLoading}
+                                        className="w-full py-4 text-base"
+                                    >
+                                        Sign In to Dashboard
+                                        <ArrowRight className="ml-2 w-5 h-5" />
+                                    </CustomButton>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </>
+    );
 }

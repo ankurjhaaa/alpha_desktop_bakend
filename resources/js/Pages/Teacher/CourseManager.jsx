@@ -89,7 +89,7 @@ export default function CourseManager() {
             } else {
                 await axios.post('/api/courses', { ...formData, is_active: true }, config);
             }
-            fetchCourses();
+            await fetchCourses();
             closeModals();
         } catch (error) {
             console.error("Error saving course", error);
@@ -109,7 +109,7 @@ export default function CourseManager() {
                 is_active: true,
                 topics: formData.topics
             }, config);
-            fetchCourses();
+            await fetchCourses();
             closeModals();
         } catch (error) {
             console.error("Error saving topics", error);
@@ -125,7 +125,7 @@ export default function CourseManager() {
 
         try {
             await axios.delete(`/api/courses/${id}`, config);
-            fetchCourses();
+            await fetchCourses();
         } catch (error) {
             console.error("Error deleting course", error);
             alert(error.response?.data?.message || 'Failed to delete course');
@@ -285,7 +285,7 @@ export default function CourseManager() {
                     )}
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton variant="secondary" onPressed={closeModals}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModals}>Cancel</CustomButton>
                         <CustomButton type="submit">{editingCourse ? 'Save Changes' : 'Create Course'}</CustomButton>
                     </div>
                 </form>
@@ -331,7 +331,7 @@ export default function CourseManager() {
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton variant="secondary" onPressed={closeModals}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModals}>Cancel</CustomButton>
                         <CustomButton type="submit">Save Changes</CustomButton>
                     </div>
                 </form>

@@ -170,7 +170,7 @@ export default function QuestionBankPage() {
             } else {
                 await axios.post('/api/question-bank', payload, config);
             }
-            fetchQuestions();
+            await fetchQuestions();
             closeModal();
         } catch (error) {
             console.error("Error saving question", error);
@@ -188,7 +188,7 @@ export default function QuestionBankPage() {
 
         try {
             await axios.delete(`/api/question-bank/${id}`, config);
-            fetchQuestions();
+            await fetchQuestions();
         } catch (error) {
             console.error("Error deleting question", error);
             alert(error.response?.data?.message || 'Failed to delete question');
@@ -420,7 +420,7 @@ export default function QuestionBankPage() {
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton variant="secondary" onPressed={closeModal} disabled={isSubmitting}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModal} disabled={isSubmitting}>Cancel</CustomButton>
                         <CustomButton type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : (editingQuestion ? 'Save Changes' : 'Add Question')}</CustomButton>
                     </div>
                 </form>
@@ -449,7 +449,7 @@ export default function QuestionBankPage() {
                         onChange={(e) => setJsonImportText(e.target.value)}
                     />
                     <div className="flex justify-end space-x-3 pt-4">
-                        <CustomButton variant="secondary" onPressed={() => setIsImportModalOpen(false)} disabled={isSubmitting}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={() => setIsImportModalOpen(false)} disabled={isSubmitting}>Cancel</CustomButton>
                         <CustomButton onPressed={handleImportJson} disabled={isSubmitting}>{isSubmitting ? 'Importing...' : 'Import Questions'}</CustomButton>
                     </div>
                 </div>

@@ -121,7 +121,7 @@ export default function StudentsPage() {
             } else {
                 await axios.post('/api/students', payload, config);
             }
-            fetchData();
+            await fetchData();
             closeModal();
         } catch (error) {
             console.error("Error saving student", error);
@@ -137,7 +137,7 @@ export default function StudentsPage() {
 
         try {
             await axios.delete(`/api/students/${id}`, config);
-            fetchData();
+            await fetchData();
         } catch (error) {
             console.error("Error deleting student", error);
             alert(error.response?.data?.message || 'Failed to delete student');
@@ -375,7 +375,7 @@ export default function StudentsPage() {
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
                         <CustomButton type="submit">{editingStudent ? 'Save Changes' : 'Register Student'}</CustomButton>
                     </div>
                 </form>

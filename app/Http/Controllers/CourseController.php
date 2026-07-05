@@ -65,8 +65,18 @@ class CourseController extends Controller
         ]);
 
         if (isset($validated['topics'])) {
-            $course->topics()->delete();
-            foreach ($validated['topics'] as $topicTitle) {
+            $existingTopics = $course->topics()->pluck('title', 'id')->toArray();
+            $newTopics = $validated['topics'];
+            
+            // Delete topics that are not in the new list
+            $topicsToDelete = array_diff($existingTopics, $newTopics);
+            if (!empty($topicsToDelete)) {
+                $course->topics()->whereIn('id', array_keys($topicsToDelete))->delete();
+            }
+            
+            // Create topics that are in the new list but not in the existing list
+            $topicsToCreate = array_diff($newTopics, $existingTopics);
+            foreach ($topicsToCreate as $topicTitle) {
                 $course->topics()->create(['title' => $topicTitle]);
             }
         }

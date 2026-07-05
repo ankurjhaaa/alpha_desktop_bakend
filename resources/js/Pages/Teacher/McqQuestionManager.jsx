@@ -128,7 +128,7 @@ export default function McqQuestionManager({ paperId }) {
             } else {
                 await axios.post('/api/mcq_questions', payload, config);
             }
-            fetchData();
+            await fetchData();
             closeModal();
         } catch (error) {
             console.error("Error saving question", error);
@@ -144,7 +144,7 @@ export default function McqQuestionManager({ paperId }) {
 
         try {
             await axios.delete(`/api/mcq_questions/${id}`, config);
-            fetchData();
+            await fetchData();
         } catch (error) {
             console.error("Error deleting question", error);
             alert(error.response?.data?.message || 'Failed to delete question');
@@ -329,7 +329,7 @@ export default function McqQuestionManager({ paperId }) {
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
                         <CustomButton type="submit">{editingQuestion ? 'Save Changes' : 'Add Question'}</CustomButton>
                     </div>
                 </form>

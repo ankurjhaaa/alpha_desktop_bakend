@@ -161,7 +161,7 @@ export default function MaterialManagerPage() {
             } else {
                 await axios.post('/api/materials', payload, config);
             }
-            fetchData();
+            await fetchData();
             closeModal();
         } catch (error) {
             console.error("Error saving material", error);
@@ -177,7 +177,7 @@ export default function MaterialManagerPage() {
 
         try {
             await axios.delete(`/api/materials/${id}`, config);
-            fetchData();
+            await fetchData();
         } catch (error) {
             console.error("Error deleting material", error);
             alert(error.response?.data?.message || 'Failed to delete material');
@@ -384,7 +384,7 @@ export default function MaterialManagerPage() {
                     )}
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
                         <CustomButton type="submit">{editingMaterial ? 'Save Changes' : 'Upload Material'}</CustomButton>
                     </div>
                 </form>

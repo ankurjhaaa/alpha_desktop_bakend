@@ -99,7 +99,7 @@ export default function BatchManager() {
             } else {
                 await axios.post('/api/batches', payload, config);
             }
-            fetchData();
+            await fetchData();
             closeModal();
         } catch (error) {
             console.error("Error saving batch", error);
@@ -115,7 +115,7 @@ export default function BatchManager() {
 
         try {
             await axios.delete(`/api/batches/${id}`, config);
-            fetchData();
+            await fetchData();
         } catch (error) {
             console.error("Error deleting batch", error);
             alert(error.response?.data?.message || 'Failed to delete batch');
@@ -286,7 +286,7 @@ export default function BatchManager() {
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
                         <CustomButton type="submit">{editingBatch ? 'Save Changes' : 'Create Batch'}</CustomButton>
                     </div>
                 </form>

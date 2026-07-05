@@ -47,17 +47,17 @@ export default function Leaderboard() {
             <Head title="Leaderboard" />
 
             <div className="max-w-7xl mx-auto">
-                <div className="bg-gradient-to-r from-primary to-primary-hover rounded-md p-8 mb-8 text-white shadow-lg relative overflow-hidden">
-                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-bg-card opacity-10 rounded-full blur-2xl"></div>
+                <div className="bg-bg-card border border-border-base rounded-md p-8 mb-8 text-text-base shadow-sm relative overflow-hidden transition-colors">
+                    <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-primary opacity-10 rounded-full blur-2xl"></div>
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
                         <div>
                             <h2 className="text-3xl font-bold mb-2">Global Leaderboard</h2>
-                            <p className="text-primary-light opacity-90">Top performing students across all courses and batches.</p>
+                            <p className="text-text-muted opacity-90">Top performing students across all courses and batches.</p>
                         </div>
-                        <div className="mt-6 md:mt-0 p-4 bg-bg-card/10 backdrop-blur-sm rounded-md border border-white/20 flex items-center space-x-3">
-                            <TrendingUp className="w-8 h-8 text-primary-light-hover" />
+                        <div className="mt-6 md:mt-0 p-4 bg-bg-hover rounded-md border border-border-base flex items-center space-x-3 transition-colors">
+                            <TrendingUp className="w-8 h-8 text-primary" />
                             <div>
-                                <div className="text-sm text-primary-light uppercase tracking-wider font-semibold">Total Students</div>
+                                <div className="text-sm text-text-muted uppercase tracking-wider font-semibold">Total Students</div>
                                 <div className="text-2xl font-bold">{leaderboard.length} Ranked</div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@ export default function Leaderboard() {
                             <p className="text-lg">No leaderboard data available yet.</p>
                         </div>
                     ) : (
-                        <div className="divide-y divide-slate-100 ">
+                        <div className="divide-y divide-border-base ">
                             {leaderboard.map((student, index) => {
                                 const rank = index + 1;
                                 const isTop3 = rank <= 3;
@@ -89,15 +89,15 @@ export default function Leaderboard() {
                                         <div className="ml-4 sm:ml-6 flex-1 flex items-center">
                                             <div className="relative">
                                                 {student.profile_image ? (
-                                                    <img src={student.profile_image} alt={student.name} className={`rounded-full object-cover border-2 border-white shadow-sm ${isTop3 ? 'w-14 h-14' : 'w-10 h-10'}`} />
+                                                    <img src={student.profile_image} alt={student.name} className={`rounded-full object-cover border-2 border-bg-card shadow-sm ${isTop3 ? 'w-14 h-14' : 'w-10 h-10'}`} />
                                                 ) : (
-                                                    <div className={`rounded-full bg-primary-light-hover flex items-center justify-center text-primary-hover font-bold border-2 border-white shadow-sm ${isTop3 ? 'w-14 h-14 text-xl' : 'w-10 h-10 text-lg'}`}>
+                                                    <div className={`rounded-full bg-primary-light-hover flex items-center justify-center text-primary-hover font-bold border-2 border-bg-card shadow-sm ${isTop3 ? 'w-14 h-14 text-xl' : 'w-10 h-10 text-lg'}`}>
                                                         {student.name ? student.name.charAt(0).toUpperCase() : '?'}
                                                     </div>
                                                 )}
                                                 {isTop3 && (
-                                                    <div className="absolute -bottom-1 -right-1 bg-primary-light-hover rounded-full p-0.5 border-2 border-white ">
-                                                        <Star className="w-3 h-3 text-white fill-current" />
+                                                    <div className="absolute -bottom-1 -right-1 bg-primary-light-hover rounded-full p-0.5 border-2 border-bg-card ">
+                                                        <Star className="w-3 h-3 text-primary fill-current" />
                                                     </div>
                                                 )}
                                             </div>

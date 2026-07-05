@@ -148,14 +148,20 @@ export default function McqManagerPage() {
 
         const token = localStorage.getItem('auth_token');
         const config = { headers: { Authorization: `Bearer ${token}` } };
+        
+        const payload = {
+            ...formData,
+            start_time: formData.start_time ? formData.start_time.replace('T', ' ') + (formData.start_time.length === 16 ? ':00' : '') : null,
+            end_time: formData.end_time ? formData.end_time.replace('T', ' ') + (formData.end_time.length === 16 ? ':00' : '') : null,
+        };
 
         try {
             if (editingPaper) {
-                await axios.put(`/api/mcq_papers/${editingPaper.id}`, formData, config);
+                await axios.put(`/api/mcq_papers/${editingPaper.id}`, payload, config);
             } else {
-                await axios.post('/api/mcq_papers', formData, config);
+                await axios.post('/api/mcq_papers', payload, config);
             }
-            fetchData();
+            await fetchData();
             closeModal();
         } catch (error) {
             console.error("Error saving paper", error);
@@ -171,7 +177,7 @@ export default function McqManagerPage() {
 
         try {
             await axios.delete(`/api/mcq_papers/${id}`, config);
-            fetchData();
+            await fetchData();
         } catch (error) {
             console.error("Error deleting paper", error);
             alert(error.response?.data?.message || 'Failed to delete paper');
@@ -423,7 +429,7 @@ export default function McqManagerPage() {
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
                         <CustomButton type="submit">{editingPaper ? 'Save Changes' : 'Create Paper'}</CustomButton>
                     </div>
                 </form>
