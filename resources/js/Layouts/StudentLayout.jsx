@@ -70,7 +70,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
 
     const handleMouseMove = (e) => {
         if (!isDraggingRef.current) return;
-        const newWidth = Math.min(Math.max(200, e.clientX), 600);
+        const newWidth = Math.min(Math.max(260, e.clientX), 320);
         setSidebarWidth(newWidth);
     };
 
@@ -91,7 +91,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
 
     const handleNavbarMouseMove = (e) => {
         if (!isDraggingNavbarRef.current) return;
-        const newHeight = Math.min(Math.max(50, e.clientY), 300);
+        const newHeight = Math.min(Math.max(60, e.clientY), 90);
         setNavbarHeight(newHeight);
     };
 
@@ -112,7 +112,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
 
     const handleLogoMouseMove = (e) => {
         if (!isDraggingLogoRef.current) return;
-        const newHeight = Math.min(Math.max(80, e.clientY), 500);
+        const newHeight = Math.min(Math.max(180, e.clientY), 280);
         setLogoHeight(newHeight);
     };
 
@@ -143,9 +143,9 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
     const handleComplexMouseMove = (e) => {
         const { type, startY, startHeight } = complexDragRef.current;
         if (type === 'footer') {
-            setFooterHeight(Math.max(30, startHeight - (e.clientY - startY)));
+            setFooterHeight(Math.min(Math.max(35, startHeight - (e.clientY - startY)), 60));
         } else if (type === 'link') {
-            setLinkHeight(Math.max(30, startHeight + (e.clientY - startY)));
+            setLinkHeight(Math.min(Math.max(40, startHeight + (e.clientY - startY)), 60));
         }
     };
 
@@ -252,7 +252,11 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
     );
 
     return (
-        <div className="flex h-screen bg-bg-base [#0F172A] overflow-hidden transition-colors">
+        <div className="flex h-screen bg-bg-base overflow-hidden transition-colors relative">
+            {/* Global Watermark */}
+            <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center opacity-5">
+                <img src="/assets/images/logo.png" alt="Watermark" className="w-[400px] md:w-[600px] lg:w-[800px] h-auto object-contain grayscale" />
+            </div>
             <div className="hidden lg:block h-full relative shrink-0" style={{ width: sidebarWidth }}>
                 <Sidebar />
                 <div 
@@ -309,9 +313,9 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                         <span>Developed by Brotytics Technologies</span>
                     </div>
                     <div className="flex items-center space-x-3 w-24 justify-end">
-                        <button onClick={() => setZoom(z => Math.max(50, z - 10))} className="hover:text-text-base "><Minus className="w-4 h-4" /></button>
+                        <button onClick={() => setZoom(z => Math.max(90, z - 10))} className="hover:text-text-base "><Minus className="w-4 h-4" /></button>
                         <span className="font-bold">{zoom}%</span>
-                        <button onClick={() => setZoom(z => Math.min(200, z + 10))} className="hover:text-text-base "><Plus className="w-4 h-4" /></button>
+                        <button onClick={() => setZoom(z => Math.min(110, z + 10))} className="hover:text-text-base "><Plus className="w-4 h-4" /></button>
                     </div>
                 </footer>
             </div>

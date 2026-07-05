@@ -8,16 +8,14 @@ export default function AboutUs() {
         <TeacherLayout title="About Alpha Graphics">
             <Head title="About Us" />
 
-            <div className="max-w-5xl mx-auto space-y-6 pb-12">
-                
+            <div className="max-w-7xl mx-auto space-y-6 pb-12">
+
                 {/* Header Card */}
                 <div className="bg-bg-card rounded-xl shadow-sm border border-border-base p-8 relative overflow-hidden">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
-                        
+
                         <div className="flex items-center space-x-6">
-                            <div className="w-[90px] h-[90px] bg-bg-base p-2 rounded-lg shadow-sm border border-border-base flex items-center justify-center flex-shrink-0">
-                                <img src="/assets/images/logo.png" alt="Alpha Graphics Logo" className="max-w-full max-h-full object-contain" />
-                            </div>
+                            <img src="/assets/images/logo.png" alt="Alpha Graphics Logo" className="w-32 h-32 object-contain flex-shrink-0" />
                             <div>
                                 <h1 className="text-3xl lg:text-4xl font-black text-text-base tracking-tight mb-2">About Alpha Graphics</h1>
                                 <p className="text-primary font-bold text-lg">Empowering Digital Skills Since 2004</p>
@@ -37,7 +35,7 @@ export default function AboutUs() {
                 {/* Main Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
-                        
+
                         <div className="bg-bg-card rounded-xl shadow-sm border border-border-base p-8 h-full">
                             <h2 className="text-xl font-bold text-text-base mb-4 flex items-center">
                                 <Info className="w-5 h-5 mr-2 text-primary" /> Overview
@@ -180,7 +178,7 @@ export default function AboutUs() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-bg-card rounded-xl shadow-sm border border-border-base p-8">
                         <h2 className="text-xl font-bold text-text-base mb-5">Contact & Support</h2>
                         <div className="space-y-4">
@@ -206,7 +204,7 @@ export default function AboutUs() {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Our Commitment */}
                 <div className="bg-primary-light-hover/30 rounded-xl border border-primary-light p-8 text-center mt-4">
                     <Heart className="w-8 h-8 text-primary mx-auto mb-4" />

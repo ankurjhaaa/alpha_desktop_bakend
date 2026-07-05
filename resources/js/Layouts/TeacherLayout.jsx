@@ -252,7 +252,11 @@ export default function TeacherLayout({ children, title = 'Teacher Dashboard' })
     );
 
     return (
-        <div className="flex h-screen bg-bg-base overflow-hidden transition-colors">
+        <div className="flex h-screen bg-bg-base overflow-hidden transition-colors relative">
+            {/* Global Watermark */}
+            <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center opacity-5">
+                <img src="/assets/images/logo.png" alt="Watermark" className="w-[400px] md:w-[600px] lg:w-[800px] h-auto object-contain grayscale" />
+            </div>
             <div className="hidden lg:block h-full relative shrink-0" style={{ width: sidebarWidth }}>
                 <Sidebar />
                 <div 
