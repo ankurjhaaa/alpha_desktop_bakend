@@ -12,7 +12,12 @@ export default function BatchManager() {
     const [courses, setCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
-    const [courseFilter, setCourseFilter] = useState('');
+    const [courseFilter, setCourseFilter] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return new URLSearchParams(window.location.search).get('course_id') || '';
+        }
+        return '';
+    });
 
     // Modals state
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -210,7 +215,7 @@ export default function BatchManager() {
                                                 <Link href={`/teacher/mcq-papers?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View MCQ Papers">
                                                     <FileQuestion className="w-4 h-4" />
                                                 </Link>
-                                                <Link href={`/teacher/materials?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-md transition-colors" title="View Materials">
+                                                <Link href={`/teacher/materials?course_id=${batch.course_id || (batch.course?.id)}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-md transition-colors" title="View Materials">
                                                     <BookOpen className="w-4 h-4" />
                                                 </Link>
                                                 <div className="w-px h-4 bg-bg-hover mx-1"></div>

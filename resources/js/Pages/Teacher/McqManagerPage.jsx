@@ -14,7 +14,12 @@ export default function McqManagerPage() {
 
     // Filters
     const [searchQuery, setSearchQuery] = useState('');
-    const [batchFilter, setBatchFilter] = useState('');
+    const [batchFilter, setBatchFilter] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return new URLSearchParams(window.location.search).get('batch_id') || '';
+        }
+        return '';
+    });
 
     // Modals state
     const [isModalOpen, setIsModalOpen] = useState(false);

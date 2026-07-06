@@ -15,7 +15,12 @@ export default function MaterialManagerPage() {
 
     // Filters
     const [searchQuery, setSearchQuery] = useState('');
-    const [courseFilter, setCourseFilter] = useState('');
+    const [courseFilter, setCourseFilter] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return new URLSearchParams(window.location.search).get('course_id') || '';
+        }
+        return '';
+    });
     const [topicFilter, setTopicFilter] = useState('');
 
     // Modals state

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
 import CustomButton from '../../Core/Widgets/CustomButton';
 import CustomTextField from '../../Core/Widgets/CustomTextField';
 import Modal from '../../Core/Widgets/Modal';
-import { Search, Plus, Edit2, Trash2, BookOpen, ListTree, X } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, BookOpen, ListTree, X, Layers, Users } from 'lucide-react';
 import axios from 'axios';
 
 export default function CourseManager() {
@@ -207,6 +207,12 @@ export default function CourseManager() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
+                                                <Link href={`/teacher/batches?course_id=${course.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View Batches">
+                                                    <Layers className="w-4 h-4" />
+                                                </Link>
+                                                <Link href={`/teacher/students?course_id=${course.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View Students">
+                                                    <Users className="w-4 h-4" />
+                                                </Link>
                                                 <button onClick={() => openTopicsModal(course)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Manage Topics">
                                                     <ListTree className="w-4 h-4" />
                                                 </button>
