@@ -120,8 +120,8 @@ export default function McqManagerPage() {
                 description: paper.description || '',
                 exam_date: paper.exam_date || '',
                 exam_password: paper.exam_password || '',
-                start_time: paper.start_time || '',
-                end_time: paper.end_time || '',
+                start_time: paper.start_time ? paper.start_time.split(' ')[1]?.substring(0, 5) : '',
+                end_time: paper.end_time ? paper.end_time.split(' ')[1]?.substring(0, 5) : '',
                 invigilators: paper.invigilators || '',
                 batch_id: paper.batch_id || '',
                 topic_id: paper.topic_id || '',
@@ -154,10 +154,33 @@ export default function McqManagerPage() {
         const token = localStorage.getItem('auth_token');
         const config = { headers: { Authorization: `Bearer ${token}` } };
         
+        let finalStartTime = null;
+        let finalEndTime = null;
+
+        if (formData.start_time) {
+            if (!formData.exam_date) return alert('Please select an Exam Date first.');
+            finalStartTime = `${formData.exam_date} ${formData.start_time}:00`;
+        }
+        
+        if (formData.end_time) {
+            if (!formData.exam_date) return alert('Please select an Exam Date first.');
+            finalEndTime = `${formData.exam_date} ${formData.end_time}:00`;
+        }
+
+        if (finalStartTime && finalEndTime) {
+            if (new Date(finalStartTime) >= new Date(finalEndTime)) {
+                return alert('Start time must be earlier than End time.');
+            }
+        }
+
+        if (finalStartTime && new Date(finalStartTime) < new Date()) {
+            return alert('Cannot schedule an exam in the past.');
+        }
+
         const payload = {
             ...formData,
-            start_time: formData.start_time ? formData.start_time.replace('T', ' ') + (formData.start_time.length === 16 ? ':00' : '') : null,
-            end_time: formData.end_time ? formData.end_time.replace('T', ' ') + (formData.end_time.length === 16 ? ':00' : '') : null,
+            start_time: finalStartTime,
+            end_time: finalEndTime,
         };
 
         try {
@@ -360,7 +383,7 @@ export default function McqManagerPage() {
                             label="Exam Date (Optional)"
                             type="date"
                             value={formData.exam_date}
-                            onChange={(e) => setFormData({ ...formData, exam_date: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, exam_date: e.target.value, start_time: '', end_time: '' })}
                         />
                         <CustomTextField
                             label="Exam Password (Optional)"
@@ -373,15 +396,17 @@ export default function McqManagerPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <CustomTextField
                             label="Start Time (Optional)"
-                            type="datetime-local"
-                            value={formData.start_time ? formData.start_time.slice(0, 16) : ''}
+                            type="time"
+                            value={formData.start_time}
                             onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
+                            disabled={!formData.exam_date}
                         />
                         <CustomTextField
                             label="End Time (Optional)"
-                            type="datetime-local"
-                            value={formData.end_time ? formData.end_time.slice(0, 16) : ''}
+                            type="time"
+                            value={formData.end_time}
                             onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
+                            disabled={!formData.exam_date}
                         />
                     </div>
 
