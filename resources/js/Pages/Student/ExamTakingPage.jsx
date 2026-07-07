@@ -11,46 +11,65 @@ export default function ExamTakingPage({ paperId }) {
     const [answers, setAnswers] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Password state
+    const [needsPassword, setNeedsPassword] = useState(false);
+    const [passwordInput, setPasswordInput] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [fetchError, setFetchError] = useState(null);
+
     // Timer state
     const [remainingTime, setRemainingTime] = useState(null);
 
-    useEffect(() => {
-        const fetchQuestions = async () => {
-            const token = localStorage.getItem('auth_token');
-            if (!token) return;
+    const fetchQuestions = async (pwd = '') => {
+        setIsLoading(true);
+        const token = localStorage.getItem('auth_token');
+        if (!token) return;
 
-            try {
-                // Assuming we have an endpoint that gives paper details AND questions for the student
-                // We'll use the teacher endpoint for questions and paper endpoint for paper details
-                // In a real app, there'd be a specific student endpoint `GET /student/exams/{id}/take`
+        try {
+            // Fetch paper details to get end_time for timer (do this first so we have the title even on error)
+            const paperRes = await axios.get(`/api/student/exams`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const currentPaper = paperRes.data.find(p => p.id == paperId);
+            setExamData(currentPaper);
 
-                const questionsRes = await axios.get(`/api/mcq_papers/${paperId}/questions`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+            const questionsRes = await axios.post(`/api/student/exams/${paperId}/verify`, { password: pwd }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
-                setQuestions(questionsRes.data);
+            setQuestions(questionsRes.data.questions || []);
+            setNeedsPassword(false);
+            setFetchError(null);
 
-                // Fetch paper details to get end_time for timer (mocking if not available)
-                const paperRes = await axios.get(`/api/mcq_papers`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const currentPaper = paperRes.data.find(p => p.id == paperId);
-                setExamData(currentPaper);
-
-                // Load saved drafts
-                const draft = localStorage.getItem(`exam_draft_${paperId}`);
-                if (draft) {
-                    try {
-                        setAnswers(JSON.parse(draft));
-                    } catch (e) { }
-                }
-            } catch (error) {
-                console.error("Error fetching exam", error);
-            } finally {
-                setIsLoading(false);
+            // Load saved drafts
+            const draft = localStorage.getItem(`exam_draft_${paperId}`);
+            if (draft) {
+                try {
+                    setAnswers(JSON.parse(draft));
+                } catch (e) { }
             }
-        };
+        } catch (error) {
+            console.error("Error fetching exam", error);
+            if (error.response) {
+                if (error.response.status === 422 || (error.response.status === 403 && error.response.data.message === 'Invalid password')) {
+                    setNeedsPassword(true);
+                    if (pwd !== '') {
+                        setPasswordError('Incorrect password. Please try again.');
+                    }
+                } else if (error.response.status === 403) {
+                    setFetchError(error.response.data.message);
+                } else {
+                    setFetchError('Failed to load exam. Please try again later.');
+                }
+            } else {
+                setFetchError('Network error. Please check your connection.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchQuestions();
     }, [paperId]);
 
@@ -111,10 +130,53 @@ export default function ExamTakingPage({ paperId }) {
         }
     };
 
-    if (isLoading) {
+    if (isLoading && !needsPassword) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-bg-base ">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
+    if (fetchError) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-bg-base text-text-base ">
+                <h2 className="text-2xl font-bold mb-4 text-danger-text">{fetchError}</h2>
+                <button onClick={() => router.visit('/student/exams')} className="px-4 py-2 bg-primary text-primary-text rounded-md">Go Back to Exams</button>
+            </div>
+        );
+    }
+
+    if (needsPassword) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-bg-base text-text-base p-6">
+                <div className="bg-bg-card border border-border-base rounded-md p-8 shadow-lg max-w-md w-full">
+                    <h2 className="text-2xl font-bold mb-6 text-center">Exam Password Required</h2>
+                    <p className="text-text-muted mb-6 text-center text-sm">
+                        This exam is protected by a password. Please enter the password provided by your teacher to continue.
+                    </p>
+                    {passwordError && (
+                        <div className="mb-4 p-3 bg-danger-light text-danger-text text-sm rounded-md font-medium text-center">
+                            {passwordError}
+                        </div>
+                    )}
+                    <form onSubmit={(e) => { e.preventDefault(); fetchQuestions(passwordInput); }}>
+                        <input 
+                            type="password" 
+                            placeholder="Enter password" 
+                            value={passwordInput}
+                            onChange={e => setPasswordInput(e.target.value)}
+                            className="w-full px-4 py-3 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary mb-4"
+                            autoFocus
+                        />
+                        <div className="flex space-x-3">
+                            <button type="button" onClick={() => router.visit('/student/exams')} className="flex-1 px-4 py-3 border border-border-base text-text-base rounded-md hover:bg-bg-hover transition-colors font-medium">Cancel</button>
+                            <button type="submit" disabled={isLoading || !passwordInput} className="flex-1 px-4 py-3 bg-primary text-primary-text rounded-md hover:bg-primary-hover transition-colors font-bold disabled:opacity-50 flex items-center justify-center">
+                                {isLoading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div> : 'Start Exam'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
     }

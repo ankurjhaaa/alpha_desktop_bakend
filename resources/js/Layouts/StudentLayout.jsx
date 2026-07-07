@@ -293,7 +293,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                         </h1>
                     </div>
                     <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-2 mr-2">
+                        <div className="flex items-center space-x-2">
                             {userImage && userImage !== 'null' && userImage !== 'undefined' ? (
                                 <img src={userImage} alt={userName} className="w-10 h-10 rounded-full border border-border-base object-cover" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
                             ) : null}
@@ -302,13 +302,6 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                             </div>
                             <span className="hidden sm:block font-semibold text-text-base">{userName}</span>
                         </div>
-                        <button 
-                            onClick={handleLogout}
-                            className="p-2 text-danger-text hover:bg-danger-light rounded-full transition-colors flex items-center"
-                            title="Logout"
-                        >
-                            <LogOut className="w-5 h-5" />
-                        </button>
                     </div>
                     <div 
                         className="absolute bottom-0 -mb-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"
