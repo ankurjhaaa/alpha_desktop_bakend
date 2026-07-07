@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import StudentLayout from '../../Layouts/StudentLayout';
-import { FileText, Download, ExternalLink, Filter, Search } from 'lucide-react';
+import { FileText, Download, ExternalLink, Filter, Search, Eye } from 'lucide-react';
 import axios from 'axios';
+import FilePreviewModal from '../../Core/Widgets/FilePreviewModal';
 
 export default function Materials() {
     const [materials, setMaterials] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
+    const [previewMaterial, setPreviewMaterial] = useState(null);
     const [typeFilter, setTypeFilter] = useState('');
 
     useEffect(() => {
@@ -16,9 +18,8 @@ export default function Materials() {
             if (!token) return;
 
             try {
-                let url = '/api/student/materials?';
+                let url = '/api/materials?';
                 if (searchQuery) url += `search=${searchQuery}&`;
-                if (typeFilter) url += `type=${typeFilter}&`;
 
                 const res = await axios.get(url, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -51,22 +52,6 @@ export default function Materials() {
                             className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                         />
                     </div>
-                    <div className="relative max-w-xs">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <Filter className="w-4 h-4 text-text-muted" />
-                        </div>
-                        <select
-                            value={typeFilter}
-                            onChange={(e) => setTypeFilter(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
-                        >
-                            <option value="">All Types</option>
-                            <option value="pdf">PDFs</option>
-                            <option value="video">Videos</option>
-                            <option value="doc">Documents</option>
-                            <option value="link">Links</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div className="p-6">
@@ -89,9 +74,7 @@ export default function Materials() {
                                         <div className="ml-4 flex-1">
                                             <h3 className="font-bold text-text-base line-clamp-2">{item.title}</h3>
                                             <div className="flex items-center text-xs text-text-muted mt-1">
-                                                <span className="uppercase font-semibold tracking-wider">{item.material_type}</span>
-                                                {item.topic && <span className="mx-2">•</span>}
-                                                {item.topic && <span>{item.topic.title}</span>}
+                                                {item.batch && <span className="uppercase font-semibold tracking-wider">Batch: {item.batch.name}</span>}
                                             </div>
                                         </div>
                                     </div>
@@ -99,21 +82,13 @@ export default function Materials() {
                                         {item.description}
                                     </p>
                                     <div className="mt-auto">
-                                        {item.url && (
-                                            <a
-                                                href={item.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+                                        {item.file_url && (
+                                            <button
+                                                onClick={() => setPreviewMaterial(item)}
                                                 className="flex items-center justify-center w-full py-2.5 px-4 bg-bg-card border border-border-base hover:bg-bg-base text-primary rounded-md font-medium transition-colors"
                                             >
-                                                {item.material_type === 'video' ? (
-                                                    <><ExternalLink className="w-4 h-4 mr-2" /> Watch Video</>
-                                                ) : item.material_type === 'link' ? (
-                                                    <><ExternalLink className="w-4 h-4 mr-2" /> Open Link</>
-                                                ) : (
-                                                    <><Download className="w-4 h-4 mr-2" /> Download File</>
-                                                )}
-                                            </a>
+                                                <Eye className="w-4 h-4 mr-2" /> View Material
+                                            </button>
                                         )}
                                     </div>
                                 </div>
@@ -122,6 +97,13 @@ export default function Materials() {
                     )}
                 </div>
             </div>
+
+            <FilePreviewModal 
+                isOpen={!!previewMaterial}
+                onClose={() => setPreviewMaterial(null)}
+                fileUrl={previewMaterial?.file_url}
+                title={previewMaterial?.title}
+            />
         </StudentLayout>
     );
 }

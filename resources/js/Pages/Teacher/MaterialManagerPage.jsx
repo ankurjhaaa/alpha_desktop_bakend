@@ -4,8 +4,9 @@ import TeacherLayout from '../../Layouts/TeacherLayout';
 import CustomButton from '../../Core/Widgets/CustomButton';
 import CustomTextField from '../../Core/Widgets/CustomTextField';
 import Modal from '../../Core/Widgets/Modal';
-import { Search, Plus, Edit2, Trash2, Filter, FileText, Download, ExternalLink } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, Filter, FileText, Download, ExternalLink, Eye } from 'lucide-react';
 import axios from 'axios';
+import FilePreviewModal from '../../Core/Widgets/FilePreviewModal';
 
 export default function MaterialManagerPage() {
     const [materials, setMaterials] = useState([]);
@@ -23,6 +24,7 @@ export default function MaterialManagerPage() {
 
     // Modals state
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [previewMaterial, setPreviewMaterial] = useState(null);
 
     // Edit state
     const [editingMaterial, setEditingMaterial] = useState(null);
@@ -224,9 +226,9 @@ export default function MaterialManagerPage() {
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
                                                 {item.file_url && (
-                                                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View/Download">
-                                                        <ExternalLink className="w-4 h-4" />
-                                                    </a>
+                                                    <button onClick={() => setPreviewMaterial(item)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View Material">
+                                                        <Eye className="w-4 h-4" />
+                                                    </button>
                                                 )}
                                                 <button onClick={() => openModal(item)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Material">
                                                     <Edit2 className="w-4 h-4" />
@@ -294,6 +296,13 @@ export default function MaterialManagerPage() {
                     </div>
                 </form>
             </Modal>
+
+            <FilePreviewModal 
+                isOpen={!!previewMaterial}
+                onClose={() => setPreviewMaterial(null)}
+                fileUrl={previewMaterial?.file_url}
+                title={previewMaterial?.title}
+            />
         </TeacherLayout>
     );
 }

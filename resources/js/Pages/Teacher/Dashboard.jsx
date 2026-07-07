@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
-import { Users, BookOpen, Layers, FileQuestion, ArrowUp, UserPlus, Calendar, RefreshCw } from 'lucide-react';
+import { Users, BookOpen, Layers, FileQuestion, ArrowUp, UserPlus, Calendar, RefreshCw, Clock } from 'lucide-react';
 import CustomButton from '../../Core/Widgets/CustomButton';
 import axios from 'axios';
 
@@ -42,8 +42,16 @@ export default function TeacherDashboard() {
                 totalMcqPapers: mcqs.length
             });
 
-            setUpcomingBatches(batches.slice(0, 3));
-            setRecentStudents([...students].reverse().slice(0, 4));
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const upcoming = batches.filter(batch => {
+                if (!batch.start_date) return false;
+                const startDate = new Date(batch.start_date);
+                startDate.setHours(0, 0, 0, 0);
+                return startDate >= today;
+            });
+            setUpcomingBatches(upcoming.slice(0, 3));
+            setRecentStudents(students.slice(0, 4));
         } catch (error) {
             console.error("Error fetching dashboard data", error);
         } finally {
@@ -141,8 +149,12 @@ export default function TeacherDashboard() {
                                             <div>
                                                 <h4 className="font-bold text-text-base mb-1.5">{batch.name}</h4>
                                                 <div className="flex items-center text-xs text-text-muted space-x-4">
-                                                    <div className="flex items-center">
+                                                    <div className="flex items-center" title="Start Date">
                                                         <Calendar className="w-3.5 h-3.5 mr-1.5" />
+                                                        {batch.start_date ? new Date(batch.start_date).toLocaleDateString() : 'TBD'}
+                                                    </div>
+                                                    <div className="flex items-center" title="Schedule Time">
+                                                        <Clock className="w-3.5 h-3.5 mr-1.5" />
                                                         {batch.schedule_time || 'TBD'}
                                                     </div>
                                                     <div className="flex items-center">
