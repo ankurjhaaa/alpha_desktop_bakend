@@ -32,6 +32,8 @@ export default function QuestionBankPage() {
         option_c: '',
         option_d: '',
         correct_answer: 'A',
+        marks: 1,
+        explanation: ''
     });
     const [jsonImportText, setJsonImportText] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -127,10 +129,12 @@ export default function QuestionBankPage() {
                 option_c: options[2] || '',
                 option_d: options[3] || '',
                 correct_answer: correctOpt,
+                marks: question.marks || 1,
+                explanation: question.explanation || ''
             });
         } else {
             setFormData({
-                question_text: '', option_a: '', option_b: '', option_c: '', option_d: '', correct_answer: 'A'
+                question_text: '', option_a: '', option_b: '', option_c: '', option_d: '', correct_answer: 'A', marks: 1, explanation: ''
             });
         }
         setIsModalOpen(true);
@@ -154,7 +158,9 @@ export default function QuestionBankPage() {
                 topic_id: topicFilter,
                 question_text: formData.question_text,
                 options: [formData.option_a, formData.option_b, formData.option_c, formData.option_d],
-                correct_answer: formData.correct_answer
+                correct_answer: formData.correct_answer,
+                marks: formData.marks,
+                explanation: formData.explanation
             };
 
             const config = {
@@ -336,6 +342,9 @@ export default function QuestionBankPage() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center space-x-2 ml-4">
+                                                <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-md font-medium whitespace-nowrap hidden sm:inline-block">
+                                                    {q.marks || 1} Marks
+                                                </span>
                                                 <button onClick={() => openModal(q)} className="p-1.5 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Question">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
@@ -359,6 +368,13 @@ export default function QuestionBankPage() {
                                                 );
                                             })}
                                         </div>
+                                        
+                                        {q.explanation && (
+                                            <div className="mt-3 ml-7 p-3 bg-bg-base border border-border-base rounded-md text-sm text-text-muted">
+                                                <span className="font-semibold text-text-base mr-2">Explanation:</span>
+                                                {q.explanation}
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             })}
@@ -406,19 +422,39 @@ export default function QuestionBankPage() {
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-text-base mb-1.5">Correct Option</label>
-                        <select
-                            value={formData.correct_answer}
-                            onChange={(e) => setFormData({ ...formData, correct_answer: e.target.value })}
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-text-base mb-1.5">Correct Option</label>
+                            <select
+                                value={formData.correct_answer}
+                                onChange={(e) => setFormData({ ...formData, correct_answer: e.target.value })}
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                required
+                            >
+                                <option value="A">Option A</option>
+                                <option value="B">Option B</option>
+                                <option value="C">Option C</option>
+                                <option value="D">Option D</option>
+                            </select>
+                        </div>
+                        <CustomTextField
+                            label="Marks"
+                            type="number"
+                            value={formData.marks}
+                            onChange={(e) => setFormData({ ...formData, marks: e.target.value })}
                             required
-                        >
-                            <option value="A">Option A</option>
-                            <option value="B">Option B</option>
-                            <option value="C">Option C</option>
-                            <option value="D">Option D</option>
-                        </select>
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-text-base mb-1.5">Explanation (Optional)</label>
+                        <textarea
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            rows="2"
+                            placeholder="Add solution explanation..."
+                            value={formData.explanation}
+                            onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
+                        />
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
