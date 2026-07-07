@@ -51,7 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Student Profile
     Route::get('/student/profile', function (Request $request) {
         $user = $request->user();
-        $user->load(['batches.course']);
+        $user->load(['batches.course', 'examResults.mcqPaper']);
         return response()->json($user);
     });
 

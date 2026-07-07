@@ -111,7 +111,7 @@ class StudentController extends Controller
             return response()->json(['message' => 'Not a student'], 403);
         }
 
-        return response()->json($student->load('batches.course'));
+        return response()->json($student->load(['batches.course', 'examResults.mcqPaper']));
     }
 
     public function update(Request $request, User $student)

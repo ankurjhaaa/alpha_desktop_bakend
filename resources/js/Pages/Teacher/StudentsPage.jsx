@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
 import CustomButton from '../../Core/Widgets/CustomButton';
 import CustomTextField from '../../Core/Widgets/CustomTextField';
 import Modal from '../../Core/Widgets/Modal';
-import { Search, Plus, Edit2, Trash2, Filter, Mail, Phone, MapPin } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, Filter, Mail, Phone, MapPin, Eye } from 'lucide-react';
 import axios from 'axios';
 
 export default function StudentsPage() {
@@ -271,6 +271,9 @@ export default function StudentsPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
+                                                <Link href={`/teacher/students/${student.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors inline-block" title="View Student">
+                                                    <Eye className="w-4 h-4" />
+                                                </Link>
                                                 <button onClick={() => openModal(student)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Student">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
@@ -291,7 +294,6 @@ export default function StudentsPage() {
             <Modal isOpen={isModalOpen} onClose={closeModal} title={editingStudent ? "Edit Student" : "Add New Student"} maxWidth="3xl">
                 <form onSubmit={handleSave} className="space-y-6">
                     <div>
-                        <h4 className="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Required Fields</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <CustomTextField
                                 label="Full Name"
@@ -319,10 +321,7 @@ export default function StudentsPage() {
                         </div>
                     </div>
 
-                    <div className="h-px bg-bg-hover " />
-
                     <div>
-                        <h4 className="text-sm font-semibold text-text-muted mb-3 uppercase tracking-wider">Additional Details</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <CustomTextField
                                 label="Phone Number"
@@ -360,19 +359,21 @@ export default function StudentsPage() {
                                 value={formData.dob}
                                 onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
                             />
-                            <div>
-                                <label className="block text-sm font-medium text-text-base mb-1.5">Assign Batch (Optional)</label>
-                                <select
-                                    value={formData.batch_id}
-                                    onChange={(e) => setFormData({ ...formData, batch_id: e.target.value })}
-                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
-                                >
-                                    <option value="">None (No Batch)</option>
-                                    {batches.map(b => (
-                                        <option key={b.id} value={b.id}>{b.name}</option>
-                                    ))}
-                                </select>
-                            </div>
+                            {!editingStudent && (
+                                <div>
+                                    <label className="block text-sm font-medium text-text-base mb-1.5">Assign Batch (Optional)</label>
+                                    <select
+                                        value={formData.batch_id}
+                                        onChange={(e) => setFormData({ ...formData, batch_id: e.target.value })}
+                                        className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                    >
+                                        <option value="">None (No Batch)</option>
+                                        {batches.map(b => (
+                                            <option key={b.id} value={b.id}>{b.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
                             <div className="md:col-span-2">
                                 <CustomTextField
                                     label="Address"

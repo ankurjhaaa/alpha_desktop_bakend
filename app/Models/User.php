@@ -37,4 +37,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Batch::class)
                     ->withTimestamps();
     }
+
+    public function examResults()
+    {
+        return $this->hasMany(ExamResult::class);
+    }
 }

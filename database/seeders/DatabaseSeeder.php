@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         // 1. Create Teacher
         User::create([
             'name' => 'Admin Teacher',
-            'email' => 'teacher@gmail.com',
-            'password' => Hash::make('password'),
+            'email' => 'Razah5367@gmail.com',
+            'password' => Hash::make('Alpha@Patna'),
             'role' => 'teacher',
             'is_active' => true,
         ]);

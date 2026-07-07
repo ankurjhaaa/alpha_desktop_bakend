@@ -3,7 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import {
     LayoutDashboard, BookOpen, Layers, Users, FileQuestion,
     Database, Trophy, BookText, MessageSquare, Info,
-    LogOut, Menu, Bell, Code, Plus, Minus, Laptop, Settings, Palette
+    LogOut, Menu, Bell, Code, Plus, Minus, Laptop, Palette
 } from 'lucide-react';
 import { cn } from '../Core/utils';
 
@@ -285,9 +285,7 @@ export default function TeacherLayout({ children, title = 'Teacher Dashboard' })
                         </h1>
                     </div>
                     <div className="flex items-center space-x-4">
-                        <Link href="/teacher/settings" className="p-2 text-text-muted hover:bg-bg-hover rounded-full transition-colors">
-                            <Settings className="w-6 h-6" />
-                        </Link>
+                        {/* Settings icon removed */}
                         <button className="p-2 text-text-muted hover:bg-bg-hover rounded-full transition-colors">
                             <Bell className="w-6 h-6" />
                         </button>

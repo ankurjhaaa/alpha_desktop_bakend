@@ -18,18 +18,18 @@ export default function ExamsPage() {
 
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            let url = '/api/student/mcq_papers?';
+            let url = '/api/student/exams?';
             if (searchQuery) url += `search=${encodeURIComponent(searchQuery)}&`;
 
             const res = await axios.get(url, config);
             let fetchedPapers = res.data;
 
-            // Client-side filtering based on date
+            // Client-side filtering based on date and completion status
             const now = new Date();
             if (filter === 'upcoming') {
-                fetchedPapers = fetchedPapers.filter(p => !p.end_time || new Date(p.end_time) > now);
+                fetchedPapers = fetchedPapers.filter(p => !p.is_completed && (!p.end_time || new Date(p.end_time) > now));
             } else if (filter === 'past') {
-                fetchedPapers = fetchedPapers.filter(p => p.end_time && new Date(p.end_time) <= now);
+                fetchedPapers = fetchedPapers.filter(p => p.is_completed || (p.end_time && new Date(p.end_time) <= now));
             }
 
             setPapers(fetchedPapers);
@@ -46,7 +46,7 @@ export default function ExamsPage() {
     }, [searchQuery, filter]);
 
     const getExamStatus = (paper) => {
-        if (paper.submission) return { label: 'Completed', color: 'text-primary bg-primary-light ' };
+        if (paper.is_completed) return { label: 'Completed', color: 'text-primary bg-primary-light ' };
 
         const now = new Date();
         if (paper.start_time && new Date(paper.start_time) > now) {

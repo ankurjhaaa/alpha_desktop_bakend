@@ -37,7 +37,26 @@ export default function StudentDashboard() {
     }, []);
 
     const completedExams = exams.filter(e => e.is_completed === true);
-    const pendingExams = exams.filter(e => e.is_completed !== true);
+    
+    const now = new Date();
+    
+    // Upcoming: Not completed AND (no end_time OR end_time is in the future)
+    const upcomingExams = exams.filter(e => {
+        if (e.is_completed === true) return false;
+        if (!e.end_time) return true;
+        return new Date(e.end_time) > now;
+    });
+
+    // Missed: Not completed AND (end_time is in the past)
+    const missedExams = exams.filter(e => {
+        if (e.is_completed === true) return false;
+        if (!e.end_time) return false;
+        return new Date(e.end_time) <= now;
+    });
+
+    // For the stat card, total pending could mean upcoming + missed, or just upcoming. Let's just use upcoming.
+    const pendingExamsCount = upcomingExams.length;
+
     let avgPercentage = 0;
     if (completedExams.length > 0) {
         avgPercentage = completedExams.reduce((sum, e) => sum + (parseFloat(e.percentage) || 0), 0) / completedExams.length;
@@ -78,7 +97,7 @@ export default function StudentDashboard() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <StatCard title="Enrolled Batches" value={batches.length} icon={Layers} colorClass="text-primary " bgClass="bg-primary-light-hover " />
                         <StatCard title="Exams Taken" value={completedExams.length} icon={CheckCircle} colorClass="text-primary " bgClass="bg-primary-light " />
-                        <StatCard title="Pending Exams" value={pendingExams.length} icon={Clock} colorClass="text-primary " bgClass="bg-primary-light " />
+                        <StatCard title="Upcoming Exams" value={pendingExamsCount} icon={Clock} colorClass="text-primary " bgClass="bg-primary-light " />
                         <StatCard title="Avg. Score" value={completedExams.length === 0 ? 'N/A' : `${avgPercentage.toFixed(1)}%`} icon={TrendingUp} colorClass="text-primary " bgClass="bg-primary-light " />
                     </div>
 
@@ -126,34 +145,67 @@ export default function StudentDashboard() {
                             )}
                         </div>
 
-                        {/* Upcoming Exams */}
-                        <div className="xl:col-span-5 bg-bg-card rounded-md border border-border-base shadow-sm p-6 transition-colors">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-lg font-bold text-text-base ">Upcoming Exams</h2>
-                                <Link href="/student/exams" className="text-primary text-sm font-semibold hover:underline">View All</Link>
-                            </div>
-                            {pendingExams.length === 0 ? (
-                                <p className="text-text-muted text-center py-8">No pending exams. You are all caught up!</p>
-                            ) : (
-                                <div className="space-y-4">
-                                    {pendingExams.slice(0, 5).map((exam, i) => (
-                                        <div key={i} className="flex items-center justify-between p-4 rounded-md border border-primary-light bg-primary-light/50 ">
-                                            <div className="flex items-center">
-                                                <FileQuestion className="w-5 h-5 text-primary mr-4" />
-                                                <div>
-                                                    <h4 className="font-semibold text-text-base text-sm mb-1">{exam.title || 'Exam'}</h4>
-                                                    <p className="text-xs text-text-muted ">
-                                                        {exam.exam_date ? `Exam Date: ${exam.exam_date}` : 'Available Now'}
-                                                    </p>
+                        {/* Upcoming and Missed Exams */}
+                        <div className="xl:col-span-5 space-y-6">
+                            
+                            {/* Upcoming Exams */}
+                            <div className="bg-bg-card rounded-md border border-border-base shadow-sm p-6 transition-colors">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-lg font-bold text-text-base ">Upcoming Exams</h2>
+                                    <Link href="/student/exams" className="text-primary text-sm font-semibold hover:underline">View All</Link>
+                                </div>
+                                {upcomingExams.length === 0 ? (
+                                    <p className="text-text-muted text-center py-8">No upcoming exams. You are all caught up!</p>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {upcomingExams.slice(0, 5).map((exam, i) => (
+                                            <div key={i} className="flex items-center justify-between p-4 rounded-md border border-primary-light bg-primary-light/50 ">
+                                                <div className="flex items-center">
+                                                    <FileQuestion className="w-5 h-5 text-primary mr-4 flex-shrink-0" />
+                                                    <div>
+                                                        <h4 className="font-semibold text-text-base text-sm mb-1 line-clamp-1">{exam.title || 'Exam'}</h4>
+                                                        <p className="text-xs text-text-muted ">
+                                                            {exam.exam_date ? `Exam Date: ${exam.exam_date}` : 'Available Now'}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="px-2 py-1 rounded-md bg-primary-light-hover text-primary-hover text-[10px] font-bold ml-2">
+                                                    READY
                                                 </div>
                                             </div>
-                                            <div className="px-2 py-1 rounded-md bg-primary-light-hover text-primary-hover text-[10px] font-bold">
-                                                READY
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Missed Exams */}
+                            {missedExams.length > 0 && (
+                                <div className="bg-bg-card rounded-md border border-border-base shadow-sm p-6 transition-colors">
+                                    <div className="flex justify-between items-center mb-6">
+                                        <h2 className="text-lg font-bold text-text-base ">Missed Exams</h2>
+                                        <Link href="/student/exams?filter=past" className="text-primary text-sm font-semibold hover:underline">View All</Link>
+                                    </div>
+                                    <div className="space-y-4">
+                                        {missedExams.slice(0, 5).map((exam, i) => (
+                                            <div key={i} className="flex items-center justify-between p-4 rounded-md border border-danger-text/20 bg-danger-light/50 ">
+                                                <div className="flex items-center">
+                                                    <FileQuestion className="w-5 h-5 text-danger-text mr-4 flex-shrink-0" />
+                                                    <div>
+                                                        <h4 className="font-semibold text-text-base text-sm mb-1 line-clamp-1">{exam.title || 'Exam'}</h4>
+                                                        <p className="text-xs text-text-muted ">
+                                                            {exam.exam_date ? `Missed Date: ${exam.exam_date}` : 'Expired'}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="px-2 py-1 rounded-md bg-danger-text/10 text-danger-text text-[10px] font-bold ml-2">
+                                                    MISSED
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
                             )}
+
                         </div>
                     </div>
                 </div>

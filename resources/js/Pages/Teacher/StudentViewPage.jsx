@@ -1,55 +1,99 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
-import { ArrowLeft, User, Mail, Phone, BookOpen, Award, Clock } from 'lucide-react';
+import { ArrowLeft, User, Phone, BookOpen, Clock, Calendar, MapPin, Loader2, Plus, X, Award } from 'lucide-react';
 import axios from 'axios';
+import CustomButton from '../../Core/Widgets/CustomButton';
 
 export default function StudentViewPage({ studentId }) {
     const [student, setStudent] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [allBatches, setAllBatches] = useState([]);
+    
+    // Modal state
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedBatchId, setSelectedBatchId] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const fetchStudentDetails = async () => {
+        const token = localStorage.getItem('auth_token');
+        if (!token) return;
+
+        try {
+            const res = await axios.get(`/api/students/${studentId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setStudent(res.data);
+        } catch (error) {
+            console.error("Error fetching student details", error);
+            alert("Failed to load student details.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const fetchBatches = async () => {
+        const token = localStorage.getItem('auth_token');
+        if (!token) return;
+
+        try {
+            const res = await axios.get('/api/batches', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setAllBatches(res.data);
+        } catch (error) {
+            console.error("Error fetching batches", error);
+        }
+    };
 
     useEffect(() => {
-        const fetchStudentData = async () => {
-            const token = localStorage.getItem('auth_token');
-            if (!token) return;
-
-            try {
-                // Assuming an endpoint exists to fetch specific student details + progress
-                const res = await axios.get(`/api/teacher/students/${studentId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setStudent(res.data);
-            } catch (error) {
-                console.error("Error fetching student details", error);
-                // Mock data for demo
-                setStudent({
-                    id: studentId,
-                    name: "Alex Johnson",
-                    email: "alex@example.com",
-                    phone: "+1 555-0198",
-                    enrollment_date: "2023-09-01T00:00:00Z",
-                    courses: [
-                        { id: 1, name: "Advanced Mathematics", progress: 85 },
-                        { id: 2, name: "Physics 101", progress: 60 }
-                    ],
-                    recent_exams: [
-                        { id: 101, title: "Midterm Math", score: 92, total: 100, date: "2024-03-15T10:00:00Z" },
-                        { id: 102, title: "Physics Quiz 1", score: 75, total: 100, date: "2024-03-10T14:30:00Z" }
-                    ]
-                });
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchStudentData();
+        fetchStudentDetails();
+        fetchBatches();
     }, [studentId]);
+
+    const attachBatch = async () => {
+        if (!selectedBatchId) {
+            alert('Please select a batch.');
+            return;
+        }
+
+        setIsSubmitting(true);
+        const token = localStorage.getItem('auth_token');
+        
+        try {
+            await axios.post(`/api/students/${studentId}/batches`, {
+                batch_id: selectedBatchId
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            await fetchStudentDetails();
+            setIsModalOpen(false);
+            setSelectedBatchId('');
+            alert('Batch enrolled successfully!');
+        } catch (error) {
+            console.error("Error attaching batch", error);
+            alert(error.response?.data?.message || 'Failed to enroll in batch.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const formatDate = (isoDate) => {
+        if (!isoDate) return 'N/A';
+        try {
+            const date = new Date(isoDate);
+            return `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+        } catch (e) {
+            return 'Invalid Date';
+        }
+    };
 
     if (isLoading) {
         return (
-            <TeacherLayout title="Student Details">
+            <TeacherLayout title="Student Profile">
                 <div className="flex justify-center items-center py-24">
-                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+                    <Loader2 className="animate-spin text-primary w-8 h-8" />
                 </div>
             </TeacherLayout>
         );
@@ -57,125 +101,250 @@ export default function StudentViewPage({ studentId }) {
 
     if (!student) {
         return (
-            <TeacherLayout title="Student Details">
+            <TeacherLayout title="Student Profile">
                 <div className="text-center py-24 text-text-muted">Student not found.</div>
             </TeacherLayout>
         );
     }
 
+    const isActive = student.is_active === 1 || student.is_active === true;
+
     return (
-        <TeacherLayout title={`Student: ${student.name}`}>
+        <TeacherLayout title="Student Profile">
             <Head title={student.name} />
 
-            <div className="mb-6">
+            <div className="mb-4">
                 <Link href="/teacher/students" className="inline-flex items-center text-sm font-medium text-text-muted hover:text-primary transition-colors">
                     <ArrowLeft className="w-4 h-4 mr-1" />
-                    Back to Students List
+                    Back to Students
                 </Link>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                {/* Profile Card */}
-                <div className="lg:col-span-1">
-                    <div className="bg-bg-card rounded-md shadow-sm border border-border-base p-6 text-center transition-colors">
-                        <div className="w-32 h-32 mx-auto rounded-full bg-primary-light-hover flex items-center justify-center text-primary-hover text-4xl font-bold mb-4 border-4 border-white shadow-md">
-                            {student.name.charAt(0).toUpperCase()}
+                
+                {/* Profile Card & Info */}
+                <div className="lg:col-span-1 space-y-6">
+                    <div className="bg-bg-card rounded-md border border-border-base p-6 flex flex-col items-center text-center transition-colors shadow-sm">
+                        <div className="w-24 h-24 rounded-full bg-primary-light-hover flex items-center justify-center border-4 border-white shadow-sm mb-4 overflow-hidden">
+                            {student.profile_image ? (
+                                <img src={student.profile_image} alt={student.name} className="w-full h-full object-cover" />
+                            ) : (
+                                <span className="text-3xl font-bold text-primary">{student.name.charAt(0).toUpperCase()}</span>
+                            )}
                         </div>
-                        <h2 className="text-2xl font-bold text-text-base mb-1">{student.name}</h2>
-                        <p className="text-text-muted text-sm mb-6">Enrolled {new Date(student.enrollment_date || Date.now()).toLocaleDateString()}</p>
+                        <h2 className="text-xl font-bold text-text-base mb-1">{student.name}</h2>
+                        <p className="text-text-muted text-sm mb-1">{student.email}</p>
+                        {student.registration_id && (
+                            <p className="text-text-muted/70 text-xs mb-3">Admission No: {student.registration_id}</p>
+                        )}
+                        <span className={`px-3 py-1 rounded-md font-bold text-xs ${isActive ? 'bg-primary-light text-primary-hover' : 'bg-danger-light text-danger-text'}`}>
+                            {isActive ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
 
-                        <div className="space-y-3 text-left">
-                            <div className="flex items-center p-3 rounded-md bg-bg-base ">
-                                <Mail className="w-5 h-5 text-text-muted mr-3" />
-                                <span className="text-text-base ">{student.email}</span>
+                    <div className="bg-bg-card rounded-md border border-border-base p-5 transition-colors shadow-sm">
+                        <h3 className="text-sm font-bold text-text-base mb-4 uppercase tracking-wide border-b border-border-base/50 pb-2">Personal Info</h3>
+                        <div className="space-y-4">
+                            <div className="flex items-center">
+                                <div className="w-8 h-8 rounded-md bg-bg-hover flex items-center justify-center mr-3 text-text-muted">
+                                    <User className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="text-[11px] font-medium text-text-muted/70 uppercase">Father's Name</p>
+                                    <p className="text-sm font-medium text-text-base">{student.father_name || 'N/A'}</p>
+                                </div>
                             </div>
-                            <div className="flex items-center p-3 rounded-md bg-bg-base ">
-                                <Phone className="w-5 h-5 text-text-muted mr-3" />
-                                <span className="text-text-base ">{student.phone || 'N/A'}</span>
+                            <div className="flex items-center">
+                                <div className="w-8 h-8 rounded-md bg-bg-hover flex items-center justify-center mr-3 text-text-muted">
+                                    <Phone className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="text-[11px] font-medium text-text-muted/70 uppercase">Phone</p>
+                                    <p className="text-sm font-medium text-text-base">{student.phone || 'N/A'}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="w-8 h-8 rounded-md bg-bg-hover flex items-center justify-center mr-3 text-text-muted">
+                                    <Calendar className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="text-[11px] font-medium text-text-muted/70 uppercase">Date of Birth</p>
+                                    <p className="text-sm font-medium text-text-base">{formatDate(student.dob)}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="w-8 h-8 rounded-md bg-bg-hover flex items-center justify-center mr-3 text-text-muted">
+                                    <User className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="text-[11px] font-medium text-text-muted/70 uppercase">Gender</p>
+                                    <p className="text-sm font-medium text-text-base">{student.gender || 'N/A'}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="w-8 h-8 rounded-md bg-bg-hover flex items-center justify-center mr-3 text-text-muted">
+                                    <MapPin className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="text-[11px] font-medium text-text-muted/70 uppercase">Address</p>
+                                    <p className="text-sm font-medium text-text-base">{student.address || 'N/A'}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="w-8 h-8 rounded-md bg-bg-hover flex items-center justify-center mr-3 text-text-muted">
+                                    <Clock className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <p className="text-[11px] font-medium text-text-muted/70 uppercase">Joined</p>
+                                    <p className="text-sm font-medium text-text-base">{formatDate(student.created_at)}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Progress and Activity */}
+                {/* Batches and Exams */}
                 <div className="lg:col-span-2 space-y-6">
-
-                    {/* Courses */}
-                    <div className="bg-bg-card rounded-md shadow-sm border border-border-base p-6 transition-colors">
-                        <h3 className="text-lg font-bold text-text-base mb-4 flex items-center">
-                            <BookOpen className="w-5 h-5 mr-2 text-primary" />
-                            Enrolled Courses
-                        </h3>
-
-                        <div className="space-y-4">
-                            {student.courses && student.courses.length > 0 ? student.courses.map(course => (
-                                <div key={course.id} className="border border-border-base p-4 rounded-md">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h4 className="font-bold text-text-base ">{course.name}</h4>
-                                        <span className="text-sm font-semibold text-primary ">{course.progress}%</span>
-                                    </div>
-                                    <div className="w-full bg-bg-hover rounded-full h-2">
-                                        <div className="bg-primary h-2 rounded-full" style={{ width: `${course.progress}%` }}></div>
-                                    </div>
-                                </div>
-                            )) : (
-                                <p className="text-text-muted ">No courses enrolled.</p>
-                            )}
+                    
+                    {/* Enrolled Batches */}
+                    <div className="bg-bg-card rounded-md border border-border-base p-6 transition-colors shadow-sm">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-bold text-text-base flex items-center">
+                                <BookOpen className="w-5 h-5 mr-2 text-primary" />
+                                Enrolled Batches
+                            </h3>
+                            <CustomButton onPressed={() => setIsModalOpen(true)} icon={Plus} className="py-1.5 px-3 text-sm whitespace-nowrap">
+                                Enroll
+                            </CustomButton>
                         </div>
+
+                        {(!student.batches || student.batches.length === 0) ? (
+                            <div className="p-8 text-center bg-bg-base rounded-md border border-border-base/50">
+                                <p className="text-sm text-text-muted">No batches enrolled yet.</p>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="bg-bg-base border-b border-border-base">
+                                        <tr>
+                                            <th className="px-4 py-3 font-semibold text-text-base">Batch Name</th>
+                                            <th className="px-4 py-3 font-semibold text-text-base">Course</th>
+                                            <th className="px-4 py-3 font-semibold text-text-base">Timeline</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {student.batches.map((batch, index) => (
+                                            <tr key={batch.id} className="border-b border-border-base/50 hover:bg-bg-hover transition-colors last:border-0">
+                                                <td className="px-4 py-3 font-medium text-text-base whitespace-nowrap">{batch.name}</td>
+                                                <td className="px-4 py-3 text-text-muted whitespace-nowrap">{batch.course?.name || '-'}</td>
+                                                <td className="px-4 py-3 text-text-muted whitespace-nowrap text-xs">
+                                                    {formatDate(batch.start_date)} to {formatDate(batch.end_date)}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </div>
 
                     {/* Recent Exams */}
-                    <div className="bg-bg-card rounded-md shadow-sm border border-border-base p-6 transition-colors">
+                    <div className="bg-bg-card rounded-md border border-border-base p-6 transition-colors shadow-sm">
                         <h3 className="text-lg font-bold text-text-base mb-4 flex items-center">
                             <Award className="w-5 h-5 mr-2 text-primary" />
-                            Recent Exam Performances
+                            Recent Exams
                         </h3>
 
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm">
-                                <thead>
-                                    <tr className="border-b border-border-base text-text-muted uppercase tracking-wider">
-                                        <th className="pb-3 font-semibold">Exam Title</th>
-                                        <th className="pb-3 font-semibold">Date</th>
-                                        <th className="pb-3 font-semibold text-right">Score</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {student.recent_exams && student.recent_exams.length > 0 ? student.recent_exams.map(exam => {
-                                        const percentage = Math.round((exam.score / exam.total) * 100);
-                                        return (
-                                            <tr key={exam.id} className="border-b border-border-base last:border-0">
-                                                <td className="py-4 font-medium text-text-base ">
-                                                    <Link href={`/teacher/exams/${exam.id}/student/${student.id}`} className="hover:text-primary transition-colors">
-                                                        {exam.title}
+                        {(!student.exam_results || student.exam_results.length === 0) ? (
+                            <div className="p-8 text-center bg-bg-base rounded-md border border-border-base/50">
+                                <p className="text-sm text-text-muted">No exams taken yet.</p>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="bg-bg-base border-b border-border-base">
+                                        <tr>
+                                            <th className="px-4 py-3 font-semibold text-text-base">Exam Title</th>
+                                            <th className="px-4 py-3 font-semibold text-text-base">Attempted On</th>
+                                            <th className="px-4 py-3 font-semibold text-text-base text-right">Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {student.exam_results.map((result) => (
+                                            <tr key={result.id} className="border-b border-border-base/50 hover:bg-bg-hover transition-colors last:border-0">
+                                                <td className="px-4 py-3 font-medium text-text-base">
+                                                    <Link href={`/teacher/exams/${result.mcq_paper_id}/student/${student.id}`} className="hover:text-primary transition-colors">
+                                                        {result.mcq_paper?.title || 'Unknown Exam'}
                                                     </Link>
                                                 </td>
-                                                <td className="py-4 text-text-muted ">
-                                                    <div className="flex items-center">
-                                                        <Clock className="w-4 h-4 mr-1" />
-                                                        {new Date(exam.date).toLocaleDateString()}
-                                                    </div>
+                                                <td className="px-4 py-3 text-text-muted text-xs">
+                                                    {formatDate(result.created_at)}
                                                 </td>
-                                                <td className="py-4 text-right font-bold text-text-base ">
-                                                    <span className={`px-2.5 py-1 rounded-md text-sm ${percentage >= 75 ? 'bg-primary-light text-primary-hover ' : percentage >= 50 ? 'bg-primary-light text-primary-hover ' : 'bg-danger-light text-danger-text '}`}>
-                                                        {exam.score}/{exam.total} ({percentage}%)
+                                                <td className="px-4 py-3 text-right font-bold">
+                                                    <span className={`px-2 py-1 rounded-md text-xs ${result.percentage >= 75 ? 'bg-primary-light text-primary-hover' : result.percentage >= 50 ? 'bg-primary-light text-primary-hover' : 'bg-danger-light text-danger-text'}`}>
+                                                        {result.score} / {result.total_questions} ({result.percentage}%)
                                                     </span>
                                                 </td>
                                             </tr>
-                                        );
-                                    }) : (
-                                        <tr>
-                                            <td colSpan="3" className="py-4 text-center text-text-muted ">No recent exams found.</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </div>
 
                 </div>
             </div>
+
+            {/* Enroll Modal */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-bg-card rounded-md border border-border-base w-full max-w-sm overflow-hidden shadow-xl animate-in fade-in zoom-in-95 duration-200">
+                        <div className="flex items-center justify-between p-4 border-b border-border-base/50">
+                            <h3 className="text-lg font-bold text-text-base">Enroll in Batch</h3>
+                            <button onClick={() => setIsModalOpen(false)} className="p-1 text-text-muted hover:text-text-base hover:bg-bg-hover rounded-md transition-colors">
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                        
+                        <div className="p-4 space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-text-base mb-1.5 flex items-center">
+                                    <BookOpen className="w-4 h-4 mr-1 text-text-muted" />
+                                    Select Batch
+                                </label>
+                                <select
+                                    value={selectedBatchId}
+                                    onChange={(e) => setSelectedBatchId(e.target.value)}
+                                    className="w-full px-3 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none text-sm"
+                                >
+                                    <option value="">-- Choose a batch --</option>
+                                    {allBatches.map(b => (
+                                        <option key={b.id} value={b.id}>{b.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            
+                            <div className="flex justify-end gap-2 mt-4">
+                                <button
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="px-4 py-2 rounded-md border border-border-base hover:bg-bg-hover text-text-base text-sm font-semibold transition-colors"
+                                    disabled={isSubmitting}
+                                >
+                                    Cancel
+                                </button>
+                                <CustomButton 
+                                    onPressed={attachBatch} 
+                                    isLoading={isSubmitting}
+                                    className="px-4 py-2 font-semibold text-sm"
+                                >
+                                    Enroll
+                                </CustomButton>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </TeacherLayout>
     );
 }
