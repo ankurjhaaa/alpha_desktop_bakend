@@ -39,6 +39,10 @@ class McqQuestionController extends Controller
             'is_active' => 'boolean',
         ]);
 
+        if (\App\Models\ExamResult::where('mcq_paper_id', $validated['mcq_paper_id'])->exists()) {
+            return response()->json(['message' => 'Cannot add question because one or more students have already submitted this exam.'], 403);
+        }
+
         $question = McqQuestion::create($validated);
         return response()->json($question, 201);
     }
@@ -46,6 +50,10 @@ class McqQuestionController extends Controller
     public function update(Request $request, $id)
     {
         $question = McqQuestion::findOrFail($id);
+
+        if (\App\Models\ExamResult::where('mcq_paper_id', $question->mcq_paper_id)->exists()) {
+            return response()->json(['message' => 'Cannot edit this question because one or more students have already submitted this exam.'], 403);
+        }
 
         $validated = $request->validate([
             'mcq_paper_id' => 'sometimes|required|exists:mcq_papers,id',
@@ -65,6 +73,11 @@ class McqQuestionController extends Controller
     public function destroy($id)
     {
         $question = McqQuestion::findOrFail($id);
+
+        if (\App\Models\ExamResult::where('mcq_paper_id', $question->mcq_paper_id)->exists()) {
+            return response()->json(['message' => 'Cannot delete this question because one or more students have already submitted this exam.'], 403);
+        }
+
         $question->delete();
         return response()->json(null, 204);
     }
@@ -82,6 +95,14 @@ class McqQuestionController extends Controller
             'questions.*.correct_option' => 'required|in:a,b,c,d,A,B,C,D',
             'questions.*.is_active' => 'boolean',
         ]);
+
+        // Assuming all questions in a bulk request belong to the same paper, we just check the first one
+        if (count($validated['questions']) > 0) {
+            $paperId = $validated['questions'][0]['mcq_paper_id'];
+            if (\App\Models\ExamResult::where('mcq_paper_id', $paperId)->exists()) {
+                return response()->json(['message' => 'Cannot add questions because one or more students have already submitted this exam.'], 403);
+            }
+        }
 
         $inserted = [];
         foreach ($validated['questions'] as $qData) {

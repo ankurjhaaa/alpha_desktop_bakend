@@ -63,6 +63,10 @@ class McqPaperController extends Controller
     {
         $paper = McqPaper::findOrFail($id);
 
+        if (\App\Models\ExamResult::where('mcq_paper_id', $id)->exists()) {
+            return response()->json(['message' => 'Cannot edit this paper because one or more students have already submitted their exam.'], 403);
+        }
+
         $validated = $request->validate([
             'batch_id' => 'required|exists:batches,id',
             'topic_id' => 'required|exists:topics,id',
@@ -98,6 +102,10 @@ class McqPaperController extends Controller
 
         if (!$course_id) {
             return response()->json(['message' => 'No course selected or available.'], 400);
+        }
+
+        if (\App\Models\ExamResult::where('mcq_paper_id', $id)->exists()) {
+            return response()->json(['message' => 'Cannot import questions because one or more students have already submitted their exam.'], 403);
         }
 
         // Fetch questions from bank
@@ -152,6 +160,11 @@ class McqPaperController extends Controller
     public function destroy($id)
     {
         $paper = McqPaper::findOrFail($id);
+        
+        if (\App\Models\ExamResult::where('mcq_paper_id', $id)->exists()) {
+            return response()->json(['message' => 'Cannot delete this paper because one or more students have already submitted their exam.'], 403);
+        }
+
         $paper->delete();
         return response()->json(null, 204);
     }

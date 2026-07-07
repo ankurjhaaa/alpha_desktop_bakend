@@ -12,7 +12,6 @@ class QuestionBank extends Model
         'question_text',
         'options',
         'correct_answer',
-        'marks',
         'explanation',
     ];
 

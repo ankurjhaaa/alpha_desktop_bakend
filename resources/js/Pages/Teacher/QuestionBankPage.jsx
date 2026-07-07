@@ -32,7 +32,6 @@ export default function QuestionBankPage() {
         option_c: '',
         option_d: '',
         correct_answer: 'A',
-        marks: 1,
         explanation: ''
     });
     const [jsonImportText, setJsonImportText] = useState('');
@@ -128,13 +127,12 @@ export default function QuestionBankPage() {
                 option_b: options[1] || '',
                 option_c: options[2] || '',
                 option_d: options[3] || '',
-                correct_answer: correctOpt,
-                marks: question.marks || 1,
+                correct_answer: question.correct_answer || 'A',
                 explanation: question.explanation || ''
             });
         } else {
             setFormData({
-                question_text: '', option_a: '', option_b: '', option_c: '', option_d: '', correct_answer: 'A', marks: 1, explanation: ''
+                question_text: '', option_a: '', option_b: '', option_c: '', option_d: '', correct_answer: 'A', explanation: ''
             });
         }
         setIsModalOpen(true);
@@ -159,8 +157,7 @@ export default function QuestionBankPage() {
                 question_text: formData.question_text,
                 options: [formData.option_a, formData.option_b, formData.option_c, formData.option_d],
                 correct_answer: formData.correct_answer,
-                marks: formData.marks,
-                explanation: formData.explanation
+                explanation: formData.explanation,
             };
 
             const config = {
@@ -340,11 +337,13 @@ export default function QuestionBankPage() {
                                                     <span className="font-bold text-primary mr-2">Q{index + 1}.</span>
                                                     <h3 className="text-text-base font-medium">{q.question_text}</h3>
                                                 </div>
+                                                <div className="flex items-center space-x-2 mt-3">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-600">
+                                                        Correct: {q.correct_answer}
+                                                    </span>
+                                                </div>
                                             </div>
                                             <div className="flex items-center space-x-2 ml-4">
-                                                <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-md font-medium whitespace-nowrap hidden sm:inline-block">
-                                                    {q.marks || 1} Marks
-                                                </span>
                                                 <button onClick={() => openModal(q)} className="p-1.5 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Question">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
@@ -437,13 +436,6 @@ export default function QuestionBankPage() {
                                 <option value="D">Option D</option>
                             </select>
                         </div>
-                        <CustomTextField
-                            label="Marks"
-                            type="number"
-                            value={formData.marks}
-                            onChange={(e) => setFormData({ ...formData, marks: e.target.value })}
-                            required
-                        />
                     </div>
 
                     <div>

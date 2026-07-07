@@ -305,7 +305,6 @@ export default function McqQuestionManager({ paperId }) {
                 option_d: question.option_d || '',
                 correct_option: question.correct_option || 'A',
             });
-            setImagePreview(question.image_url || null);
         } else {
             setFormData({
                 question_text: '', option_a: '', option_b: '', option_c: '', option_d: '', correct_option: 'A'
@@ -417,9 +416,6 @@ export default function McqQuestionManager({ paperId }) {
                                             </div>
                                         </div>
                                         <div className="flex items-center space-x-2 ml-4">
-                                            <span className="px-2 py-1 bg-bg-hover text-text-muted text-xs rounded-md font-medium">
-                                                {q.marks} Mark{q.marks !== 1 && 's'}
-                                            </span>
                                             <button onClick={() => openModal(q)} className="p-1.5 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Question">
                                                 <Edit2 className="w-4 h-4" />
                                             </button>

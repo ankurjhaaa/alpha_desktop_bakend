@@ -30,7 +30,6 @@ class QuestionBankController extends Controller
             'questions.*.question' => 'required|string',
             'questions.*.options' => 'required|array',
             'questions.*.correct_answer' => 'required|string',
-            'questions.*.marks' => 'nullable|integer',
             'questions.*.explanation' => 'nullable|string',
         ]);
 
@@ -43,7 +42,6 @@ class QuestionBankController extends Controller
                 'question_text' => $q['question'],
                 'options' => $q['options'],
                 'correct_answer' => $q['correct_answer'],
-                'marks' => $q['marks'] ?? 1,
                 'explanation' => $q['explanation'] ?? null,
             ]);
             $importedCount++;
@@ -60,7 +58,6 @@ class QuestionBankController extends Controller
             'question_text' => 'required|string',
             'options' => 'required|array',
             'correct_answer' => 'required|string',
-            'marks' => 'nullable|integer',
             'explanation' => 'nullable|string',
         ]);
 
@@ -70,7 +67,6 @@ class QuestionBankController extends Controller
             'question_text' => $validated['question_text'],
             'options' => $validated['options'],
             'correct_answer' => $validated['correct_answer'],
-            'marks' => $validated['marks'] ?? 1,
             'explanation' => $validated['explanation'] ?? null,
         ]);
 
@@ -85,7 +81,6 @@ class QuestionBankController extends Controller
             'question_text' => 'sometimes|required|string',
             'options' => 'sometimes|required|array',
             'correct_answer' => 'sometimes|required|string',
-            'marks' => 'nullable|integer',
             'explanation' => 'nullable|string',
         ]);
 
