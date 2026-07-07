@@ -172,6 +172,9 @@ export default function BatchManager() {
                                 <th className="px-6 py-4 font-semibold">ID</th>
                                 <th className="px-6 py-4 font-semibold">Batch Name</th>
                                 <th className="px-6 py-4 font-semibold">Course</th>
+                                <th className="px-6 py-4 font-semibold">Students</th>
+                                <th className="px-6 py-4 font-semibold">Exams</th>
+                                <th className="px-6 py-4 font-semibold">Materials</th>
                                 <th className="px-6 py-4 font-semibold">Schedule</th>
                                 <th className="px-6 py-4 font-semibold">Duration</th>
                                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
@@ -180,13 +183,13 @@ export default function BatchManager() {
                         <tbody>
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan="6" className="px-6 py-12 text-center">
+                                    <td colSpan="9" className="px-6 py-12 text-center">
                                         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                                     </td>
                                 </tr>
                             ) : batches.length === 0 ? (
                                 <tr>
-                                    <td colSpan="6" className="px-6 py-12 text-center text-text-muted">No batches found.</td>
+                                    <td colSpan="9" className="px-6 py-12 text-center text-text-muted">No batches found.</td>
                                 </tr>
                             ) : (
                                 batches.map((batch) => (
@@ -200,6 +203,39 @@ export default function BatchManager() {
                                                 {batch.course?.name || 'Unknown'}
                                             </span>
                                         </td>
+                                        <td className="px-6 py-4">
+                                            <Link 
+                                                href={`/teacher/students?batch_id=${batch.id}`} 
+                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors whitespace-nowrap"
+                                            >
+                                                <span className="font-medium text-sm">{batch.students_count || 0} Students</span>
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </Link>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <Link 
+                                                href={`/teacher/mcq-papers?batch_id=${batch.id}`} 
+                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-colors whitespace-nowrap"
+                                            >
+                                                <span className="font-medium text-sm">{batch.mcq_papers_count || 0} Exams</span>
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </Link>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <Link 
+                                                href={`/teacher/materials?batch_id=${batch.id}`} 
+                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-purple-500/10 text-purple-600 hover:bg-purple-500/20 transition-colors whitespace-nowrap"
+                                            >
+                                                <span className="font-medium text-sm">{batch.materials_count || 0} Materials</span>
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </Link>
+                                        </td>
                                         <td className="px-6 py-4 text-text-base ">{batch.schedule_time || '-'}</td>
                                         <td className="px-6 py-4 text-text-muted ">
                                             <div className="text-xs">
@@ -209,16 +245,6 @@ export default function BatchManager() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-1.5">
-                                                <Link href={`/teacher/students?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View Students">
-                                                    <Users className="w-4 h-4" />
-                                                </Link>
-                                                <Link href={`/teacher/mcq-papers?batch_id=${batch.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View MCQ Papers">
-                                                    <FileQuestion className="w-4 h-4" />
-                                                </Link>
-                                                <Link href={`/teacher/materials?course_id=${batch.course_id || (batch.course?.id)}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-md transition-colors" title="View Materials">
-                                                    <BookOpen className="w-4 h-4" />
-                                                </Link>
-                                                <div className="w-px h-4 bg-bg-hover mx-1"></div>
                                                 <button onClick={() => openModal(batch)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Batch">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>

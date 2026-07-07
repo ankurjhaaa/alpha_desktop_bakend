@@ -22,4 +22,9 @@ class Batch extends Model
     {
         return $this->hasMany(McqPaper::class);
     }
+
+    public function materials()
+    {
+        return $this->hasMany(Material::class);
+    }
 }

@@ -9,19 +9,17 @@ import axios from 'axios';
 
 export default function MaterialManagerPage() {
     const [materials, setMaterials] = useState([]);
-    const [courses, setCourses] = useState([]);
-    const [topics, setTopics] = useState([]);
+    const [batches, setBatches] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     // Filters
     const [searchQuery, setSearchQuery] = useState('');
-    const [courseFilter, setCourseFilter] = useState(() => {
+    const [batchFilter, setBatchFilter] = useState(() => {
         if (typeof window !== 'undefined') {
-            return new URLSearchParams(window.location.search).get('course_id') || '';
+            return new URLSearchParams(window.location.search).get('batch_id') || '';
         }
         return '';
     });
-    const [topicFilter, setTopicFilter] = useState('');
 
     // Modals state
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,10 +31,7 @@ export default function MaterialManagerPage() {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        course_id: '',
-        topic_id: '',
-        material_type: 'pdf',
-        url: ''
+        batch_id: '',
     });
     const [file, setFile] = useState(null);
 
@@ -48,13 +43,12 @@ export default function MaterialManagerPage() {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
 
-            const coursesRes = await axios.get('/api/courses', config);
-            setCourses(coursesRes.data);
+            const batchesRes = await axios.get('/api/batches', config);
+            setBatches(batchesRes.data);
 
             let url = '/api/materials?';
             if (searchQuery) url += `search=${encodeURIComponent(searchQuery)}&`;
-            if (courseFilter) url += `course_id=${courseFilter}&`;
-            if (topicFilter) url += `topic_id=${topicFilter}&`;
+            if (batchFilter) url += `batch_id=${batchFilter}&`;
 
             const res = await axios.get(url, config);
             setMaterials(res.data);
@@ -65,38 +59,11 @@ export default function MaterialManagerPage() {
         }
     };
 
-    const fetchTopics = async (courseId) => {
-        if (!courseId) {
-            setTopics([]);
-            return;
-        }
-        const token = localStorage.getItem('auth_token');
-        try {
-            const res = await axios.get(`/api/topics?course_id=${courseId}`, { headers: { Authorization: `Bearer ${token}` } });
-            setTopics(res.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     useEffect(() => {
         const debounce = setTimeout(() => fetchData(), 500);
         return () => clearTimeout(debounce);
-    }, [searchQuery, courseFilter, topicFilter]);
+    }, [searchQuery, batchFilter]);
 
-    useEffect(() => {
-        if (courseFilter) fetchTopics(courseFilter);
-        else setTopics([]);
-    }, [courseFilter]);
-
-    const handleCourseChangeForm = async (courseId) => {
-        setFormData({ ...formData, course_id: courseId, topic_id: '' });
-        if (courseId) {
-            fetchTopics(courseId);
-        } else {
-            setTopics([]);
-        }
-    };
 
     const openModal = async (material = null) => {
         setEditingMaterial(material);
@@ -106,22 +73,13 @@ export default function MaterialManagerPage() {
             setFormData({
                 title: material.title || '',
                 description: material.description || '',
-                course_id: material.course_id || '',
-                topic_id: material.topic_id || '',
-                material_type: material.material_type || 'pdf',
-                url: material.url || ''
+                batch_id: material.batch_id || '',
             });
-            if (material.course_id) {
-                await fetchTopics(material.course_id);
-            }
         } else {
-            const initialCourse = courses.length > 0 ? courses[0].id : '';
+            const initialBatch = batches.length > 0 ? batches[0].id : '';
             setFormData({
-                title: '', description: '', course_id: initialCourse, topic_id: '', material_type: 'pdf', url: ''
+                title: '', description: '', batch_id: initialBatch,
             });
-            if (initialCourse) {
-                await fetchTopics(initialCourse);
-            }
         }
         setIsModalOpen(true);
     };
@@ -134,9 +92,8 @@ export default function MaterialManagerPage() {
 
     const handleSave = async (e) => {
         e.preventDefault();
-        if (!formData.title || !formData.course_id) return alert('Title and Course are required');
-        if (formData.material_type === 'video' && !formData.url) return alert('Video URL is required');
-        if (formData.material_type !== 'video' && !file && !editingMaterial && !formData.url) return alert('File or URL is required');
+        if (!formData.title || !formData.batch_id) return alert('Title and Batch are required');
+        if (!file && !editingMaterial) return alert('File is required');
 
         const token = localStorage.getItem('auth_token');
 
@@ -201,26 +158,14 @@ export default function MaterialManagerPage() {
                                 <Filter className="w-4 h-4 text-text-muted" />
                             </div>
                             <select
-                                value={courseFilter}
-                                onChange={(e) => { setCourseFilter(e.target.value); setTopicFilter(''); }}
+                                value={batchFilter}
+                                onChange={(e) => setBatchFilter(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
                             >
-                                <option value="">All Courses</option>
-                                {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                <option value="">All Batches</option>
+                                {batches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                             </select>
                         </div>
-                        {courseFilter && (
-                            <div className="relative max-w-xs">
-                                <select
-                                    value={topicFilter}
-                                    onChange={(e) => setTopicFilter(e.target.value)}
-                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
-                                >
-                                    <option value="">All Topics</option>
-                                    {topics.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-                                </select>
-                            </div>
-                        )}
                         <div className="relative flex-1 max-w-md">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                             <input
@@ -242,8 +187,7 @@ export default function MaterialManagerPage() {
                         <thead className="bg-bg-base text-text-base border-b border-border-base ">
                             <tr>
                                 <th className="px-6 py-4 font-semibold">Title</th>
-                                <th className="px-6 py-4 font-semibold">Course & Topic</th>
-                                <th className="px-6 py-4 font-semibold">Type</th>
+                                <th className="px-6 py-4 font-semibold">Batch</th>
                                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
                             </tr>
                         </thead>
@@ -274,20 +218,14 @@ export default function MaterialManagerPage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col text-sm">
-                                                <span className="font-medium">{item.course?.name}</span>
-                                                {item.topic && <span className="text-xs text-text-muted">{item.topic.title}</span>}
+                                                <span className="font-medium">{item.batch?.name || '-'}</span>
                                             </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-bg-hover text-text-base uppercase">
-                                                {item.material_type}
-                                            </span>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
-                                                {item.url && (
-                                                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View/Download">
-                                                        {item.material_type === 'video' ? <ExternalLink className="w-4 h-4" /> : <Download className="w-4 h-4" />}
+                                                {item.file_url && (
+                                                    <a href={item.file_url} target="_blank" rel="noopener noreferrer" className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View/Download">
+                                                        <ExternalLink className="w-4 h-4" />
                                                     </a>
                                                 )}
                                                 <button onClick={() => openModal(item)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Material">
@@ -310,30 +248,17 @@ export default function MaterialManagerPage() {
             <Modal isOpen={isModalOpen} onClose={closeModal} title={editingMaterial ? "Edit Material" : "Add New Material"} maxWidth="2xl">
                 <form onSubmit={handleSave} className="space-y-5">
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-text-base mb-1.5">Select Course</label>
-                            <select
-                                value={formData.course_id}
-                                onChange={(e) => handleCourseChangeForm(e.target.value)}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
-                                required
-                            >
-                                <option value="">Select Course</option>
-                                {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-text-base mb-1.5">Select Topic (Optional)</label>
-                            <select
-                                value={formData.topic_id}
-                                onChange={(e) => setFormData({ ...formData, topic_id: e.target.value })}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
-                            >
-                                <option value="">No Topic</option>
-                                {topics.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-                            </select>
-                        </div>
+                    <div>
+                        <label className="block text-sm font-medium text-text-base mb-1.5">Select Batch</label>
+                        <select
+                            value={formData.batch_id}
+                            onChange={(e) => setFormData({ ...formData, batch_id: e.target.value })}
+                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                            required
+                        >
+                            <option value="">Select Batch</option>
+                            {batches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                        </select>
                     </div>
 
                     <CustomTextField
@@ -355,38 +280,13 @@ export default function MaterialManagerPage() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-text-base mb-1.5">Material Type</label>
-                        <select
-                            value={formData.material_type}
-                            onChange={(e) => setFormData({ ...formData, material_type: e.target.value })}
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
-                            required
-                        >
-                            <option value="pdf">PDF Document</option>
-                            <option value="video">Video (YouTube/Link)</option>
-                            <option value="link">External Link</option>
-                            <option value="doc">Word/Other Document</option>
-                        </select>
-                    </div>
-
-                    {formData.material_type === 'video' || formData.material_type === 'link' ? (
-                        <CustomTextField
-                            label="URL / Link"
-                            placeholder="https://..."
-                            value={formData.url}
-                            onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                            required
+                        <label className="block text-sm font-medium text-text-base mb-1.5">Upload File {editingMaterial && '(Leave empty to keep existing)'}</label>
+                        <input
+                            type="file"
+                            onChange={(e) => setFile(e.target.files[0])}
+                            className="w-full px-3 py-1.5 text-sm bg-bg-base border border-border-base rounded-md file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-primary-hover hover:file:bg-primary-light-hover"
                         />
-                    ) : (
-                        <div>
-                            <label className="block text-sm font-medium text-text-base mb-1.5">Upload File {editingMaterial && '(Leave empty to keep existing)'}</label>
-                            <input
-                                type="file"
-                                onChange={(e) => setFile(e.target.files[0])}
-                                className="w-full px-3 py-1.5 text-sm bg-bg-base border border-border-base rounded-md file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-primary-hover hover:file:bg-primary-light-hover"
-                            />
-                        </div>
-                    )}
+                    </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
                         <CustomButton type="button" variant="secondary" onPressed={closeModal}>Cancel</CustomButton>

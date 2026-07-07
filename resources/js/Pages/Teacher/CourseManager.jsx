@@ -174,20 +174,22 @@ export default function CourseManager() {
                                 <th className="px-6 py-4 font-semibold">ID</th>
                                 <th className="px-6 py-4 font-semibold">Course Name</th>
                                 <th className="px-6 py-4 font-semibold">Description</th>
-                                <th className="px-6 py-4 font-semibold">Topics / Chapters</th>
+                                <th className="px-6 py-4 font-semibold">Topics</th>
+                                <th className="px-6 py-4 font-semibold">Batches</th>
+                                <th className="px-6 py-4 font-semibold">Students</th>
                                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan="5" className="px-6 py-12 text-center">
+                                    <td colSpan="7" className="px-6 py-12 text-center">
                                         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                                     </td>
                                 </tr>
                             ) : courses.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="px-6 py-12 text-center text-text-muted">No courses found.</td>
+                                    <td colSpan="7" className="px-6 py-12 text-center text-text-muted">No courses found.</td>
                                 </tr>
                             ) : (
                                 courses.map((course) => (
@@ -201,21 +203,40 @@ export default function CourseManager() {
                                         </td>
                                         <td className="px-6 py-4 max-w-xs truncate" title={course.description}>{course.description || '-'}</td>
                                         <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary-light text-primary-hover ">
-                                                {course.topics?.length || 0} Topics
-                                            </span>
+                                            <button 
+                                                onClick={() => openTopicsModal(course)}
+                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-purple-500/10 text-purple-600 hover:bg-purple-500/20 transition-colors whitespace-nowrap"
+                                            >
+                                                <span className="font-medium text-sm">{course.topics?.length || 0} Topics</span>
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </button>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <Link 
+                                                href={`/teacher/batches?course_id=${course.id}`} 
+                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-colors whitespace-nowrap"
+                                            >
+                                                <span className="font-medium text-sm">{course.batches?.length || 0} Batches</span>
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </Link>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <Link 
+                                                href={`/teacher/students?course_id=${course.id}`} 
+                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors whitespace-nowrap"
+                                            >
+                                                <span className="font-medium text-sm">View Students</span>
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </Link>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
-                                                <Link href={`/teacher/batches?course_id=${course.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View Batches">
-                                                    <Layers className="w-4 h-4" />
-                                                </Link>
-                                                <Link href={`/teacher/students?course_id=${course.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="View Students">
-                                                    <Users className="w-4 h-4" />
-                                                </Link>
-                                                <button onClick={() => openTopicsModal(course)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Manage Topics">
-                                                    <ListTree className="w-4 h-4" />
-                                                </button>
                                                 <button onClick={() => openCourseModal(course)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Course">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>

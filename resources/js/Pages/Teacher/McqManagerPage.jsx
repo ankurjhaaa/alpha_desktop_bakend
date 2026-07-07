@@ -256,6 +256,7 @@ export default function McqManagerPage() {
                             <tr>
                                 <th className="px-6 py-4 font-semibold">Title</th>
                                 <th className="px-6 py-4 font-semibold">Batch</th>
+                                <th className="px-6 py-4 font-semibold">Questions</th>
                                 <th className="px-6 py-4 font-semibold">Schedule</th>
                                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
                             </tr>
@@ -263,13 +264,13 @@ export default function McqManagerPage() {
                         <tbody>
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan="4" className="px-6 py-12 text-center">
+                                    <td colSpan="5" className="px-6 py-12 text-center">
                                         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                                     </td>
                                 </tr>
                             ) : papers.length === 0 ? (
                                 <tr>
-                                    <td colSpan="4" className="px-6 py-12 text-center text-text-muted">No papers found.</td>
+                                    <td colSpan="5" className="px-6 py-12 text-center text-text-muted">No papers found.</td>
                                 </tr>
                             ) : (
                                 papers.map((paper) => (
@@ -295,6 +296,17 @@ export default function McqManagerPage() {
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
+                                            <Link 
+                                                href={`/teacher/mcq-questions/${paper.id}`} 
+                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors whitespace-nowrap"
+                                            >
+                                                <span className="font-medium text-sm">{paper.questions_count || 0} Questions</span>
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </Link>
+                                        </td>
+                                        <td className="px-6 py-4">
                                             <div className="flex flex-col text-xs text-text-muted space-y-1">
                                                 {paper.exam_date && <div>Date: {paper.exam_date}</div>}
                                                 {(paper.start_time || paper.end_time) && (
@@ -308,9 +320,6 @@ export default function McqManagerPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
-                                                <Link href={`/teacher/mcq-questions/${paper.id}`} className="p-2 text-primary hover:bg-emerald-500/10 text-emerald-600 rounded-md transition-colors" title="Manage Questions">
-                                                    <CheckCircle className="w-4 h-4" />
-                                                </Link>
                                                 <button onClick={() => openModal(paper)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Paper">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>

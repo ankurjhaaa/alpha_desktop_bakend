@@ -9,7 +9,7 @@ class BatchController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Batch::with('course');
+        $query = Batch::with('course')->withCount(['students', 'mcqPapers', 'materials']);
         
         if ($request->has('search')) {
             $search = $request->search;

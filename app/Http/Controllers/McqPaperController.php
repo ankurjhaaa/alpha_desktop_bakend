@@ -9,7 +9,7 @@ class McqPaperController extends Controller
 {
     public function index(Request $request)
     {
-        $query = McqPaper::with('batch');
+        $query = McqPaper::with(['batch', 'topic'])->withCount('questions');
         if ($request->has('batch_id')) {
             $query->where('batch_id', $request->batch_id);
         }
