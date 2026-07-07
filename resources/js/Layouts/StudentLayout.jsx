@@ -3,7 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import {
     LayoutDashboard, BookOpen, Trophy, BookText,
     MessageSquare, Info, LogOut, Menu, Bell, Code,
-    Plus, Minus, User, Laptop, Palette
+    Plus, Minus, User, Laptop, Palette, ArrowLeft
 } from 'lucide-react';
 import { cn } from '../Core/utils';
 
@@ -279,6 +279,13 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                     <div className="flex items-center space-x-4">
                         <button className="lg:hidden text-text-muted " onClick={() => setIsSidebarOpen(true)}>
                             <Menu className="w-6 h-6" />
+                        </button>
+                        <button 
+                            onClick={() => window.history.back()} 
+                            className="flex p-2 -ml-2 text-text-muted hover:bg-bg-hover hover:text-text-base rounded-full transition-colors"
+                            title="Go Back"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
                         </button>
                         <h1 className="text-xl font-bold text-text-base truncate">
                             {title}
