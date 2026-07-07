@@ -171,6 +171,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
     }, []);
 
     const userName = typeof window !== 'undefined' ? localStorage.getItem('user_name') || 'Student' : 'Student';
+    const userImage = typeof window !== 'undefined' ? localStorage.getItem('user_profile_image') : null;
     const initial = userName.charAt(0).toUpperCase();
 
     const handleLogout = () => {
@@ -292,12 +293,22 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                         </h1>
                     </div>
                     <div className="flex items-center space-x-4">
-                        <button className="p-2 text-text-muted hover:bg-bg-hover rounded-full transition-colors">
-                            <Bell className="w-6 h-6" />
-                        </button>
-                        <div className="w-10 h-10 rounded-full bg-primary-light-hover flex items-center justify-center text-primary-hover font-bold text-lg">
-                            {initial}
+                        <div className="flex items-center space-x-2 mr-2">
+                            {userImage && userImage !== 'null' && userImage !== 'undefined' ? (
+                                <img src={userImage} alt={userName} className="w-10 h-10 rounded-full border border-border-base object-cover" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+                            ) : null}
+                            <div className={cn("w-10 h-10 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-lg", userImage && userImage !== 'null' && userImage !== 'undefined' ? "hidden" : "flex")}>
+                                {initial}
+                            </div>
+                            <span className="hidden sm:block font-semibold text-text-base">{userName}</span>
                         </div>
+                        <button 
+                            onClick={handleLogout}
+                            className="p-2 text-danger-text hover:bg-danger-light rounded-full transition-colors flex items-center"
+                            title="Logout"
+                        >
+                            <LogOut className="w-5 h-5" />
+                        </button>
                     </div>
                     <div 
                         className="absolute bottom-0 -mb-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"

@@ -26,7 +26,7 @@ export default function AboutUs() {
                             <div className="w-[130px] h-[160px] bg-bg-base rounded-md shadow-md border-2 border-primary/20 overflow-hidden mb-3">
                                 <img src="/assets/images/director.png" alt="Director" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
                             </div>
-                            <h3 className="text-base font-bold text-text-base">[Director Name]</h3>
+                            <h3 className="text-base font-bold text-text-base">Shadman Hussain</h3>
                             <p className="text-sm text-text-muted font-medium">Director, Alpha Graphics</p>
                         </div>
                     </div>
@@ -57,7 +57,7 @@ export default function AboutUs() {
                                 <User className="w-5 h-5 mr-2" /> About the Director
                             </h2>
                             <p className="text-sm text-text-base leading-relaxed font-medium">
-                                Mr. [Director Name], Director of Alpha Graphics, has been instrumental in shaping the institute's vision of delivering quality computer education. Under his leadership, Alpha Graphics has continuously focused on practical learning, skill development, and career-oriented training. His commitment to academic excellence and student success has helped the institute earn the trust of thousands of students over the years.
+                                Mr. Shadman Hussain, Director of Alpha Graphics, has been instrumental in shaping the institute's vision of delivering quality computer education. Under his leadership, Alpha Graphics has continuously focused on practical learning, skill development, and career-oriented training. His commitment to academic excellence and student success has helped the institute earn the trust of thousands of students over the years.
                             </p>
                         </div>
                     </div>
@@ -225,11 +225,11 @@ export default function AboutUs() {
                             Brolytics Technologies specializes in developing modern desktop applications, web applications, mobile applications, ERP systems, and customized software solutions that improve productivity, streamline operations, and enhance user experience.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 pt-4">
-                            <a href="mailto:[Brolytics Email]" className="flex items-center text-primary hover:underline font-medium">
-                                <Mail className="w-4 h-4 mr-2" /> [Brolytics Email]
+                            <a href="mailto:brolyticstechnologies@gmail.com" className="flex items-center text-primary hover:underline font-medium">
+                                <Mail className="w-4 h-4 mr-2" /> brolyticstechnologies@gmail.com
                             </a>
-                            <a href="https://[Brolytics Website URL]" target="_blank" rel="noopener noreferrer" className="flex items-center text-primary hover:underline font-medium">
-                                <Globe className="w-4 h-4 mr-2" /> [Brolytics Website URL]
+                            <a href="https://www.brolyticstechnologies.com" target="_blank" rel="noopener noreferrer" className="flex items-center text-primary hover:underline font-medium">
+                                <Globe className="w-4 h-4 mr-2" /> www.brolyticstechnologies.com
                             </a>
                         </div>
                     </div>

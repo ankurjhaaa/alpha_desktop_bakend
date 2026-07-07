@@ -40,6 +40,7 @@ export default function LoginPage() {
                 localStorage.setItem('user_role', response.data.role);
                 localStorage.setItem('user_name', response.data.user?.name || '');
                 localStorage.setItem('user_email', response.data.user?.email || '');
+                localStorage.setItem('user_profile_image', response.data.user?.profile_image || '');
 
                 if (response.data.role === 'teacher') {
                     router.visit('/teacher');

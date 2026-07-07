@@ -171,6 +171,7 @@ export default function TeacherLayout({ children, title = 'Teacher Dashboard' })
     }, []);
 
     const userName = typeof window !== 'undefined' ? localStorage.getItem('user_name') || 'Teacher' : 'Teacher';
+    const userImage = typeof window !== 'undefined' ? localStorage.getItem('user_profile_image') : null;
     const initial = userName.charAt(0).toUpperCase();
 
     const handleLogout = () => {
@@ -292,13 +293,14 @@ export default function TeacherLayout({ children, title = 'Teacher Dashboard' })
                         </h1>
                     </div>
                     <div className="flex items-center space-x-4">
-                        {/* Settings icon removed */}
-                        <button className="p-2 text-text-muted hover:bg-bg-hover rounded-full transition-colors">
-                            <Bell className="w-6 h-6" />
+                        <button 
+                            onClick={handleLogout}
+                            className="flex items-center space-x-2 px-3 py-2 text-danger-text hover:bg-danger-light rounded-md transition-colors"
+                            title="Logout"
+                        >
+                            <LogOut className="w-5 h-5" />
+                            <span className="font-semibold text-sm">Logout</span>
                         </button>
-                        <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-lg">
-                            {initial}
-                        </div>
                     </div>
                     <div 
                         className="absolute bottom-0 -mb-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"
