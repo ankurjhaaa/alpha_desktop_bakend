@@ -32,19 +32,25 @@ class McqPaperController extends Controller
         return response()->json($query->get());
     }
 
+    public function show($id)
+    {
+        $paper = McqPaper::with('batch')->findOrFail($id);
+        return response()->json($paper);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'batch_id' => 'required|exists:batches,id',
-            'topic_id' => 'nullable|exists:topics,id',
+            'topic_id' => 'required|exists:topics,id',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'is_active' => 'boolean',
-            'exam_date' => 'nullable|date',
-            'exam_password' => 'nullable|string|max:255',
-            'start_time' => 'nullable|date_format:Y-m-d H:i:s',
-            'end_time' => 'nullable|date_format:Y-m-d H:i:s',
-            'invigilators' => 'nullable|string',
+            'exam_date' => 'required|date',
+            'exam_password' => 'required|string|max:255',
+            'start_time' => 'required|date_format:Y-m-d H:i:s',
+            'end_time' => 'required|date_format:Y-m-d H:i:s|after:start_time',
+            'invigilators' => 'required|string',
             'selected_student_ids' => 'nullable|array',
             'selected_student_ids.*' => 'integer',
         ]);
@@ -58,16 +64,16 @@ class McqPaperController extends Controller
         $paper = McqPaper::findOrFail($id);
 
         $validated = $request->validate([
-            'batch_id' => 'sometimes|required|exists:batches,id',
-            'topic_id' => 'nullable|exists:topics,id',
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
+            'batch_id' => 'required|exists:batches,id',
+            'topic_id' => 'required|exists:topics,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
             'is_active' => 'boolean',
-            'exam_date' => 'nullable|date',
-            'exam_password' => 'nullable|string|max:255',
-            'start_time' => 'nullable|date_format:Y-m-d H:i:s',
-            'end_time' => 'nullable|date_format:Y-m-d H:i:s',
-            'invigilators' => 'nullable|string',
+            'exam_date' => 'required|date',
+            'exam_password' => 'required|string|max:255',
+            'start_time' => 'required|date_format:Y-m-d H:i:s',
+            'end_time' => 'required|date_format:Y-m-d H:i:s|after:start_time',
+            'invigilators' => 'required|string',
             'selected_student_ids' => 'nullable|array',
             'selected_student_ids.*' => 'integer',
         ]);
@@ -83,24 +89,30 @@ class McqPaperController extends Controller
         $request->validate([
             'start_number' => 'required|integer|min:1',
             'end_number' => 'required|integer|gte:start_number',
+            'course_id' => 'nullable|integer',
+            'topic_id' => 'nullable|integer',
         ]);
 
-        if (!$paper->topic_id) {
-            return response()->json(['message' => 'This exam does not have a topic assigned. Please assign a topic first.'], 400);
+        $course_id = $request->course_id ?? $paper->batch->course_id;
+        $topic_id = $request->topic_id ?? $paper->topic_id;
+
+        if (!$course_id) {
+            return response()->json(['message' => 'No course selected or available.'], 400);
         }
 
-        $course_id = $paper->batch->course_id;
-        
         // Fetch questions from bank
-        $questions = \App\Models\QuestionBank::where('course_id', $course_id)
-            ->where('topic_id', $paper->topic_id)
-            ->orderBy('id', 'asc') // Assuming order is by ID
+        $query = \App\Models\QuestionBank::where('course_id', $course_id);
+        if ($topic_id) {
+            $query->where('topic_id', $topic_id);
+        }
+
+        $questions = $query->orderBy('id', 'asc') // Assuming order is by ID
             ->skip($request->start_number - 1)
             ->take($request->end_number - $request->start_number + 1)
             ->get();
 
         if ($questions->isEmpty()) {
-            return response()->json(['message' => 'No questions found in the specified range.'], 404);
+            return response()->json(['message' => 'No questions found in the specified range for this course/topic.'], 404);
         }
 
         $importedCount = 0;

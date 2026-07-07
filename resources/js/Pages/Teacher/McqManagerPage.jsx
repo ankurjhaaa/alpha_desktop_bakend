@@ -346,13 +346,14 @@ export default function McqManagerPage() {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-text-base mb-1.5">Select Topic (Optional)</label>
+                            <label className="block text-sm font-medium text-text-base mb-1.5">Select Topic</label>
                             <select
                                 value={formData.topic_id}
                                 onChange={(e) => setFormData({ ...formData, topic_id: e.target.value })}
                                 className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
+                                required
                             >
-                                <option value="">No Topic</option>
+                                <option value="">Select Topic</option>
                                 {topics.map(t => (
                                     <option key={t.id} value={t.id}>{t.title}</option>
                                 ))}
@@ -368,45 +369,56 @@ export default function McqManagerPage() {
                         required
                     />
 
+                    <CustomTextField
+                        label="Invigilators (Comma separated)"
+                        placeholder="e.g. John Doe, Jane Smith"
+                        value={formData.invigilators}
+                        onChange={(e) => setFormData({ ...formData, invigilators: e.target.value })}
+                        required
+                    />
+
                     <div>
-                        <label className="block text-sm font-medium text-text-base mb-1.5">Description (Optional)</label>
+                        <label className="block text-sm font-medium text-text-base mb-1.5">Description</label>
                         <textarea
                             className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
                             rows="3"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            required
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <CustomTextField
-                            label="Exam Date (Optional)"
+                            label="Exam Date"
                             type="date"
                             value={formData.exam_date}
                             onChange={(e) => setFormData({ ...formData, exam_date: e.target.value, start_time: '', end_time: '' })}
+                            required
                         />
                         <CustomTextField
-                            label="Exam Password (Optional)"
+                            label="Exam Password"
                             placeholder="Enter password"
                             value={formData.exam_password}
                             onChange={(e) => setFormData({ ...formData, exam_password: e.target.value })}
+                            required
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <CustomTextField
-                            label="Start Time (Optional)"
+                            label="Start Time"
                             type="time"
                             value={formData.start_time}
                             onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                            disabled={!formData.exam_date}
+                            required
                         />
                         <CustomTextField
-                            label="End Time (Optional)"
+                            label="End Time"
                             type="time"
                             value={formData.end_time}
                             onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                            disabled={!formData.exam_date}
+                            required
                         />
                     </div>
 
