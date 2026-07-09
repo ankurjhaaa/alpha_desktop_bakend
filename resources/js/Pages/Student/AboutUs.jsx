@@ -224,13 +224,18 @@ export default function AboutUs() {
                         <p>
                             Brolytics Technologies specializes in developing modern desktop applications, web applications, mobile applications, ERP systems, and customized software solutions that improve productivity, streamline operations, and enhance user experience.
                         </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 pt-4">
-                            <a href="mailto:brolyticstechnologies@gmail.com" className="flex items-center text-primary hover:underline font-medium">
-                                <Mail className="w-4 h-4 mr-2" /> brolyticstechnologies@gmail.com
-                            </a>
-                            <a href="https://www.brolyticstechnologies.com" target="_blank" rel="noopener noreferrer" className="flex items-center text-primary hover:underline font-medium">
-                                <Globe className="w-4 h-4 mr-2" /> www.brolyticstechnologies.com
-                            </a>
+                        <div className="flex flex-col items-center justify-center gap-3 pt-4">
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+                                <a href="mailto:brolyticstechnologies@gmail.com" className="flex items-center text-primary hover:underline font-medium">
+                                    <Mail className="w-4 h-4 mr-2" /> brolyticstechnologies@gmail.com
+                                </a>
+                                <a href="https://www.brolyticstechnologies.com" target="_blank" rel="noopener noreferrer" className="flex items-center text-primary hover:underline font-medium text-center">
+                                    <Globe className="w-4 h-4 mr-2" /> www.brolyticstechnologies.com
+                                </a>
+                            </div>
+                            <div className="flex items-center text-primary font-medium">
+                                <Phone className="w-4 h-4 mr-2" /> +91 85075 07173
+                            </div>
                         </div>
                     </div>
                 </div>

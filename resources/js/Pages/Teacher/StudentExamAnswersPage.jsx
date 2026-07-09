@@ -16,11 +16,23 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
 
             try {
                 // Endpoint gives specific student's answers for specific exam
-                const res = await axios.get(`/api/teacher/exams/${examId}/student/${studentId}`, {
+                const res = await axios.get(`/api/mcq_papers/${examId}/results/${studentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setQuestions(res.data.answers || []);
-                setStudentData(res.data.student || { name: 'Student' });
+                
+                const data = res.data;
+                const studentAnswers = data.result.student_answers || {};
+                
+                const mappedQuestions = data.questions.map(q => {
+                     return {
+                          ...q,
+                          correct_answer: q.correct_option ? q.correct_option.toUpperCase() : '',
+                          selected_answer: studentAnswers[q.id] ? studentAnswers[q.id].toUpperCase() : null
+                     };
+                });
+                
+                setQuestions(mappedQuestions);
+                setStudentData(data.result.user || { name: 'Student' });
             } catch (error) {
                 console.error("Error fetching student answers", error);
                 // Mock data for demo
@@ -63,17 +75,7 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
         <TeacherLayout title={`Answers: ${studentData?.name}`}>
             <Head title="Student Answers" />
 
-            <div className="mb-6 flex items-center justify-between">
-                <Link href={`/teacher/exams/${examId}/results`} className="inline-flex items-center text-sm font-medium text-text-muted hover:text-primary transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-1" />
-                    Back to Leaderboard
-                </Link>
 
-                <div className="flex items-center bg-bg-card px-4 py-2 rounded-md shadow-sm border border-border-base ">
-                    <User className="w-4 h-4 mr-2 text-text-muted" />
-                    <span className="font-bold text-text-base ">{studentData?.name}</span>
-                </div>
-            </div>
 
             <div className="max-w-7xl mx-auto space-y-6">
                 {questions.length === 0 ? (
@@ -135,8 +137,8 @@ export default function StudentExamAnswersPage({ examId, studentId }) {
 
                                             return (
                                                 <div key={optLabel} className={`p-4 rounded-md border-2 flex items-center ${borderClass} ${bgClass} transition-colors`}>
-                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 ${isActualCorrect ? 'bg-primary text-white' :
-                                                            (isSelected && !isCorrect) ? 'bg-danger text-white' :
+                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 ${isActualCorrect ? 'bg-primary text-primary-text' :
+                                                            (isSelected && !isCorrect) ? 'bg-danger text-danger-text' :
                                                                 'bg-bg-hover text-text-muted '
                                                         }`}>
                                                         {optLabel}

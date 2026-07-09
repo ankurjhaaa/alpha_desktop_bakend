@@ -14,32 +14,24 @@ export default function ExamAnswersPage({ paperId }) {
             if (!token) return;
 
             try {
-                // In a real app, this endpoint returns questions + student's selected_answer
                 const res = await axios.get(`/api/student/exams/${paperId}/answers`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setQuestions(res.data);
+                
+                const data = res.data;
+                const studentAnswers = data.result.student_answers || {};
+                
+                const mappedQuestions = data.questions.map(q => {
+                     return {
+                          ...q,
+                          correct_answer: q.correct_option ? q.correct_option.toUpperCase() : '',
+                          selected_answer: studentAnswers[q.id] ? studentAnswers[q.id].toUpperCase() : null
+                     };
+                });
+                
+                setQuestions(mappedQuestions);
             } catch (error) {
                 console.error("Error fetching answers", error);
-                // Mock data for demo if endpoint fails
-                setQuestions([
-                    {
-                        id: 1,
-                        question_text: "What is the capital of France?",
-                        option_a: "London", option_b: "Berlin", option_c: "Paris", option_d: "Madrid",
-                        correct_answer: "C",
-                        selected_answer: "C",
-                        explanation: "Paris is the capital and most populous city of France."
-                    },
-                    {
-                        id: 2,
-                        question_text: "Which planet is known as the Red Planet?",
-                        option_a: "Earth", option_b: "Mars", option_c: "Jupiter", option_d: "Saturn",
-                        correct_answer: "B",
-                        selected_answer: "A",
-                        explanation: "Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System, being larger than only Mercury. It is often referred to as the 'Red Planet'."
-                    }
-                ]);
             } finally {
                 setIsLoading(false);
             }
@@ -52,12 +44,7 @@ export default function ExamAnswersPage({ paperId }) {
         <StudentLayout title="Detailed Answers">
             <Head title="Answers" />
 
-            <div className="mb-6">
-                <Link href={`/student/exams/${paperId}/result`} className="inline-flex items-center text-sm font-medium text-text-muted hover:text-primary transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-1" />
-                    Back to Results
-                </Link>
-            </div>
+
 
             <div className="max-w-7xl mx-auto space-y-6">
                 {isLoading ? (

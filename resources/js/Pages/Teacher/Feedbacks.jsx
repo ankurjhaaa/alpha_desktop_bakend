@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
-import { MessageSquare, Calendar, User } from 'lucide-react';
+import { MessageSquare, Calendar, User, Star } from 'lucide-react';
 import axios from 'axios';
 
 export default function Feedbacks() {
@@ -60,9 +60,11 @@ export default function Feedbacks() {
                                             </div>
                                         </div>
                                     </div>
-                                    <span className="px-2.5 py-1 bg-bg-hover text-text-base text-xs font-semibold rounded-full">
-                                        {item.subject || 'General'}
-                                    </span>
+                                    <div className="flex items-center space-x-1">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <Star key={star} className={`w-4 h-4 ${item.rating >= star ? 'text-yellow-400' : 'text-border-base'}`} fill={item.rating >= star ? 'currentColor' : 'none'} />
+                                        ))}
+                                    </div>
                                 </div>
                                 <p className="text-text-base text-sm leading-relaxed">
                                     "{item.message}"

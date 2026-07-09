@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
-import { ArrowLeft, Trophy, FileText, CheckCircle, Search } from 'lucide-react';
+import { ArrowLeft, Trophy, FileText, CheckCircle, Search, Download } from 'lucide-react';
 import axios from 'axios';
+import { downloadExamResultPdf } from '../../Core/Utils/PdfGenerator';
 
 export default function McqPaperResultsPage({ examId }) {
     const [results, setResults] = useState([]);
@@ -24,10 +25,18 @@ export default function McqPaperResultsPage({ examId }) {
                 setExamData(paper);
 
                 // Fetch student submissions for this specific exam
-                const resultsRes = await axios.get(`/api/teacher/exams/${examId}/results`, {
+                const resultsRes = await axios.get(`/api/mcq_papers/${examId}/results`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setResults(resultsRes.data);
+                const mappedResults = resultsRes.data.map(r => ({
+                    id: r.id,
+                    student: { id: r.user_id, name: r.student_name, email: r.student_email },
+                    score: r.score,
+                    percentage: r.percentage,
+                    submitted_at: r.submitted_at,
+                    status: r.status
+                }));
+                setResults(mappedResults);
             } catch (error) {
                 console.error("Error fetching results", error);
                 // Mock data for demo
@@ -49,6 +58,19 @@ export default function McqPaperResultsPage({ examId }) {
         r.student?.name?.toLowerCase().includes(searchQuery.toLowerCase())
     ).sort((a, b) => b.score - a.score); // Sort by highest score by default
 
+    const handleDownloadPdf = async (result) => {
+        const data = {
+            examName: examData?.title || 'Exam',
+            studentName: result.student?.name || 'Unknown',
+            regNumber: result.student?.registration_id || '',
+            score: result.score || 0,
+            total: examData?.total_marks || examData?.questions_count || 100,
+            percentage: result.percentage || 0,
+            examDate: result.submitted_at || new Date().toISOString(),
+        };
+        await downloadExamResultPdf(data);
+    };
+
     if (isLoading) {
         return (
             <TeacherLayout title="Exam Results">
@@ -63,15 +85,9 @@ export default function McqPaperResultsPage({ examId }) {
         <TeacherLayout title={`Results: ${examData?.title || 'Exam'}`}>
             <Head title="Exam Results" />
 
-            <div className="mb-6">
-                <Link href="/teacher/mcq-manager" className="inline-flex items-center text-sm font-medium text-text-muted hover:text-primary transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-1" />
-                    Back to MCQ Manager
-                </Link>
-            </div>
 
             <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors overflow-hidden">
-                <div className="p-6 md:p-8 bg-gradient-to-r from-bg-base to-white border-b border-border-base flex flex-col md:flex-row items-center justify-between">
+                <div className="p-6 md:p-8 bg-bg-card border-b border-border-base flex flex-col md:flex-row items-center justify-between">
                     <div className="flex items-center mb-4 md:mb-0">
                         <div className="w-14 h-14 bg-primary-light-hover rounded-md flex items-center justify-center text-primary mr-5">
                             <Trophy className="w-8 h-8" />
@@ -80,7 +96,7 @@ export default function McqPaperResultsPage({ examId }) {
                             <h2 className="text-2xl font-bold text-text-base ">{examData?.title}</h2>
                             <p className="text-text-muted mt-1 flex items-center">
                                 <FileText className="w-4 h-4 mr-1" />
-                                {results.length} Submissions • {examData?.total_marks} Total Marks
+                                {results.filter(r => r.status !== 'missed').length} Submissions • {examData?.total_marks || examData?.questions_count || 100} Total Marks
                             </p>
                         </div>
                     </div>
@@ -116,13 +132,14 @@ export default function McqPaperResultsPage({ examId }) {
                                 </tr>
                             ) : (
                                 filteredResults.map((result, index) => {
-                                    const rank = index + 1;
+                                    const rank = result.status === 'missed' ? '-' : index + 1;
                                     const score = result.score || 0;
-                                    const total = examData?.total_marks || 100;
+                                    const total = examData?.total_marks || examData?.questions_count || 100;
                                     const percentage = Math.round((score / total) * 100);
+                                    const isMissed = result.status === 'missed';
 
                                     return (
-                                        <tr key={result.id || index} className="hover:bg-bg-base transition-colors">
+                                        <tr key={result.id || index} className={`hover:bg-bg-base transition-colors ${isMissed ? 'opacity-70' : ''}`}>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${rank === 1 ? 'bg-primary-light text-primary-hover' :
                                                         rank === 2 ? 'bg-bg-hover text-text-base' :
@@ -134,34 +151,59 @@ export default function McqPaperResultsPage({ examId }) {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
-                                                    <div className="w-10 h-10 rounded-full bg-primary-light-hover flex items-center justify-center text-primary-hover font-bold mr-3">
-                                                        {result.student?.name?.charAt(0).toUpperCase() || '?'}
+                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center overflow-hidden font-bold mr-3 ${isMissed ? 'bg-bg-hover text-text-muted' : 'bg-primary-light-hover text-primary-hover'}`}>
+                                                        {result.student?.profile_image ? (
+                                                            <img src={result.student.profile_image} alt={result.student.name} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            result.student?.name?.charAt(0).toUpperCase() || '?'
+                                                        )}
                                                     </div>
                                                     <div>
                                                         <div className="font-bold text-text-base ">{result.student?.name || 'Unknown'}</div>
-                                                        <div className="text-xs text-text-muted mt-0.5">Submitted {new Date(result.submitted_at || Date.now()).toLocaleDateString()}</div>
+                                                        <div className="text-xs text-text-muted mt-0.5">
+                                                            {isMissed ? 'Did not submit' : `Submitted ${new Date(result.submitted_at || Date.now()).toLocaleDateString()}`}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center">
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-lg font-bold text-text-base ">{score}</span>
-                                                    <div className={`mt-1 w-24 h-1.5 rounded-full bg-bg-hover overflow-hidden`}>
-                                                        <div
-                                                            className={`h-full ${percentage >= 80 ? 'bg-primary' : percentage >= 50 ? 'bg-primary' : 'bg-danger'}`}
-                                                            style={{ width: `${percentage}%` }}
-                                                        ></div>
+                                                {isMissed ? (
+                                                    <span className="text-sm font-medium text-text-muted">N/A</span>
+                                                ) : (
+                                                    <div className="flex flex-col items-center">
+                                                        <span className="text-lg font-bold text-text-base ">{score}</span>
+                                                        <div className={`mt-1 w-24 h-1.5 rounded-full bg-bg-hover overflow-hidden`}>
+                                                            <div
+                                                                className={`h-full ${percentage >= 80 ? 'bg-primary' : percentage >= 50 ? 'bg-primary' : 'bg-danger'}`}
+                                                                style={{ width: `${percentage}%` }}
+                                                            ></div>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                <Link
-                                                    href={`/teacher/exams/${examId}/student/${result.student?.id || 1}`}
-                                                    className="inline-flex items-center px-4 py-2 bg-bg-card border border-border-base rounded-md text-sm font-medium text-primary hover:bg-bg-base transition-colors"
-                                                >
-                                                    View Answers
-                                                    <CheckCircle className="w-4 h-4 ml-2" />
-                                                </Link>
+                                                {isMissed ? (
+                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-danger-light text-danger-text">
+                                                        Missed
+                                                    </span>
+                                                ) : (
+                                                    <div className="flex items-center justify-end space-x-2">
+                                                        <Link
+                                                            href={`/teacher/exams/${examId}/student/${result.student?.id || 1}`}
+                                                            className="inline-flex items-center px-4 py-2 bg-bg-card border border-border-base rounded-md text-sm font-medium text-primary hover:bg-bg-base transition-colors"
+                                                        >
+                                                            View Answers
+                                                            <CheckCircle className="w-4 h-4 ml-2" />
+                                                        </Link>
+                                                        <button
+                                                            onClick={() => handleDownloadPdf(result)}
+                                                            className="inline-flex items-center px-3 py-2 bg-danger-light text-danger-text rounded-md hover:bg-danger hover:text-white transition-colors"
+                                                            title="Download PDF Result"
+                                                        >
+                                                            <Download className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </td>
                                         </tr>
                                     );

@@ -81,7 +81,7 @@ export default function Leaderboard() {
                                 const isTop3 = rank <= 3;
 
                                 return (
-                                    <div key={student.id || index} className={`p-4 sm:px-6 flex items-center transition-colors hover:bg-bg-base ${isTop3 ? 'py-5' : 'py-4'}`}>
+                                    <div key={student.user_id || index} className={`p-4 sm:px-6 flex items-center transition-colors hover:bg-bg-base ${isTop3 ? 'py-5' : 'py-4'}`}>
                                         <div className={`w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full border-2 ${getRankColor(rank)}`}>
                                             {getRankIcon(rank)}
                                         </div>
@@ -89,10 +89,10 @@ export default function Leaderboard() {
                                         <div className="ml-4 sm:ml-6 flex-1 flex items-center">
                                             <div className="relative">
                                                 {student.profile_image ? (
-                                                    <img src={student.profile_image} alt={student.name} className={`rounded-full object-cover border-2 border-bg-card shadow-sm ${isTop3 ? 'w-14 h-14' : 'w-10 h-10'}`} />
+                                                    <img src={student.profile_image} alt={student.student_name} className={`rounded-full object-cover border-2 border-bg-card shadow-sm ${isTop3 ? 'w-14 h-14' : 'w-10 h-10'}`} />
                                                 ) : (
                                                     <div className={`rounded-full bg-primary-light-hover flex items-center justify-center text-primary-hover font-bold border-2 border-bg-card shadow-sm ${isTop3 ? 'w-14 h-14 text-xl' : 'w-10 h-10 text-lg'}`}>
-                                                        {student.name ? student.name.charAt(0).toUpperCase() : '?'}
+                                                        {student.student_name ? student.student_name.charAt(0).toUpperCase() : '?'}
                                                     </div>
                                                 )}
                                                 {isTop3 && (
@@ -104,7 +104,7 @@ export default function Leaderboard() {
 
                                             <div className="ml-4">
                                                 <h3 className={`font-bold text-text-base ${isTop3 ? 'text-lg' : 'text-base'}`}>
-                                                    {student.name}
+                                                    {student.student_name}
                                                 </h3>
                                                 {student.course && (
                                                     <p className="text-sm text-text-muted mt-0.5">{student.course.name}</p>
@@ -114,9 +114,9 @@ export default function Leaderboard() {
 
                                         <div className="ml-4 text-right">
                                             <div className={`font-black ${isTop3 ? 'text-2xl text-primary ' : 'text-xl text-text-base '}`}>
-                                                {student.total_marks || student.score || 0}
+                                                {student.average_marks ? `${Math.round(student.average_marks)}%` : '0%'}
                                             </div>
-                                            <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Points</div>
+                                            <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Avg Score</div>
                                         </div>
                                     </div>
                                 );

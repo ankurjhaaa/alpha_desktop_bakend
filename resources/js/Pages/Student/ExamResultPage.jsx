@@ -15,23 +15,26 @@ export default function ExamResultPage({ paperId }) {
             if (!token) return;
 
             try {
-                // Fetch submission results
-                const res = await axios.get(`/api/student/exams/${paperId}/result`, {
+                // Fetch submission results using answers endpoint which has result data
+                const res = await axios.get(`/api/student/exams/${paperId}/answers`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                setResult(res.data);
+                
+                const data = res.data;
+                const resultData = data.result;
+                const attempted = resultData.student_answers ? Object.keys(resultData.student_answers).length : 0;
+                
+                setResult({
+                    score: resultData.score,
+                    total_marks: resultData.total_questions,
+                    correct_answers: resultData.score,
+                    incorrect_answers: attempted - resultData.score,
+                    unattempted: resultData.total_questions - attempted,
+                    total_questions: resultData.total_questions,
+                    percentage: resultData.percentage
+                });
             } catch (error) {
                 console.error("Error fetching results", error);
-                // Mock result if endpoint doesn't exist yet for demonstration
-                setResult({
-                    score: 85,
-                    total_marks: 100,
-                    correct_answers: 17,
-                    incorrect_answers: 3,
-                    unattempted: 0,
-                    total_questions: 20,
-                    percentage: 85
-                });
             } finally {
                 setIsLoading(false);
             }
@@ -45,6 +48,17 @@ export default function ExamResultPage({ paperId }) {
             <StudentLayout title="Exam Result">
                 <div className="flex justify-center items-center py-24">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                </div>
+            </StudentLayout>
+        );
+    }
+
+    if (!result) {
+        return (
+            <StudentLayout title="Exam Result">
+                <div className="flex flex-col justify-center items-center py-24">
+                    <p className="text-danger-text text-xl font-bold mb-4">Failed to load result.</p>
+                    <Link href="/student/exams" className="px-4 py-2 bg-primary text-primary-text rounded-md">Go Back</Link>
                 </div>
             </StudentLayout>
         );

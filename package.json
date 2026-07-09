@@ -16,6 +16,7 @@
     "dependencies": {
         "@headlessui/react": "^2.2.10",
         "@inertiajs/react": "^3.5.0",
+        "@react-pdf/renderer": "^4.5.1",
         "@vitejs/plugin-react": "^6.0.3",
         "axios": "^1.18.1",
         "clsx": "^2.1.1",

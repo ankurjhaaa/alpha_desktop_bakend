@@ -9,7 +9,7 @@ class McqPaperController extends Controller
 {
     public function index(Request $request)
     {
-        $query = McqPaper::with(['batch', 'topic'])->withCount('questions');
+        $query = McqPaper::with(['batch', 'topic'])->withCount(['questions', 'results']);
         if ($request->has('batch_id')) {
             $query->where('batch_id', $request->batch_id);
         }
@@ -171,24 +171,69 @@ class McqPaperController extends Controller
 
     public function results($id)
     {
-        $results = \App\Models\ExamResult::with('user:id,name,email')
-            ->where('mcq_paper_id', $id)
-            ->orderBy('score', 'desc')
-            ->orderBy('created_at', 'asc')
-            ->get()
-            ->map(function ($r) {
-                return [
+        $paper = McqPaper::findOrFail($id);
+        
+        $eligibleStudentIds = [];
+        if (!empty($paper->selected_student_ids)) {
+            $eligibleStudentIds = $paper->selected_student_ids;
+        } else {
+            // Find all students in this batch
+            $batchId = $paper->batch_id;
+            $eligibleStudentIds = \App\Models\User::where('role', 'student')
+                ->whereHas('batches', function($q) use ($batchId) {
+                    $q->where('batches.id', $batchId);
+                })->pluck('id')->toArray();
+        }
+
+        $allStudents = \App\Models\User::whereIn('id', $eligibleStudentIds)->get();
+        $resultsQuery = \App\Models\ExamResult::where('mcq_paper_id', $id)->get()->keyBy('user_id');
+        $totalQuestions = $paper->questions()->count();
+
+        $finalResults = [];
+        
+        foreach ($allStudents as $student) {
+            if ($resultsQuery->has($student->id)) {
+                $r = $resultsQuery->get($student->id);
+                $finalResults[] = [
+                    'id' => $r->id,
                     'user_id' => $r->user_id,
-                    'student_name' => $r->user->name ?? 'Unknown',
-                    'student_email' => $r->user->email ?? 'N/A',
+                    'student_name' => $student->name ?? 'Unknown',
+                    'student_email' => $student->email ?? 'N/A',
+                    'profile_image' => $student->profile_image ?? null,
                     'score' => $r->score,
                     'total_questions' => $r->total_questions,
                     'percentage' => $r->percentage,
                     'submitted_at' => $r->created_at,
+                    'status' => 'submitted'
                 ];
-            });
+            } else {
+                $finalResults[] = [
+                    'id' => null,
+                    'user_id' => $student->id,
+                    'student_name' => $student->name ?? 'Unknown',
+                    'student_email' => $student->email ?? 'N/A',
+                    'profile_image' => $student->profile_image ?? null,
+                    'score' => 0,
+                    'total_questions' => $totalQuestions,
+                    'percentage' => 0,
+                    'submitted_at' => null,
+                    'status' => 'missed'
+                ];
+            }
+        }
+        
+        // Sort by score desc
+        usort($finalResults, function($a, $b) {
+            if ($a['status'] === 'missed' && $b['status'] !== 'missed') return 1;
+            if ($a['status'] !== 'missed' && $b['status'] === 'missed') return -1;
+            
+            if ($b['score'] == $a['score']) {
+                return strcmp($a['student_name'], $b['student_name']);
+            }
+            return $b['score'] - $a['score'];
+        });
 
-        return response()->json($results);
+        return response()->json($finalResults);
     }
 
     public function studentAnswers($id, $user_id)

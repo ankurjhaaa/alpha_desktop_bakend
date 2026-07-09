@@ -12,6 +12,7 @@ export default function StudentsPage() {
     const [batches, setBatches] = useState([]);
     const [courses, setCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Filters
     const [searchQuery, setSearchQuery] = useState('');
@@ -45,7 +46,8 @@ export default function StudentsPage() {
         address: '',
         gender: 'Male',
         dob: '',
-        batch_id: ''
+        batch_id: '',
+        profile_image: null
     });
 
     const fetchData = async () => {
@@ -96,11 +98,12 @@ export default function StudentsPage() {
                 address: student.address || '',
                 gender: student.gender || 'Male',
                 dob: student.dob || '',
-                batch_id: (student.batches && student.batches.length > 0) ? student.batches[0].id : ''
+                batch_id: (student.batches && student.batches.length > 0) ? student.batches[0].id : '',
+                profile_image: null
             });
         } else {
             setFormData({
-                name: '', email: '', password: '', phone: '', father_name: '', registration_id: '', address: '', gender: 'Male', dob: '', batch_id: ''
+                name: '', email: '', password: '', phone: '', father_name: '', registration_id: '', address: '', gender: 'Male', dob: '', batch_id: '', profile_image: null
             });
         }
         setIsModalOpen(true);
@@ -116,26 +119,47 @@ export default function StudentsPage() {
         if (!formData.name || !formData.email) return alert('Name and Email are required');
         if (!editingStudent && !formData.password) return alert('Password is required for new students');
 
+        setIsSubmitting(true);
         const token = localStorage.getItem('auth_token');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
+        const config = { headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+        }};
 
         try {
-            const payload = { ...formData, is_active: '1' };
-            if (!payload.password) delete payload.password;
-            if (payload.batch_id) {
-                payload['batch_ids'] = [payload.batch_id];
+            const submitData = new FormData();
+            
+            submitData.append('name', formData.name);
+            submitData.append('email', formData.email);
+            if (formData.password) submitData.append('password', formData.password);
+            if (formData.phone) submitData.append('phone', formData.phone);
+            if (formData.father_name) submitData.append('father_name', formData.father_name);
+            if (formData.registration_id) submitData.append('registration_id', formData.registration_id);
+            if (formData.address) submitData.append('address', formData.address);
+            if (formData.gender) submitData.append('gender', formData.gender);
+            if (formData.dob) submitData.append('dob', formData.dob);
+            if (formData.batch_id) {
+                submitData.append('batch_ids[0]', formData.batch_id);
+            }
+            submitData.append('is_active', '1');
+            
+            if (formData.profile_image) {
+                submitData.append('profile_image', formData.profile_image);
             }
 
             if (editingStudent) {
-                await axios.put(`/api/students/${editingStudent.id}`, payload, config);
+                submitData.append('_method', 'PUT');
+                await axios.post(`/api/students/${editingStudent.id}`, submitData, config);
             } else {
-                await axios.post('/api/students', payload, config);
+                await axios.post('/api/students', submitData, config);
             }
             await fetchData();
             closeModal();
         } catch (error) {
             console.error("Error saving student", error);
             alert(error.response?.data?.message || 'Failed to save student');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -232,8 +256,12 @@ export default function StudentsPage() {
                                     <tr key={student.id} className="border-b border-border-base hover:bg-bg-base">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0 rounded-full bg-primary-light-hover flex items-center justify-center">
-                                                    <span className="text-primary font-bold">{student.name.charAt(0).toUpperCase()}</span>
+                                                <div className="h-10 w-10 flex-shrink-0 rounded-full bg-primary-light-hover flex items-center justify-center overflow-hidden">
+                                                    {student.profile_image ? (
+                                                        <img src={student.profile_image} alt={student.name} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <span className="text-primary font-bold">{student.name.charAt(0).toUpperCase()}</span>
+                                                    )}
                                                 </div>
                                                 <div className="ml-4">
                                                     <div className="font-medium text-text-base ">{student.name}</div>
@@ -318,6 +346,15 @@ export default function StudentsPage() {
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 required={!editingStudent}
                             />
+                            <div>
+                                <label className="block text-sm font-medium text-text-base mb-1.5">Profile Image</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setFormData({ ...formData, profile_image: e.target.files[0] })}
+                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-light file:text-primary hover:file:bg-primary-light-hover"
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -386,8 +423,8 @@ export default function StudentsPage() {
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
-                        <CustomButton type="button" variant="secondary" onPressed={closeModal}>Cancel</CustomButton>
-                        <CustomButton type="submit">{editingStudent ? 'Save Changes' : 'Register Student'}</CustomButton>
+                        <CustomButton type="button" variant="secondary" onPressed={closeModal} disabled={isSubmitting}>Cancel</CustomButton>
+                        <CustomButton type="submit" disabled={isSubmitting}>{isSubmitting ? 'Saving...' : (editingStudent ? 'Save Changes' : 'Register Student')}</CustomButton>
                     </div>
                 </form>
             </Modal>

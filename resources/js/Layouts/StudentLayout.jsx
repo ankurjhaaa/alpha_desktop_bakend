@@ -207,7 +207,6 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                         }} />
                         <User className="w-16 h-16 text-primary hidden" />
                     </div>
-                    <h2 className="text-xl font-bold text-text-base">Alpha Graphics</h2>
                 </div>
                 <div 
                     className="absolute bottom-0 -mb-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"

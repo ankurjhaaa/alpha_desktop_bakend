@@ -167,7 +167,7 @@ class StudentExamController extends Controller
 
     public function leaderboard($id)
     {
-        $results = ExamResult::with('user:id,name')
+        $results = ExamResult::with('user:id,name,profile_image')
             ->where('mcq_paper_id', $id)
             ->orderBy('score', 'desc')
             ->orderBy('created_at', 'asc') // Tie-breaker: who finished first
@@ -175,6 +175,7 @@ class StudentExamController extends Controller
             ->map(function ($r) {
                 return [
                     'student_name' => $r->user->name ?? 'Unknown',
+                    'profile_image' => $r->user->profile_image ?? null,
                     'score' => $r->score,
                     'total_questions' => $r->total_questions,
                     'percentage' => $r->percentage,
@@ -230,7 +231,7 @@ class StudentExamController extends Controller
         $results = ExamResult::select('user_id')
             ->selectRaw('COUNT(id) as total_exams')
             ->selectRaw('ROUND(AVG(percentage), 2) as average_marks')
-            ->with('user:id,name,email')
+            ->with('user:id,name,email,profile_image')
             ->groupBy('user_id')
             ->orderByDesc('total_exams')
             ->orderByDesc('average_marks')
@@ -242,6 +243,7 @@ class StudentExamController extends Controller
                 'user_id' => $r->user_id,
                 'student_name' => $r->user->name ?? 'Unknown',
                 'student_email' => $r->user->email ?? 'Unknown',
+                'profile_image' => $r->user->profile_image ?? null,
                 'total_exams' => $r->total_exams,
                 'average_marks' => $r->average_marks,
             ];

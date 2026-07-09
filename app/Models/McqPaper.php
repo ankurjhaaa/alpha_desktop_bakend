@@ -26,4 +26,9 @@ class McqPaper extends Model
     {
         return $this->hasMany(McqQuestion::class);
     }
+
+    public function results()
+    {
+        return $this->hasMany(ExamResult::class);
+    }
 }

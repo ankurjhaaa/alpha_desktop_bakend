@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
-import { ArrowLeft, User, Phone, BookOpen, Clock, Calendar, MapPin, Loader2, Plus, X, Award } from 'lucide-react';
+import { ArrowLeft, User, Phone, BookOpen, Clock, Calendar, MapPin, Loader2, Plus, X, Award, Eye, Download } from 'lucide-react';
 import axios from 'axios';
 import CustomButton from '../../Core/Widgets/CustomButton';
+import { downloadExamResultPdf } from '../../Core/Utils/PdfGenerator';
 
 export default function StudentViewPage({ studentId }) {
     const [student, setStudent] = useState(null);
@@ -79,6 +80,29 @@ export default function StudentViewPage({ studentId }) {
         }
     };
 
+    const toggleStudentStatus = async () => {
+        if (!student) return;
+        setIsSubmitting(true);
+        const token = localStorage.getItem('auth_token');
+        const currentStatus = student.is_active === 1 || student.is_active === true;
+        const newStatus = !currentStatus;
+        
+        try {
+            await axios.put(`/api/students/${studentId}`, {
+                is_active: newStatus
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            await fetchStudentDetails();
+        } catch (error) {
+            console.error("Error updating student status", error);
+            alert(error.response?.data?.message || 'Failed to update student status.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const formatDate = (isoDate) => {
         if (!isoDate) return 'N/A';
         try {
@@ -87,6 +111,19 @@ export default function StudentViewPage({ studentId }) {
         } catch (e) {
             return 'Invalid Date';
         }
+    };
+
+    const handleDownloadPdf = async (result) => {
+        const data = {
+            examName: result.mcq_paper?.title || 'Unknown Exam',
+            studentName: student?.name || 'Unknown',
+            regNumber: student?.registration_id || '',
+            score: result.score || 0,
+            total: result.total_questions || 100,
+            percentage: result.percentage || 0,
+            examDate: result.created_at || new Date().toISOString(),
+        };
+        await downloadExamResultPdf(data);
     };
 
     if (isLoading) {
@@ -113,13 +150,6 @@ export default function StudentViewPage({ studentId }) {
         <TeacherLayout title="Student Profile">
             <Head title={student.name} />
 
-            <div className="mb-4">
-                <Link href="/teacher/students" className="inline-flex items-center text-sm font-medium text-text-muted hover:text-primary transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-1" />
-                    Back to Students
-                </Link>
-            </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Profile Card & Info */}
@@ -135,11 +165,16 @@ export default function StudentViewPage({ studentId }) {
                         <h2 className="text-xl font-bold text-text-base mb-1">{student.name}</h2>
                         <p className="text-text-muted text-sm mb-1">{student.email}</p>
                         {student.registration_id && (
-                            <p className="text-text-muted/70 text-xs mb-3">Admission No: {student.registration_id}</p>
+                            <p className="text-text-muted/70 text-xs mb-3">Admission No: <span className="font-bold text-text-muted">{student.registration_id}</span></p>
                         )}
-                        <span className={`px-3 py-1 rounded-md font-bold text-xs ${isActive ? 'bg-primary-light text-primary-hover' : 'bg-danger-light text-danger-text'}`}>
-                            {isActive ? 'Active' : 'Inactive'}
-                        </span>
+                        <button
+                            onClick={toggleStudentStatus}
+                            disabled={isSubmitting}
+                            className={`px-4 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all border ${isActive ? 'bg-primary-light/50 text-primary border-primary-light hover:bg-danger-light hover:text-danger hover:border-danger-light' : 'bg-danger-light/50 text-danger border-danger-light hover:bg-primary-light hover:text-primary hover:border-primary-light'}`}
+                            title={isActive ? 'Click to Deactivate' : 'Click to Activate'}
+                        >
+                            {isSubmitting ? 'Updating...' : (isActive ? '● Active' : '○ Inactive')}
+                        </button>
                     </div>
 
                     <div className="bg-bg-card rounded-md border border-border-base p-5 transition-colors shadow-sm">
@@ -267,6 +302,7 @@ export default function StudentViewPage({ studentId }) {
                                             <th className="px-4 py-3 font-semibold text-text-base">Exam Title</th>
                                             <th className="px-4 py-3 font-semibold text-text-base">Attempted On</th>
                                             <th className="px-4 py-3 font-semibold text-text-base text-right">Score</th>
+                                            <th className="px-4 py-3 font-semibold text-text-base text-right">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -284,6 +320,24 @@ export default function StudentViewPage({ studentId }) {
                                                     <span className={`px-2 py-1 rounded-md text-xs ${result.percentage >= 75 ? 'bg-primary-light text-primary-hover' : result.percentage >= 50 ? 'bg-primary-light text-primary-hover' : 'bg-danger-light text-danger-text'}`}>
                                                         {result.score} / {result.total_questions} ({result.percentage}%)
                                                     </span>
+                                                </td>
+                                                <td className="px-4 py-3 text-right">
+                                                    <div className="flex items-center justify-end space-x-2">
+                                                        <Link
+                                                            href={`/teacher/exams/${result.mcq_paper_id}/student/${student.id}`}
+                                                            className="p-1.5 bg-bg-hover text-primary rounded-md hover:bg-primary-light-hover transition-colors"
+                                                            title="View Answers"
+                                                        >
+                                                            <Eye className="w-4 h-4" />
+                                                        </Link>
+                                                        <button
+                                                            onClick={() => handleDownloadPdf(result)}
+                                                            className="p-1.5 bg-danger-light text-danger-text rounded-md hover:bg-danger hover:text-white transition-colors"
+                                                            title="Download PDF"
+                                                        >
+                                                            <Download className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}

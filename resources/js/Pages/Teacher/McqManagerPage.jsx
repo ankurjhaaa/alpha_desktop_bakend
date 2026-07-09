@@ -296,15 +296,26 @@ export default function McqManagerPage() {
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <Link 
-                                                href={`/teacher/mcq-questions/${paper.id}`} 
-                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors whitespace-nowrap"
-                                            >
-                                                <span className="font-medium text-sm">{paper.questions_count || 0} Questions</span>
-                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </Link>
+                                            <div className="flex space-x-2">
+                                                <Link 
+                                                    href={`/teacher/mcq-questions/${paper.id}`} 
+                                                    className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors whitespace-nowrap"
+                                                >
+                                                    <span className="font-medium text-sm">{paper.questions_count || 0} Questions</span>
+                                                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </Link>
+                                                <Link 
+                                                    href={`/teacher/exams/${paper.id}/results`} 
+                                                    className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-colors whitespace-nowrap"
+                                                >
+                                                    <span className="font-medium text-sm">{paper.results_count || 0} Results</span>
+                                                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </Link>
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col text-xs text-text-muted space-y-1">
