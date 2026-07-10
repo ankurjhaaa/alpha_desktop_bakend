@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
-import { ArrowLeft, Trophy, FileText, CheckCircle, Search, Download } from 'lucide-react';
+import { ArrowLeft, Trophy, FileText, CheckCircle, Search, Download, RotateCcw } from 'lucide-react';
 import axios from 'axios';
 import { downloadExamResultPdf } from '../../Core/Utils/PdfGenerator';
 
@@ -71,6 +71,25 @@ export default function McqPaperResultsPage({ examId }) {
         await downloadExamResultPdf(data);
     };
 
+    const handleRevoke = async (result) => {
+        if (!confirm(`Are you sure you want to revoke the exam result for ${result.student?.name}? They will be able to take the exam again.`)) {
+            return;
+        }
+
+        const token = localStorage.getItem('auth_token');
+        try {
+            await axios.delete(`/api/mcq_papers/${examId}/results/${result.student.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            // Remove the revoked result from the local state
+            setResults(prev => prev.filter(r => r.student.id !== result.student.id));
+            alert('Exam result revoked successfully.');
+        } catch (error) {
+            console.error('Error revoking result:', error);
+            alert('Failed to revoke exam result.');
+        }
+    };
+
     if (isLoading) {
         return (
             <TeacherLayout title="Exam Results">
@@ -123,7 +142,7 @@ export default function McqPaperResultsPage({ examId }) {
                                 <th className="px-6 py-4 font-semibold text-right">Action</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-200 ">
+                        <tbody className="divide-y divide-border-base ">
                             {filteredResults.length === 0 ? (
                                 <tr>
                                     <td colSpan="4" className="px-6 py-12 text-center text-text-muted ">
@@ -195,6 +214,13 @@ export default function McqPaperResultsPage({ examId }) {
                                                             View Answers
                                                             <CheckCircle className="w-4 h-4 ml-2" />
                                                         </Link>
+                                                        <button
+                                                            onClick={() => handleRevoke(result)}
+                                                            className="inline-flex items-center px-3 py-2 bg-warning-light text-warning-text rounded-md hover:bg-warning hover:text-white transition-colors"
+                                                            title="Revoke Result"
+                                                        >
+                                                            <RotateCcw className="w-4 h-4" />
+                                                        </button>
                                                         <button
                                                             onClick={() => handleDownloadPdf(result)}
                                                             className="inline-flex items-center px-3 py-2 bg-danger-light text-danger-text rounded-md hover:bg-danger hover:text-white transition-colors"
