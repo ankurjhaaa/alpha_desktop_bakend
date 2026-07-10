@@ -10,6 +10,11 @@ export default function ExamTakingPage({ paperId }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answers, setAnswers] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // UI Modal States
+    const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+    const [securityMsg, setSecurityMsg] = useState(null);
+    const [submitErrorMsg, setSubmitErrorMsg] = useState(null);
     const [fetchError, setFetchError] = useState(null);
 
     // Timer state
@@ -65,7 +70,7 @@ export default function ExamTakingPage({ paperId }) {
         // Anti-cheat: Check if exam was already in progress (page refresh)
         const inProgress = localStorage.getItem(`exam_in_progress_${paperId}`);
         if (inProgress === 'true') {
-            alert("Security Violation: Page refresh detected during an active exam. Your exam has been automatically submitted.");
+            setSecurityMsg("Security Violation: Page refresh detected during an active exam. Your exam is being automatically submitted.");
             
             const draft = JSON.parse(localStorage.getItem(`exam_draft_${paperId}`) || '{}');
             const token = localStorage.getItem('auth_token');
@@ -118,13 +123,8 @@ export default function ExamTakingPage({ paperId }) {
     };
 
     const submitExam = async (autoSubmit = false) => {
-        if (!autoSubmit) {
-            if (!confirm('Are you sure you want to submit your answers? You cannot change them after submission.')) {
-                return;
-            }
-        }
-
         setIsSubmitting(true);
+        setSubmitErrorMsg(null);
         const token = localStorage.getItem('auth_token');
 
         // Prevent stale state on auto-submit closure
@@ -144,7 +144,8 @@ export default function ExamTakingPage({ paperId }) {
         } catch (error) {
             console.error("Error submitting exam", error);
             if (!autoSubmit) {
-                alert("Failed to submit exam. Please try again.");
+                setSubmitErrorMsg("Failed to submit exam. Please try again.");
+                setShowSubmitConfirm(false); // close modal if open
             }
             setIsSubmitting(false);
         }
@@ -154,7 +155,7 @@ export default function ExamTakingPage({ paperId }) {
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden && !isSubmitting && !isLoading) {
-                alert("Warning: You switched tabs! The exam has been automatically submitted due to security rules.");
+                setSecurityMsg("Warning: You switched tabs! The exam has been automatically submitted due to security rules.");
                 submitExam(true);
             }
         };
@@ -350,7 +351,7 @@ export default function ExamTakingPage({ paperId }) {
                         <span className="text-text-muted">Remaining: <span className="font-bold">{questions.length - Object.keys(answers).length}</span></span>
                     </div>
                     <button
-                        onClick={() => submitExam()}
+                        onClick={() => setShowSubmitConfirm(true)}
                         disabled={isSubmitting}
                         className="w-full py-4 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg flex items-center justify-center transition-colors disabled:opacity-70 cursor-pointer shadow-md"
                     >
@@ -359,6 +360,69 @@ export default function ExamTakingPage({ paperId }) {
                     </button>
                 </div>
             </aside>
+
+            {/* Submit Confirmation Modal */}
+            {showSubmitConfirm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                    <div className="bg-bg-card rounded-xl shadow-2xl max-w-md w-full border border-border-base overflow-hidden">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-primary-light/20 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                                <CheckCircle className="w-8 h-8" />
+                            </div>
+                            <h2 className="text-2xl font-bold text-text-base mb-2">Submit Exam?</h2>
+                            <p className="text-text-muted font-medium mb-6">
+                                Are you sure you want to submit your answers? You cannot change them after submission.
+                            </p>
+                            
+                            {submitErrorMsg && (
+                                <div className="mb-4 p-3 bg-danger-light text-danger-text rounded-md text-sm font-bold">
+                                    {submitErrorMsg}
+                                </div>
+                            )}
+
+                            <div className="flex space-x-3">
+                                <button 
+                                    onClick={() => {
+                                        setShowSubmitConfirm(false);
+                                        setSubmitErrorMsg(null);
+                                    }} 
+                                    disabled={isSubmitting}
+                                    className="flex-1 px-4 py-3 border border-border-base rounded-md hover:bg-bg-hover transition-colors font-semibold"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    onClick={() => submitExam()}
+                                    disabled={isSubmitting}
+                                    className="flex-1 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-md flex items-center justify-center transition-colors disabled:opacity-50"
+                                >
+                                    {isSubmitting ? 'Submitting...' : 'Yes, Submit'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Security Warning Modal (Non-dismissible) */}
+            {securityMsg && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-danger/90 backdrop-blur-md">
+                    <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 text-center">
+                        <div className="w-20 h-20 bg-danger/10 text-danger rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Security Alert</h2>
+                        <p className="text-gray-700 font-medium text-lg leading-relaxed">
+                            {securityMsg}
+                        </p>
+                        <div className="mt-8 flex justify-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-danger"></div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
