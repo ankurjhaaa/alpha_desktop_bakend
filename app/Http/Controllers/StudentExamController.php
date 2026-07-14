@@ -256,4 +256,80 @@ class StudentExamController extends Controller
 
         return response()->json($formatted);
     }
+    public function allResults(Request $request)
+    {
+        $query = ExamResult::with([
+            'user:id,name,email,registration_id,father_name',
+            'user.batches.course',
+            'mcqPaper:id,title,batch_id'
+        ]);
+
+        // Filter by Exam Title
+        if ($request->filled('exam_id')) {
+            $query->where('mcq_paper_id', $request->exam_id);
+        } elseif ($request->filled('search')) {
+            // General search by student name or registration ID
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('registration_id', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by Batch
+        if ($request->filled('batch_id')) {
+            $batchId = $request->batch_id;
+            $query->whereHas('user.batches', function ($q) use ($batchId) {
+                $q->where('batches.id', $batchId);
+            });
+        }
+
+        // Filter by Course
+        if ($request->filled('course_id')) {
+            $courseId = $request->course_id;
+            $query->whereHas('user.batches.course', function ($q) use ($courseId) {
+                $q->where('courses.id', $courseId);
+            });
+        }
+
+        // Order by latest
+        $query->orderByDesc('created_at');
+
+        // Fetch all (unpaginated) if download is true
+        if ($request->filled('download') && $request->download == 'true') {
+            $results = $query->get();
+        } else {
+            // Paginate
+            $results = $query->paginate(15);
+        }
+
+        // Transform results to include flat batch/course data
+        $transformData = function ($r) {
+            $user = $r->user;
+            $batch = $user && $user->batches->first() ? $user->batches->first() : null;
+            return [
+                'id' => $r->id,
+                'user_id' => $r->user_id,
+                'student_name' => $user->name ?? 'Unknown',
+                'registration_id' => $user->registration_id ?? 'N/A',
+                'exam_title' => $r->mcqPaper->title ?? 'N/A',
+                'score' => $r->score,
+                'total_questions' => $r->total_questions,
+                'percentage' => $r->percentage,
+                'date' => $r->created_at,
+                'father_name' => $user->father_name ?? 'N/A',
+                'course' => $batch && $batch->course ? $batch->course->name : 'N/A',
+                'batch' => $batch ? $batch->name : 'N/A',
+                'batchTiming' => $batch ? $batch->schedule_time : 'N/A',
+            ];
+        };
+
+        if ($request->filled('download') && $request->download == 'true') {
+            return response()->json($results->map($transformData));
+        }
+
+        $results->getCollection()->transform($transformData);
+
+        return response()->json($results);
+    }
 }

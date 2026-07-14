@@ -56,8 +56,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json($user);
     });
 
-    // Global Leaderboard
+    // Global Leaderboard & Results
     Route::get('/leaderboard', [App\Http\Controllers\StudentExamController::class, 'globalLeaderboard']);
+    Route::get('/results', [App\Http\Controllers\StudentExamController::class, 'allResults']);
 
     // Feedbacks
     Route::get('/student/feedbacks', [App\Http\Controllers\FeedbackController::class, 'studentIndex']);

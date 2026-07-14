@@ -462,3 +462,162 @@ export const downloadLeaderboardPdf = async (leaderboardData) => {
     alert('Failed to generate PDF document: ' + (error.message || error));
   }
 };
+
+// ==========================================
+// FILTERED RESULTS PDF TEMPLATE
+// ==========================================
+
+const FilteredResultsPdfTemplate = ({ data }) => {
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+        const d = new Date(dateString);
+        return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')} at ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+    } catch(e) {
+        return 'Invalid Date';
+    }
+  };
+
+  return (
+    <Document>
+      {data.map((result, index) => {
+        const examName = result.exam_title;
+        const studentName = result.student_name;
+        const regNumber = result.registration_id;
+        const score = result.score;
+        const total = result.total_questions;
+        const percentage = result.percentage;
+        const examDate = result.date;
+        const fatherName = result.father_name;
+        const course = result.course;
+        const batch = result.batch;
+        const batchTiming = result.batchTiming;
+
+        const isPass = percentage >= 50.0;
+
+        let performanceWord = 'NEEDS IMPROVEMENT';
+        let badgeStyle = styles.performanceBadgeFail;
+        let labelStyle = styles.performanceLabelFail;
+        let textStyle = styles.performanceTextFail;
+        if (percentage >= 90) { performanceWord = 'EXCELLENT'; badgeStyle = styles.performanceBadgePass; labelStyle = styles.performanceLabelPass; textStyle = styles.performanceTextPass; }
+        else if (percentage >= 75) { performanceWord = 'GOOD'; badgeStyle = styles.performanceBadgePass; labelStyle = styles.performanceLabelPass; textStyle = styles.performanceTextPass; }
+        else if (percentage >= 50) { performanceWord = 'AVERAGE'; badgeStyle = styles.performanceBadgePass; labelStyle = styles.performanceLabelPass; textStyle = styles.performanceTextPass; }
+
+        return (
+          <Page key={index} size="A4" style={styles.page}>
+            <View style={styles.mainContent}>
+              {/* Header Section */}
+              <View style={styles.header}>
+                <Image src="/assets/images/logo.png" style={styles.logo} />
+                <View style={{ alignItems: 'flex-end' }}>
+                  <Text style={styles.headerTitle}>ALPHA GRAPHICS</Text>
+                  <View style={styles.pill}>
+                    <Text style={styles.pillText}>{examName ? examName.toUpperCase() : 'EXAM RESULT'}</Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* Student Details Section */}
+              <View style={styles.sectionBox}>
+                <View style={styles.sectionHeaderLabel}>
+                  <Text style={styles.sectionTitle}>STUDENT DETAILS</Text>
+                </View>
+                <View style={styles.table}>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableCellLabel}>Student Name</Text>
+                    <Text style={styles.tableCellValue}>{studentName}</Text>
+                  </View>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableCellLabel}>Admission No.</Text>
+                    <Text style={styles.tableCellValue}>{regNumber || 'N/A'}</Text>
+                  </View>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableCellLabel}>Father's Name</Text>
+                    <Text style={styles.tableCellValue}>{fatherName || 'Not Provided'}</Text>
+                  </View>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableCellLabel}>Course</Text>
+                    <Text style={styles.tableCellValue}>{course || 'N/A'}</Text>
+                  </View>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableCellLabel}>Date & Time</Text>
+                    <Text style={styles.tableCellValue}>{formatDate(examDate)}</Text>
+                  </View>
+                  <View style={styles.tableRow}>
+                    <Text style={styles.tableCellLabel}>Batch</Text>
+                    <Text style={styles.tableCellValue}>{batch || 'N/A'}</Text>
+                  </View>
+                  <View style={styles.tableRowLast}>
+                    <Text style={styles.tableCellLabelLast}>Batch Timing</Text>
+                    <Text style={styles.tableCellValueLast}>{batchTiming || 'N/A'}</Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* Performance Summary Section */}
+              <View style={styles.sectionBox}>
+                <View style={styles.sectionHeaderLabel}>
+                  <Text style={styles.sectionTitle}>PERFORMANCE SUMMARY</Text>
+                </View>
+                <View style={styles.statsBoxWrapper}>
+                  <View style={styles.statCol}>
+                    <Text style={styles.statLabel}>MAX MARKS</Text>
+                    <Text style={styles.statValueMax}>{total}</Text>
+                  </View>
+                  <View style={styles.statCol}>
+                    <Text style={styles.statLabel}>PASS MARKS</Text>
+                    <Text style={styles.statValuePass}>{Math.floor(total * 0.5)}</Text>
+                  </View>
+                  <View style={styles.statCol}>
+                    <Text style={styles.statLabel}>OBTAINED</Text>
+                    <Text style={styles.statValueObtained}>{score}</Text>
+                  </View>
+                  <View style={styles.statColLast}>
+                    <Text style={styles.statLabel}>PERCENTAGE</Text>
+                    <Text style={styles.statValuePercent}>{Number(percentage).toFixed(2)}%</Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* Performance Badge Section */}
+              <View style={[styles.performanceBadge, badgeStyle]}>
+                <Text style={[styles.performanceLabel, labelStyle]}>PERFORMANCE OVERALL</Text>
+                <Text style={[styles.performanceText, textStyle]}>{performanceWord}</Text>
+              </View>
+            </View>
+
+            {/* About Section */}
+            <View style={styles.aboutBox}>
+              <Text style={styles.aboutTitle}>About This Test Series</Text>
+              <Text style={styles.aboutText}>
+                The ALPHA GRAPHICS Test Series is designed to provide students with comprehensive assessment of their knowledge and skills. This result reflects your performance in the test, highlighting areas of strength and opportunities for improvement. We are committed to supporting your academic growth with detailed feedback and resources.
+              </Text>
+            </View>
+          </Page>
+        );
+      })}
+    </Document>
+  );
+};
+
+export const downloadFilteredResultsPdf = async (filteredData) => {
+  try {
+    const blob = await pdf(<FilteredResultsPdfTemplate data={filteredData} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Exam_Results_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+    
+    document.body.appendChild(link);
+    link.click();
+    
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 100);
+  } catch (error) {
+    console.error('Error generating Results PDF:', error);
+    alert('Failed to generate PDF document: ' + (error.message || error));
+  }
+};

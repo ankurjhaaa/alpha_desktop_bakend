@@ -43,6 +43,10 @@ Route::get('/teacher/leaderboard', function () {
     return Inertia::render('Teacher/Leaderboard');
 });
 
+Route::get('/teacher/results', function () {
+    return Inertia::render('Teacher/AllResultsPage');
+});
+
 Route::get('/teacher/feedbacks', function () {
     return Inertia::render('Teacher/Feedbacks');
 });

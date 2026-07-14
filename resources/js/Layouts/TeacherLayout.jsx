@@ -3,7 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import {
     LayoutDashboard, BookOpen, Layers, Users, FileQuestion,
     Database, Trophy, BookText, MessageSquare, Info,
-    LogOut, Menu, Bell, Code, Plus, Minus, Laptop, Palette, ArrowLeft
+    LogOut, Menu, Bell, Code, Plus, Minus, Laptop, Palette, ArrowLeft, ClipboardList
 } from 'lucide-react';
 import { cn } from '../Core/utils';
 
@@ -188,6 +188,7 @@ export default function TeacherLayout({ children, title = 'Teacher Dashboard' })
         { title: 'Questions', icon: FileQuestion, href: '/teacher/mcq-papers' },
         { title: 'Question Bank', icon: Database, href: '/teacher/question-bank' },
         { title: 'Leaderboard', icon: Trophy, href: '/teacher/leaderboard' },
+        { title: 'Results', icon: ClipboardList, href: '/teacher/results' },
         { title: 'Study Materials', icon: BookText, href: '/teacher/materials' },
         { title: 'Student Feedbacks', icon: MessageSquare, href: '/teacher/feedbacks' },
         { title: 'Themes', icon: Palette, href: '/teacher/themes' },
