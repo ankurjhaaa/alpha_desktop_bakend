@@ -47,6 +47,7 @@ export default function StudentsPage() {
         gender: 'Male',
         dob: '',
         batch_id: '',
+        join_date: '',
         profile_image: null
     });
 
@@ -98,12 +99,13 @@ export default function StudentsPage() {
                 address: student.address || '',
                 gender: student.gender || 'Male',
                 dob: student.dob || '',
+                join_date: student.created_at ? student.created_at.split('T')[0] : '',
                 batch_id: (student.batches && student.batches.length > 0) ? student.batches[0].id : '',
                 profile_image: null
             });
         } else {
             setFormData({
-                name: '', email: '', password: '', phone: '', father_name: '', registration_id: '', address: '', gender: 'Male', dob: '', batch_id: '', profile_image: null
+                name: '', email: '', password: '', phone: '', father_name: '', registration_id: '', address: '', gender: 'Male', dob: '', join_date: '', batch_id: '', profile_image: null
             });
         }
         setIsModalOpen(true);
@@ -138,6 +140,7 @@ export default function StudentsPage() {
             if (formData.address) submitData.append('address', formData.address);
             if (formData.gender) submitData.append('gender', formData.gender);
             if (formData.dob) submitData.append('dob', formData.dob);
+            if (formData.join_date) submitData.append('join_date', formData.join_date);
             if (formData.batch_id) {
                 submitData.append('batch_ids[0]', formData.batch_id);
             }
@@ -395,6 +398,12 @@ export default function StudentsPage() {
                                 type="date"
                                 value={formData.dob}
                                 onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+                            />
+                            <CustomTextField
+                                label="Join Date"
+                                type="date"
+                                value={formData.join_date}
+                                onChange={(e) => setFormData({ ...formData, join_date: e.target.value })}
                             />
                             {!editingStudent && (
                                 <div>

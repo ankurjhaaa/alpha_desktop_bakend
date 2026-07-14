@@ -273,16 +273,25 @@ export default function McqManagerPage() {
                                     <td colSpan="5" className="px-6 py-12 text-center text-text-muted">No papers found.</td>
                                 </tr>
                             ) : (
-                                papers.map((paper) => (
-                                    <tr key={paper.id} className="border-b border-border-base hover:bg-bg-base">
+                                papers.map((paper) => {
+                                    const hasResults = paper.results_count > 0;
+                                    return (
+                                    <tr key={paper.id} className={`border-b border-border-base transition-colors ${hasResults ? 'bg-emerald-500/5 hover:bg-emerald-500/10' : 'hover:bg-bg-hover'}`}>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0 rounded-md bg-primary-light flex items-center justify-center text-primary ">
+                                                <div className={`h-10 w-10 flex-shrink-0 rounded-md flex items-center justify-center ${hasResults ? 'bg-emerald-100 text-emerald-600' : 'bg-primary-light text-primary'}`}>
                                                     <FileText className="w-5 h-5" />
                                                 </div>
                                                 <div className="ml-4">
-                                                    <div className="font-medium text-text-base ">{paper.title}</div>
-                                                    {paper.topic && <div className="text-xs text-text-muted">Topic: {paper.topic.title}</div>}
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="font-medium text-text-base">{paper.title}</div>
+                                                        {hasResults && (
+                                                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                                                EXAM TAKEN
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {paper.topic && <div className="text-xs text-text-muted mt-0.5">Topic: {paper.topic.title}</div>}
                                                 </div>
                                             </div>
                                         </td>
@@ -340,7 +349,8 @@ export default function McqManagerPage() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))
+                                    );
+                                })
                             )}
                         </tbody>
                     </table>
@@ -389,24 +399,7 @@ export default function McqManagerPage() {
                         required
                     />
 
-                    <CustomTextField
-                        label="Invigilators (Comma separated)"
-                        placeholder="e.g. John Doe, Jane Smith"
-                        value={formData.invigilators}
-                        onChange={(e) => setFormData({ ...formData, invigilators: e.target.value })}
-                        required
-                    />
 
-                    <div>
-                        <label className="block text-sm font-medium text-text-base mb-1.5">Description</label>
-                        <textarea
-                            className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base "
-                            rows="3"
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            required
-                        />
-                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <CustomTextField

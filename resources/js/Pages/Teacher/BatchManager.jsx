@@ -176,20 +176,19 @@ export default function BatchManager() {
                                 <th className="px-6 py-4 font-semibold">Exams</th>
                                 <th className="px-6 py-4 font-semibold">Materials</th>
                                 <th className="px-6 py-4 font-semibold">Schedule</th>
-                                <th className="px-6 py-4 font-semibold">Duration</th>
                                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan="9" className="px-6 py-12 text-center">
+                                    <td colSpan="8" className="px-6 py-12 text-center">
                                         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                                     </td>
                                 </tr>
                             ) : batches.length === 0 ? (
                                 <tr>
-                                    <td colSpan="9" className="px-6 py-12 text-center text-text-muted">No batches found.</td>
+                                    <td colSpan="8" className="px-6 py-12 text-center text-text-muted">No batches found.</td>
                                 </tr>
                             ) : (
                                 batches.map((batch) => (
@@ -237,12 +236,6 @@ export default function BatchManager() {
                                             </Link>
                                         </td>
                                         <td className="px-6 py-4 text-text-base ">{batch.schedule_time || '-'}</td>
-                                        <td className="px-6 py-4 text-text-muted ">
-                                            <div className="text-xs">
-                                                <div>Start: {batch.start_date || '-'}</div>
-                                                <div>End: {batch.end_date || '-'}</div>
-                                            </div>
-                                        </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-1.5">
                                                 <button onClick={() => openModal(batch)} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors" title="Edit Batch">
@@ -294,27 +287,6 @@ export default function BatchManager() {
                         value={formData.schedule_time}
                         onChange={(e) => setFormData({ ...formData, schedule_time: e.target.value })}
                     />
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-text-base mb-1.5">Start Date</label>
-                            <input
-                                type="date"
-                                value={formData.start_date}
-                                onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-text-base mb-1.5">End Date</label>
-                            <input
-                                type="date"
-                                value={formData.end_date}
-                                onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
-                            />
-                        </div>
-                    </div>
 
                     <div className="flex justify-end space-x-3 pt-6 border-t border-border-base ">
                         <CustomButton type="button" variant="secondary" onPressed={closeModal}>Cancel</CustomButton>

@@ -16,6 +16,11 @@ export default function StudentViewPage({ studentId }) {
     const [selectedBatchId, setSelectedBatchId] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Remove Batch state
+    const [batchToRemove, setBatchToRemove] = useState(null);
+    const [isRemovingBatch, setIsRemovingBatch] = useState(false);
+    const [batchRemoveError, setBatchRemoveError] = useState(null);
+
     const fetchStudentDetails = async () => {
         const token = localStorage.getItem('auth_token');
         if (!token) return;
@@ -80,6 +85,25 @@ export default function StudentViewPage({ studentId }) {
         }
     };
 
+    const handleRemoveBatch = async () => {
+        if (!batchToRemove) return;
+        setIsRemovingBatch(true);
+        setBatchRemoveError(null);
+        const token = localStorage.getItem('auth_token');
+        try {
+            await axios.delete(`/api/students/${studentId}/batches/${batchToRemove.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            await fetchStudentDetails();
+            setBatchToRemove(null);
+        } catch (error) {
+            console.error("Error removing batch", error);
+            setBatchRemoveError(error.response?.data?.message || "Failed to remove batch.");
+        } finally {
+            setIsRemovingBatch(false);
+        }
+    };
+
     const toggleStudentStatus = async () => {
         if (!student) return;
         setIsSubmitting(true);
@@ -114,6 +138,7 @@ export default function StudentViewPage({ studentId }) {
     };
 
     const handleDownloadPdf = async (result) => {
+        const studentBatch = student?.batches?.find(b => b.id === result.mcq_paper?.batch_id) || student?.batches?.[0]; // Fallback to first batch if unknown
         const data = {
             examName: result.mcq_paper?.title || 'Unknown Exam',
             studentName: student?.name || 'Unknown',
@@ -122,6 +147,10 @@ export default function StudentViewPage({ studentId }) {
             total: result.total_questions || 100,
             percentage: result.percentage || 0,
             examDate: result.created_at || new Date().toISOString(),
+            fatherName: student?.father_name || 'N/A',
+            course: studentBatch?.course?.name || 'N/A',
+            batch: studentBatch?.name || 'N/A',
+            batchTiming: studentBatch?.schedule_time || 'N/A',
         };
         await downloadExamResultPdf(data);
     };
@@ -264,7 +293,7 @@ export default function StudentViewPage({ studentId }) {
                                         <tr>
                                             <th className="px-4 py-3 font-semibold text-text-base">Batch Name</th>
                                             <th className="px-4 py-3 font-semibold text-text-base">Course</th>
-                                            <th className="px-4 py-3 font-semibold text-text-base">Timeline</th>
+                                            <th className="px-4 py-3 font-semibold text-text-base text-right">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -272,8 +301,14 @@ export default function StudentViewPage({ studentId }) {
                                             <tr key={batch.id} className="border-b border-border-base/50 hover:bg-bg-hover transition-colors last:border-0">
                                                 <td className="px-4 py-3 font-medium text-text-base whitespace-nowrap">{batch.name}</td>
                                                 <td className="px-4 py-3 text-text-muted whitespace-nowrap">{batch.course?.name || '-'}</td>
-                                                <td className="px-4 py-3 text-text-muted whitespace-nowrap text-xs">
-                                                    {formatDate(batch.start_date)} to {formatDate(batch.end_date)}
+                                                <td className="px-4 py-3 text-right whitespace-nowrap">
+                                                    <button 
+                                                        onClick={() => setBatchToRemove(batch)}
+                                                        className="text-danger-text hover:bg-danger-light p-1.5 rounded-md transition-colors"
+                                                        title="Remove from Batch"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -394,6 +429,49 @@ export default function StudentViewPage({ studentId }) {
                                 >
                                     Enroll
                                 </CustomButton>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Remove Batch Confirmation Modal */}
+            {batchToRemove && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                    <div className="bg-bg-card rounded-xl shadow-2xl max-w-md w-full border border-border-base overflow-hidden">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-danger-light text-danger-text rounded-full flex items-center justify-center mx-auto mb-4">
+                                <X className="w-8 h-8" />
+                            </div>
+                            <h2 className="text-2xl font-bold text-text-base mb-2">Remove Batch?</h2>
+                            <p className="text-text-muted font-medium mb-6">
+                                Are you sure you want to remove the student from <strong>{batchToRemove.name}</strong>?
+                            </p>
+                            
+                            {batchRemoveError && (
+                                <div className="mb-4 p-3 bg-danger-light text-danger-text rounded-md text-sm font-bold text-left border border-danger">
+                                    {batchRemoveError}
+                                </div>
+                            )}
+
+                            <div className="flex space-x-3">
+                                <button 
+                                    onClick={() => {
+                                        setBatchToRemove(null);
+                                        setBatchRemoveError(null);
+                                    }} 
+                                    disabled={isRemovingBatch}
+                                    className="flex-1 px-4 py-2 border border-border-base rounded-md hover:bg-bg-hover transition-colors font-semibold"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    onClick={handleRemoveBatch}
+                                    disabled={isRemovingBatch}
+                                    className="flex-1 px-4 py-2 bg-danger hover:bg-danger-hover text-white font-bold rounded-md flex items-center justify-center transition-colors disabled:opacity-50"
+                                >
+                                    {isRemovingBatch ? 'Removing...' : 'Yes, Remove'}
+                                </button>
                             </div>
                         </div>
                     </div>

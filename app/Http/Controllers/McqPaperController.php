@@ -171,7 +171,7 @@ class McqPaperController extends Controller
 
     public function results($id)
     {
-        $paper = McqPaper::findOrFail($id);
+        $paper = McqPaper::with('batch.course')->findOrFail($id);
         
         $eligibleStudentIds = [];
         if (!empty($paper->selected_student_ids)) {
@@ -199,6 +199,11 @@ class McqPaperController extends Controller
                     'user_id' => $r->user_id,
                     'student_name' => $student->name ?? 'Unknown',
                     'student_email' => $student->email ?? 'N/A',
+                    'registration_id' => $student->registration_id ?? 'N/A',
+                    'father_name' => $student->father_name ?? 'N/A',
+                    'course_name' => $paper->batch->course->name ?? 'N/A',
+                    'batch_name' => $paper->batch->name ?? 'N/A',
+                    'batch_timing' => $paper->batch->schedule_time ?? 'N/A',
                     'profile_image' => $student->profile_image ?? null,
                     'score' => $r->score,
                     'total_questions' => $r->total_questions,
@@ -212,6 +217,11 @@ class McqPaperController extends Controller
                     'user_id' => $student->id,
                     'student_name' => $student->name ?? 'Unknown',
                     'student_email' => $student->email ?? 'N/A',
+                    'registration_id' => $student->registration_id ?? 'N/A',
+                    'father_name' => $student->father_name ?? 'N/A',
+                    'course_name' => $paper->batch->course->name ?? 'N/A',
+                    'batch_name' => $paper->batch->name ?? 'N/A',
+                    'batch_timing' => $paper->batch->schedule_time ?? 'N/A',
                     'profile_image' => $student->profile_image ?? null,
                     'score' => 0,
                     'total_questions' => $totalQuestions,

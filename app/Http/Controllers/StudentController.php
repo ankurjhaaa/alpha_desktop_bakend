@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Batch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use ImageKit\ImageKit;
@@ -54,6 +55,7 @@ class StudentController extends Controller
             'address' => 'nullable|string',
             'dob' => 'nullable|date',
             'gender' => 'nullable|string|max:20',
+            'join_date' => 'nullable|date',
             'profile_image' => 'nullable|image|max:2048',
         ]);
 
@@ -99,6 +101,11 @@ class StudentController extends Controller
             'profile_image_file_id' => $profileImageFileId,
         ]);
 
+        if (array_key_exists('join_date', $validated) && $validated['join_date']) {
+            $student->created_at = $validated['join_date'];
+            $student->save();
+        }
+
         if (!empty($validated['batch_ids'])) {
             $student->batches()->sync($validated['batch_ids']);
         }
@@ -133,6 +140,7 @@ class StudentController extends Controller
             'address' => 'nullable|string',
             'dob' => 'nullable|date',
             'gender' => 'nullable|string|max:20',
+            'join_date' => 'nullable|date',
             'profile_image' => 'nullable|image|max:2048',
         ]);
 
@@ -195,6 +203,27 @@ class StudentController extends Controller
         ]);
 
         return response()->json($student->load('batches.course'));
+    }
+
+    public function detachBatch(User $student, Batch $batch)
+    {
+        if ($student->role !== 'student') {
+            return response()->json(['message' => 'Not a student'], 403);
+        }
+
+        $hasExams = $student->examResults()->whereHas('mcqPaper', function ($query) use ($batch) {
+            $query->where('batch_id', $batch->id);
+        })->exists();
+
+        if ($hasExams) {
+            return response()->json([
+                'message' => 'Cannot remove batch because the student has already taken exams in this batch.'
+            ], 400);
+        }
+
+        $student->batches()->detach($batch->id);
+
+        return response()->json(['message' => 'Batch removed successfully']);
     }
 
     public function destroy(User $student)

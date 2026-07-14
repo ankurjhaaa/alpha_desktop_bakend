@@ -231,7 +231,7 @@ class StudentExamController extends Controller
         $results = ExamResult::select('user_id')
             ->selectRaw('COUNT(id) as total_exams')
             ->selectRaw('ROUND(AVG(percentage), 2) as average_marks')
-            ->with('user:id,name,email,profile_image')
+            ->with(['user:id,name,email,profile_image,registration_id', 'user.batches.course'])
             ->groupBy('user_id')
             ->orderByDesc('total_exams')
             ->orderByDesc('average_marks')
@@ -239,13 +239,18 @@ class StudentExamController extends Controller
             ->get();
 
         $formatted = $results->map(function ($r) {
+            $user = $r->user;
+            $batch = $user && clone $user->batches->first() ? $user->batches->first() : null;
             return [
                 'user_id' => $r->user_id,
-                'student_name' => $r->user->name ?? 'Unknown',
-                'student_email' => $r->user->email ?? 'Unknown',
-                'profile_image' => $r->user->profile_image ?? null,
+                'student_name' => $user->name ?? 'Unknown',
+                'student_email' => $user->email ?? 'Unknown',
+                'registration_id' => $user->registration_id ?? 'N/A',
+                'profile_image' => $user->profile_image ?? null,
                 'total_exams' => $r->total_exams,
                 'average_marks' => $r->average_marks,
+                'course' => $batch && $batch->course ? $batch->course->name : 'N/A',
+                'batch' => $batch ? $batch->name : 'N/A',
             ];
         });
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
-import { Trophy, Medal, Star, TrendingUp } from 'lucide-react';
+import { Trophy, Medal, Star, TrendingUp, Download } from 'lucide-react';
 import axios from 'axios';
+import { downloadLeaderboardPdf } from '../../Core/Utils/PdfGenerator';
 
 export default function Leaderboard() {
     const [leaderboard, setLeaderboard] = useState([]);
@@ -54,12 +55,21 @@ export default function Leaderboard() {
                             <h2 className="text-2xl font-bold mb-1">Global Leaderboard</h2>
                             <p className="text-text-muted opacity-90 text-sm">Top performing students across all courses and batches.</p>
                         </div>
-                        <div className="mt-4 md:mt-0 p-3 bg-bg-hover rounded-md border border-border-base flex items-center space-x-3 transition-colors">
-                            <TrendingUp className="w-6 h-6 text-primary" />
-                            <div>
-                                <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Total Students</div>
-                                <div className="text-xl font-bold">{leaderboard.length} Ranked</div>
+                        <div className="mt-4 md:mt-0 flex items-stretch space-x-4">
+                            <div className="p-3 bg-bg-hover rounded-md border border-border-base flex items-center space-x-3 transition-colors">
+                                <TrendingUp className="w-6 h-6 text-primary" />
+                                <div>
+                                    <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Total Students</div>
+                                    <div className="text-xl font-bold">{leaderboard.length} Ranked</div>
+                                </div>
                             </div>
+                            <button
+                                onClick={() => downloadLeaderboardPdf(leaderboard)}
+                                className="flex items-center justify-center bg-primary text-white px-5 rounded-md hover:bg-primary-hover transition-colors shadow-sm border border-primary-hover"
+                                title="Download PDF Report"
+                            >
+                                <Download className="w-5 h-5" />
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -101,14 +111,25 @@ export default function Leaderboard() {
                                                     </div>
                                                 )}
                                             </div>
-
-                                            <div className="ml-4">
-                                                <h3 className={`font-bold text-text-base ${isTop3 ? 'text-lg' : 'text-base'}`}>
+                                            <div className="ml-3 sm:ml-4">
+                                                <div className={`font-semibold text-text-base ${isTop3 ? 'text-lg sm:text-xl' : 'text-base'}`}>
                                                     {student.student_name}
-                                                </h3>
-                                                {student.course && (
-                                                    <p className="text-sm text-text-muted mt-0.5">{student.course.name}</p>
-                                                )}
+                                                </div>
+                                                <div className="flex flex-col sm:flex-row sm:items-center text-text-muted text-xs sm:text-sm mt-0.5 space-y-1 sm:space-y-0 sm:space-x-3">
+                                                    <span>{student.registration_id || student.student_email}</span>
+                                                    {student.course && student.course !== 'N/A' && (
+                                                        <>
+                                                            <span className="hidden sm:inline text-border-base">•</span>
+                                                            <span className="bg-bg-hover px-1.5 py-0.5 rounded text-xs border border-border-base font-medium">{student.course}</span>
+                                                        </>
+                                                    )}
+                                                    {student.batch && student.batch !== 'N/A' && (
+                                                        <>
+                                                            <span className="hidden sm:inline text-border-base">•</span>
+                                                            <span className="bg-bg-hover px-1.5 py-0.5 rounded text-xs border border-border-base">{student.batch}</span>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
 

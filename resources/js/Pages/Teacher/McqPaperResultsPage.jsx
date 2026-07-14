@@ -30,7 +30,16 @@ export default function McqPaperResultsPage({ examId }) {
                 });
                 const mappedResults = resultsRes.data.map(r => ({
                     id: r.id,
-                    student: { id: r.user_id, name: r.student_name, email: r.student_email },
+                    student: { 
+                        id: r.user_id, 
+                        name: r.student_name, 
+                        email: r.student_email,
+                        registration_id: r.registration_id,
+                        father_name: r.father_name
+                    },
+                    course: r.course_name,
+                    batch: r.batch_name,
+                    batch_timing: r.batch_timing,
                     score: r.score,
                     percentage: r.percentage,
                     submitted_at: r.submitted_at,
@@ -67,6 +76,10 @@ export default function McqPaperResultsPage({ examId }) {
             total: examData?.total_marks || examData?.questions_count || 100,
             percentage: result.percentage || 0,
             examDate: result.submitted_at || new Date().toISOString(),
+            fatherName: result.student?.father_name || 'N/A',
+            course: result.course || 'N/A',
+            batch: result.batch || 'N/A',
+            batchTiming: result.batch_timing || 'N/A',
         };
         await downloadExamResultPdf(data);
     };

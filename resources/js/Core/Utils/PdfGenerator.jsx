@@ -24,9 +24,10 @@ const styles = StyleSheet.create({
     borderColor: '#e2e8f0',
   },
   logo: {
-    width: 70,
-    height: 70,
-    borderRadius: 4,
+    width: 180,
+    height: 60,
+    objectFit: 'contain',
+    marginLeft: -15,
   },
   headerTitle: {
     color: '#0f172a',
@@ -360,11 +361,104 @@ export const downloadExamResultPdf = async (data) => {
     document.body.appendChild(link);
     link.click();
     
-    // Clean up
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    // Clean up after download has started
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 100);
   } catch (error) {
-    console.error("Failed to generate PDF:", error);
-    alert("Failed to generate PDF");
+    console.error('Error generating PDF:', error);
+    alert('Failed to generate PDF document');
+  }
+};
+
+// ==========================================
+// LEADERBOARD PDF TEMPLATE
+// ==========================================
+
+const LeaderboardPdfTemplate = ({ data }) => {
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.mainContent}>
+          {/* Header Section */}
+          <View style={styles.header}>
+            <Image src="/assets/images/logo.png" style={styles.logo} />
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={styles.headerTitle}>ALPHA GRAPHICS</Text>
+              <View style={styles.pill}>
+                <Text style={styles.pillText}>GLOBAL LEADERBOARD</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ fontSize: 12, color: '#64748b', textAlign: 'right' }}>Generated on: {new Date().toLocaleDateString()}</Text>
+          </View>
+
+          <View style={styles.sectionBox}>
+            <View style={styles.sectionHeaderLabel}>
+              <Text style={styles.sectionTitle}>TOP PERFORMING STUDENTS</Text>
+            </View>
+            
+            {/* Table Header */}
+            <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#cbd5e1', paddingVertical: 8, paddingHorizontal: 10, backgroundColor: '#f8fafc' }}>
+              <Text style={{ width: '8%', fontSize: 8, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#64748b', textAlign: 'center' }}>RANK</Text>
+              <Text style={{ width: '37%', fontSize: 8, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#64748b' }}>STUDENT NAME</Text>
+              <Text style={{ width: '30%', fontSize: 8, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#64748b' }}>COURSE / BATCH</Text>
+              <Text style={{ width: '10%', fontSize: 8, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#64748b', textAlign: 'center' }}>EXAMS</Text>
+              <Text style={{ width: '15%', fontSize: 8, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#64748b', textAlign: 'center' }}>AVG SCORE</Text>
+            </View>
+
+            {/* Table Rows */}
+            {data.map((student, index) => (
+              <View key={index} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 10, borderBottomWidth: 1, borderBottomColor: '#f1f5f9', backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
+                <Text style={{ width: '8%', fontSize: 9, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#0f172a', textAlign: 'center' }}>{`#${index + 1}`}</Text>
+                <View style={{ width: '37%' }}>
+                  <Text style={{ fontSize: 9, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#0f172a' }}>{student.student_name || 'N/A'}</Text>
+                  <Text style={{ fontSize: 7, color: '#64748b', marginTop: 2 }}>{student.registration_id || student.student_email || 'N/A'}</Text>
+                </View>
+                <View style={{ width: '30%' }}>
+                  <Text style={{ fontSize: 8, color: '#334155' }}>{student.course || 'N/A'}</Text>
+                  <Text style={{ fontSize: 7, color: '#64748b', marginTop: 2 }}>{student.batch || 'N/A'}</Text>
+                </View>
+                <Text style={{ width: '10%', fontSize: 9, color: '#334155', textAlign: 'center' }}>{String(student.total_exams || 0)}</Text>
+                <Text style={{ width: '15%', fontSize: 10, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#0284c7', textAlign: 'center' }}>{`${Number(student.average_marks || 0).toFixed(2)}%`}</Text>
+              </View>
+            ))}
+
+          </View>
+
+          <View style={styles.aboutBox}>
+            <Text style={styles.aboutTitle}>About This Leaderboard</Text>
+            <Text style={styles.aboutText}>
+              This leaderboard ranks the top performing students across all courses and batches based on their average exam scores. We congratulate all students for their hard work and dedication. Keep striving for excellence!
+            </Text>
+          </View>
+        </View>
+      </Page>
+    </Document>
+  );
+};
+
+export const downloadLeaderboardPdf = async (leaderboardData) => {
+  try {
+    const blob = await pdf(<LeaderboardPdfTemplate data={leaderboardData} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Global_Leaderboard_${new Date().toISOString().split('T')[0]}.pdf`;
+    
+    document.body.appendChild(link);
+    link.click();
+    
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 100);
+  } catch (error) {
+    console.error('Error generating Leaderboard PDF:', error);
+    alert('Failed to generate PDF document: ' + (error.message || error));
   }
 };

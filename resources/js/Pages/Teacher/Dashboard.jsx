@@ -42,15 +42,8 @@ export default function TeacherDashboard() {
                 totalMcqPapers: mcqs.length
             });
 
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const upcoming = batches.filter(batch => {
-                if (!batch.start_date) return false;
-                const startDate = new Date(batch.start_date);
-                startDate.setHours(0, 0, 0, 0);
-                return startDate >= today;
-            });
-            setUpcomingBatches(upcoming.slice(0, 3));
+            const recentB = [...batches].reverse();
+            setUpcomingBatches(recentB.slice(0, 3));
             setRecentStudents(students.slice(0, 4));
         } catch (error) {
             console.error("Error fetching dashboard data", error);
@@ -133,14 +126,14 @@ export default function TeacherDashboard() {
                             )}
                         </div>
 
-                        {/* Upcoming Batches */}
+                        {/* Recent Batches */}
                         <div className="xl:col-span-5 bg-bg-card rounded-md border border-border-base shadow-sm p-6 transition-colors">
                             <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-lg font-bold text-text-base ">Upcoming Batches</h2>
+                                <h2 className="text-lg font-bold text-text-base ">Recent Batches</h2>
                                 <Link href="/teacher/batches" className="text-primary text-sm font-semibold hover:underline">View All</Link>
                             </div>
                             {upcomingBatches.length === 0 ? (
-                                <p className="text-text-muted text-center py-8">No upcoming batches scheduled.</p>
+                                <p className="text-text-muted text-center py-8">No recent batches found.</p>
                             ) : (
                                 <div className="space-y-4">
                                     {upcomingBatches.map((batch, i) => (
@@ -149,10 +142,7 @@ export default function TeacherDashboard() {
                                             <div>
                                                 <h4 className="font-bold text-text-base mb-1.5">{batch.name}</h4>
                                                 <div className="flex items-center text-xs text-text-muted space-x-4">
-                                                    <div className="flex items-center" title="Start Date">
-                                                        <Calendar className="w-3.5 h-3.5 mr-1.5" />
-                                                        {batch.start_date ? new Date(batch.start_date).toLocaleDateString() : 'TBD'}
-                                                    </div>
+
                                                     <div className="flex items-center" title="Schedule Time">
                                                         <Clock className="w-3.5 h-3.5 mr-1.5" />
                                                         {batch.schedule_time || 'TBD'}

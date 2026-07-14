@@ -169,7 +169,6 @@ export default function Profile() {
                                         <tr>
                                             <th className="px-4 py-3 font-semibold text-text-base">Batch Name</th>
                                             <th className="px-4 py-3 font-semibold text-text-base">Course</th>
-                                            <th className="px-4 py-3 font-semibold text-text-base">Timeline</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -177,9 +176,6 @@ export default function Profile() {
                                             <tr key={batch.id} className="border-b border-border-base/50 hover:bg-bg-hover transition-colors last:border-0">
                                                 <td className="px-4 py-3 font-medium text-text-base whitespace-nowrap">{batch.name}</td>
                                                 <td className="px-4 py-3 text-text-muted whitespace-nowrap">{batch.course?.name || '-'}</td>
-                                                <td className="px-4 py-3 text-text-muted whitespace-nowrap text-xs">
-                                                    {formatDate(batch.start_date)} to {formatDate(batch.end_date)}
-                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
