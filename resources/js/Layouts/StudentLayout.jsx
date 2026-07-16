@@ -320,7 +320,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                     <div className="w-24 hidden md:block" />
                     <div className="flex items-center space-x-2 font-medium">
                         <Code className="w-4 h-4" />
-                        <span>Developed by Brotytics Technologies</span>
+                        <span>Developed by Brolytics Technologies</span>
                     </div>
                     <div className="flex items-center space-x-3 w-24 justify-end">
                         <button onClick={() => setZoom(z => Math.max(90, z - 10))} className="hover:text-text-base "><Minus className="w-4 h-4" /></button>
