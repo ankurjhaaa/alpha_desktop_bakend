@@ -143,6 +143,8 @@ export default function StudentsPage() {
             if (formData.join_date) submitData.append('join_date', formData.join_date);
             if (formData.batch_id) {
                 submitData.append('batch_ids[0]', formData.batch_id);
+            } else if (editingStudent) {
+                submitData.append('batch_ids', '');
             }
             submitData.append('is_active', '1');
             
@@ -256,7 +258,12 @@ export default function StudentsPage() {
                                 </tr>
                             ) : (
                                 students.map((student) => (
-                                    <tr key={student.id} className="border-b border-border-base hover:bg-bg-base">
+                                    <tr 
+                                        key={student.id} 
+                                        className="border-b border-border-base hover:bg-bg-base cursor-pointer select-none transition-colors"
+                                        onDoubleClick={() => router.visit(`/teacher/students/${student.id}`)}
+                                        title="Double click to view profile"
+                                    >
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
                                                 <div className="h-10 w-10 flex-shrink-0 rounded-full bg-primary-light-hover flex items-center justify-center overflow-hidden">
@@ -267,11 +274,7 @@ export default function StudentsPage() {
                                                     )}
                                                 </div>
                                                 <div className="ml-4">
-                                                    <div 
-                                                        className="font-medium text-text-base cursor-pointer hover:text-primary transition-colors select-none"
-                                                        onDoubleClick={() => router.visit(`/teacher/students/${student.id}`)}
-                                                        title="Double click to view profile"
-                                                    >
+                                                    <div className="font-medium text-text-base">
                                                         {student.name}
                                                     </div>
                                                     {student.registration_id && <div className="text-xs text-text-muted">Reg: {student.registration_id}</div>}
@@ -313,7 +316,7 @@ export default function StudentsPage() {
                                             )}
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end space-x-2">
+                                            <div className="flex items-center justify-end space-x-2" onDoubleClick={(e) => e.stopPropagation()}>
                                                 <Link href={`/teacher/students/${student.id}`} className="p-2 text-primary hover:bg-primary-light rounded-md transition-colors inline-block" title="View Student">
                                                     <Eye className="w-4 h-4" />
                                                 </Link>
@@ -417,21 +420,19 @@ export default function StudentsPage() {
                                 value={formData.join_date}
                                 onChange={(e) => setFormData({ ...formData, join_date: e.target.value })}
                             />
-                            {!editingStudent && (
-                                <div>
-                                    <label className="block text-sm font-medium text-text-base mb-1.5">Assign Batch</label>
-                                    <select
-                                        value={formData.batch_id}
-                                        onChange={(e) => setFormData({ ...formData, batch_id: e.target.value })}
-                                        className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
-                                    >
-                                        <option value="">None (No Batch)</option>
-                                        {batches.map(b => (
-                                            <option key={b.id} value={b.id}>{b.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )}
+                            <div>
+                                <label className="block text-sm font-medium text-text-base mb-1.5">Assign Batch</label>
+                                <select
+                                    value={formData.batch_id}
+                                    onChange={(e) => setFormData({ ...formData, batch_id: e.target.value })}
+                                    className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base appearance-none"
+                                >
+                                    <option value="">None (No Batch)</option>
+                                    {batches.map(b => (
+                                        <option key={b.id} value={b.id}>{b.name}</option>
+                                    ))}
+                                </select>
+                            </div>
                             <div className="md:col-span-2">
                                 <CustomTextField
                                     label="Address"

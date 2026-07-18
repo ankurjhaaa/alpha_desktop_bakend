@@ -208,7 +208,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                         <User className="w-16 h-16 text-primary hidden" />
                     </div>
                 </div>
-                <div 
+                <div
                     className="absolute bottom-0 -mb-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"
                     onMouseDown={handleLogoMouseDown}
                 />
@@ -231,7 +231,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                                 <item.icon className="w-5 h-5 shrink-0" />
                                 <span>{item.title}</span>
                             </Link>
-                            <div 
+                            <div
                                 className="absolute bottom-0 left-0 w-full h-2 cursor-row-resize opacity-0 group-hover:opacity-100 group-hover:delay-[5000ms] transition-opacity duration-300 bg-primary/20 hover:bg-primary/50 z-50"
                                 onMouseDown={handleLinkMouseDown}
                             />
@@ -259,7 +259,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
             </div>
             <div className="hidden lg:block h-full relative shrink-0" style={{ width: sidebarWidth }}>
                 <Sidebar />
-                <div 
+                <div
                     className="absolute top-0 -right-1 w-2 h-full cursor-col-resize hover:bg-primary/50 z-50 transition-colors"
                     onMouseDown={handleMouseDown}
                 />
@@ -280,8 +280,8 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                         <button className="lg:hidden text-text-muted " onClick={() => setIsSidebarOpen(true)}>
                             <Menu className="w-6 h-6" />
                         </button>
-                        <button 
-                            onClick={() => window.history.back()} 
+                        <button
+                            onClick={() => window.history.back()}
                             className="flex p-2 -ml-2 text-text-muted hover:bg-bg-hover hover:text-text-base rounded-full transition-colors"
                             title="Go Back"
                         >
@@ -302,7 +302,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                             <span className="hidden sm:block font-semibold text-text-base">{userName}</span>
                         </div>
                     </div>
-                    <div 
+                    <div
                         className="absolute bottom-0 -mb-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"
                         onMouseDown={handleNavbarMouseDown}
                     />
@@ -313,7 +313,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                 </main>
 
                 <footer className="bg-bg-card border-t border-border-base flex items-center justify-between px-6 shrink-0 text-sm text-text-muted transition-colors relative" style={{ height: footerHeight }}>
-                    <div 
+                    <div
                         className="absolute top-0 -mt-1 left-0 w-full h-2 cursor-row-resize hover:bg-primary/50 z-50 transition-colors"
                         onMouseDown={handleFooterMouseDown}
                     />
