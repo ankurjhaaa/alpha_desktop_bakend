@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
 import CustomButton from '../../Core/Widgets/CustomButton';
 import CustomTextField from '../../Core/Widgets/CustomTextField';
@@ -267,7 +267,13 @@ export default function StudentsPage() {
                                                     )}
                                                 </div>
                                                 <div className="ml-4">
-                                                    <div className="font-medium text-text-base ">{student.name}</div>
+                                                    <div 
+                                                        className="font-medium text-text-base cursor-pointer hover:text-primary transition-colors select-none"
+                                                        onDoubleClick={() => router.visit(`/teacher/students/${student.id}`)}
+                                                        title="Double click to view profile"
+                                                    >
+                                                        {student.name}
+                                                    </div>
                                                     {student.registration_id && <div className="text-xs text-text-muted">Reg: {student.registration_id}</div>}
                                                 </div>
                                             </div>
@@ -296,9 +302,15 @@ export default function StudentsPage() {
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary-light ">
-                                                Active
-                                            </span>
+                                            {student.is_active ? (
+                                                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary-light text-primary-text">
+                                                    Active
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-danger-light text-danger-text">
+                                                    Inactive
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end space-x-2">
@@ -407,7 +419,7 @@ export default function StudentsPage() {
                             />
                             {!editingStudent && (
                                 <div>
-                                    <label className="block text-sm font-medium text-text-base mb-1.5">Assign Batch (Optional)</label>
+                                    <label className="block text-sm font-medium text-text-base mb-1.5">Assign Batch</label>
                                     <select
                                         value={formData.batch_id}
                                         onChange={(e) => setFormData({ ...formData, batch_id: e.target.value })}
