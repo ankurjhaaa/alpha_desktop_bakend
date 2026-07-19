@@ -12,6 +12,12 @@ use App\Http\Controllers\McqQuestionController;
 use App\Http\Controllers\MaterialController;
 
 Route::post('/login', [AuthController::class, 'login']);
+
+// Forgot Password OTP routes
+Route::post('/forgot-password/send-otp', [\App\Http\Controllers\Api\ForgotPasswordController::class, 'sendOtp']);
+Route::post('/forgot-password/verify-otp', [\App\Http\Controllers\Api\ForgotPasswordController::class, 'verifyOtp']);
+Route::post('/forgot-password/reset', [\App\Http\Controllers\Api\ForgotPasswordController::class, 'resetPassword']);
+
 Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'index']);
 Route::post('/settings', [\App\Http\Controllers\SettingController::class, 'update']);
 

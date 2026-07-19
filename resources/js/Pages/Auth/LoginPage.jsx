@@ -3,6 +3,7 @@ import { Head, router } from '@inertiajs/react';
 import { Mail, Lock, BookOpen, LineChart, Laptop, ArrowRight } from 'lucide-react';
 import CustomTextField from '../../Core/Widgets/CustomTextField';
 import CustomButton from '../../Core/Widgets/CustomButton';
+import ForgotPasswordModal from './ForgotPasswordModal';
 import axios from 'axios';
 
 export default function LoginPage() {
@@ -10,6 +11,10 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
+
+    // Forgot Password State
+    const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('auth_token');
@@ -32,6 +37,7 @@ export default function LoginPage() {
 
         setIsLoading(true);
         setError(null);
+        setSuccessMessage(null);
 
         try {
             const response = await axios.post('/api/login', { email, password });
@@ -130,6 +136,12 @@ export default function LoginPage() {
                                 </div>
                             )}
 
+                            {successMessage && (
+                                <div className="mb-6 p-4 rounded-md bg-primary-light text-primary-text text-sm font-medium">
+                                    {successMessage}
+                                </div>
+                            )}
+
                             <form onSubmit={handleLogin} className="flex flex-col gap-5">
                                 <CustomTextField
                                     label="Email Address"
@@ -153,6 +165,9 @@ export default function LoginPage() {
                                 <div className="flex justify-end mt-1">
                                     <button
                                         type="button"
+                                        onClick={() => {
+                                            setIsForgotModalOpen(true);
+                                        }}
                                         className="text-primary font-bold hover:underline text-sm"
                                     >
                                         Forgot Password?
@@ -175,6 +190,16 @@ export default function LoginPage() {
 
                 </div>
             </div>
+
+            {/* Forgot Password Modal */}
+            <ForgotPasswordModal 
+                isOpen={isForgotModalOpen} 
+                onClose={() => setIsForgotModalOpen(false)} 
+                onSuccess={(msg) => {
+                    setSuccessMessage(msg);
+                    setError(null);
+                }}
+            />
         </>
     );
 }
