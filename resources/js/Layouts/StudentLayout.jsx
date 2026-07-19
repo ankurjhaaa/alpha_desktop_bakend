@@ -299,7 +299,7 @@ export default function StudentLayout({ children, title = 'Student Dashboard' })
                             <div className={cn("w-10 h-10 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-lg", userImage && userImage !== 'null' && userImage !== 'undefined' ? "hidden" : "flex")}>
                                 {initial}
                             </div>
-                            <span className="hidden sm:block font-semibold text-text-base">{userName}</span>
+                            <span className="hidden sm:block font-semibold text-text-base capitalize">{userName}</span>
                         </div>
                     </div>
                     <div

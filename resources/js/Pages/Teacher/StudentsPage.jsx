@@ -274,7 +274,7 @@ export default function StudentsPage() {
                                                     )}
                                                 </div>
                                                 <div className="ml-4">
-                                                    <div className="font-medium text-text-base">
+                                                    <div className="font-medium text-text-base capitalize">
                                                         {student.name}
                                                     </div>
                                                     {student.registration_id && <div className="text-xs text-text-muted">Reg: {student.registration_id}</div>}

@@ -75,7 +75,7 @@ export default function Profile() {
                                 <span className="text-3xl font-bold text-primary">{student.name.charAt(0).toUpperCase()}</span>
                             )}
                         </div>
-                        <h2 className="text-xl font-bold text-text-base mb-1">{student.name}</h2>
+                        <h2 className="text-xl font-bold text-text-base mb-1 capitalize">{student.name}</h2>
                         <p className="text-text-muted text-sm mb-1">{student.email}</p>
                         {student.registration_id && (
                             <p className="text-text-muted/70 text-xs mb-3">Admission No: {student.registration_id}</p>
