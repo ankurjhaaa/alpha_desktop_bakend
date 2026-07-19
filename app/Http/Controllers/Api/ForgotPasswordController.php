@@ -32,7 +32,7 @@ class ForgotPasswordController extends Controller
 
         // Send OTP via Email
         try {
-            Mail::raw("Your OTP for password reset is: $otp. This OTP is valid for 10 minutes.", function ($message) use ($email) {
+            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email) {
                 $message->to($email)
                         ->subject("Password Reset OTP - Alpha Graphics");
             });
