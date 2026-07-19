@@ -212,6 +212,7 @@ class StudentExamController extends Controller
                 'user' => [
                     'name' => $user->name,
                     'registration_id' => $user->registration_id,
+                    'father_name' => $user->father_name,
                 ],
                 'score' => $result->score,
                 'total_questions' => $result->total_questions,
@@ -263,6 +264,11 @@ class StudentExamController extends Controller
             'user.batches.course',
             'mcqPaper:id,title,batch_id'
         ]);
+
+        $currentUser = Auth::user();
+        if ($currentUser && $currentUser->role === 'student') {
+            $query->where('user_id', $currentUser->id);
+        }
 
         // Filter by Exam Title
         if ($request->filled('exam_id')) {

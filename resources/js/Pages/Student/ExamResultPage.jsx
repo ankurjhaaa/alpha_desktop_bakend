@@ -2,12 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import StudentLayout from '../../Layouts/StudentLayout';
 import CustomButton from '../../Core/Widgets/CustomButton';
-import { CheckCircle, XCircle, Award, Clock, ArrowRight } from 'lucide-react';
+import { CheckCircle, XCircle, Award, Clock, ArrowRight, Download } from 'lucide-react';
 import axios from 'axios';
+import { downloadExamResultPdf } from '../../Core/Utils/PdfGenerator';
 
 export default function ExamResultPage({ paperId }) {
     const [result, setResult] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [rawResult, setRawResult] = useState(null);
+    const [isDownloading, setIsDownloading] = useState(false);
+
+    const handleDownloadPdf = async () => {
+        if (!rawResult) return;
+        setIsDownloading(true);
+        try {
+            const r = rawResult.result;
+            const data = {
+                examName: rawResult.paper_title || 'Exam',
+                studentName: r.user?.name || 'Student',
+                regNumber: r.user?.registration_id || '',
+                score: r.score || 0,
+                total: r.total_questions || 100,
+                percentage: r.percentage || 0,
+                examDate: r.created_at || new Date().toISOString(),
+                fatherName: r.user?.father_name || 'N/A',
+                course: r.course?.name || 'N/A',
+                batch: r.batch?.name || 'N/A',
+                batchTiming: r.batch?.schedule_time || 'N/A',
+            };
+            await downloadExamResultPdf(data);
+        } catch (error) {
+            console.error("Error downloading PDF", error);
+            alert("Failed to download PDF. Please try again.");
+        } finally {
+            setIsDownloading(false);
+        }
+    };
 
     useEffect(() => {
         const fetchResult = async () => {
@@ -21,6 +51,7 @@ export default function ExamResultPage({ paperId }) {
                 });
                 
                 const data = res.data;
+                setRawResult(data);
                 const resultData = data.result;
                 const attempted = resultData.student_answers ? Object.keys(resultData.student_answers).length : 0;
                 
@@ -148,9 +179,23 @@ export default function ExamResultPage({ paperId }) {
                         </div>
 
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <Link href="/student/exams" className="px-6 py-3 bg-bg-hover hover:bg-bg-hover text-text-base font-bold rounded-md transition-colors">
+                            <Link href="/student/exams" className="px-6 py-3 bg-bg-hover hover:bg-bg-hover text-text-base font-bold rounded-md transition-colors flex items-center justify-center">
                                 Back to Exams
                             </Link>
+                            
+                            <button
+                                onClick={handleDownloadPdf}
+                                disabled={isDownloading}
+                                className="px-6 py-3 bg-bg-hover hover:bg-bg-hover text-text-base font-bold rounded-md transition-colors flex items-center justify-center gap-2 border border-border-base disabled:opacity-50"
+                            >
+                                {isDownloading ? (
+                                    <div className="w-5 h-5 border-2 border-text-base border-t-transparent rounded-full animate-spin"></div>
+                                ) : (
+                                    <Download className="w-4 h-4 text-text-base" />
+                                )}
+                                Download PDF
+                            </button>
+
                             <Link href={`/student/exams/${paperId}/answers`} className="px-6 py-3 bg-primary hover:bg-primary-hover text-primary-text font-bold rounded-md flex items-center justify-center transition-colors">
                                 View Detailed Answers
                                 <ArrowRight className="w-4 h-4 ml-2" />

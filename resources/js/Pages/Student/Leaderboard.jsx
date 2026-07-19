@@ -79,7 +79,7 @@ export default function Leaderboard() {
                             {leaderboard.map((student, index) => {
                                 const rank = index + 1;
                                 const isTop3 = rank <= 3;
-                                const isCurrentUser = student.user_id == localStorage.getItem('user_id'); // If available
+                                const isCurrentUser = student.student_email === localStorage.getItem('user_email');
 
                                 return (
                                     <div key={student.user_id || index} className={`p-4 sm:px-6 flex items-center transition-colors ${isCurrentUser ? 'bg-primary-light/50 ' : 'hover:bg-bg-base '} ${isTop3 ? 'py-5' : 'py-4'}`}>
@@ -104,20 +104,32 @@ export default function Leaderboard() {
                                             </div>
 
                                             <div className="ml-4">
-                                                <h3 className={`font-bold ${isCurrentUser ? 'text-primary-hover ' : 'text-text-base '} ${isTop3 ? 'text-lg' : 'text-base'}`}>
+                                                <h3 className={`font-bold capitalize ${isCurrentUser ? 'text-primary-hover ' : 'text-text-base '} ${isTop3 ? 'text-lg' : 'text-base'}`}>
                                                     {student.student_name} {isCurrentUser && "(You)"}
                                                 </h3>
-                                                {student.course && (
-                                                    <p className="text-sm text-text-muted mt-0.5">{student.course.name}</p>
-                                                )}
+                                                <div className="flex flex-col sm:flex-row sm:items-center text-text-muted text-xs sm:text-sm mt-0.5 space-y-1 sm:space-y-0 sm:space-x-3">
+                                                    <span>{student.registration_id || student.student_email}</span>
+                                                    {student.course && student.course !== 'N/A' && (
+                                                        <>
+                                                            <span className="hidden sm:inline text-border-base">•</span>
+                                                            <span className="bg-bg-hover px-1.5 py-0.5 rounded text-xs border border-border-base font-medium">{student.course}</span>
+                                                        </>
+                                                    )}
+                                                    {student.batch && student.batch !== 'N/A' && (
+                                                        <>
+                                                            <span className="hidden sm:inline text-border-base">•</span>
+                                                            <span className="bg-bg-hover px-1.5 py-0.5 rounded text-xs border border-border-base capitalize">{student.batch}</span>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div className="ml-4 text-right">
-                                            <div className={`font-black ${isTop3 ? 'text-2xl text-primary ' : 'text-xl text-text-base '}`}>
-                                                {student.average_marks ? `${Math.round(student.average_marks)}%` : '0%'}
-                                            </div>
-                                            <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Avg Score</div>
+                                             <div className={`font-black ${isTop3 ? 'text-2xl text-primary ' : 'text-xl text-text-base '}`}>
+                                                 {student.average_marks ? `${Math.round(student.average_marks)}%` : '0%'}
+                                             </div>
+                                             <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Avg Score</div>
                                         </div>
                                     </div>
                                 );
