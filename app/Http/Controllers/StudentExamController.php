@@ -227,13 +227,21 @@ class StudentExamController extends Controller
         ]);
     }
 
-    public function globalLeaderboard()
+    public function globalLeaderboard(Request $request)
     {
-        $results = ExamResult::select('user_id')
+        $query = ExamResult::select('user_id')
             ->selectRaw('COUNT(id) as total_exams')
             ->selectRaw('ROUND(AVG(percentage), 2) as average_marks')
-            ->with(['user:id,name,email,profile_image,registration_id', 'user.batches.course'])
-            ->groupBy('user_id')
+            ->with(['user:id,name,email,profile_image,registration_id', 'user.batches.course']);
+
+        if ($request->filled('course_id')) {
+            $courseId = $request->course_id;
+            $query->whereHas('user.batches', function ($q) use ($courseId) {
+                $q->where('course_id', $courseId);
+            });
+        }
+
+        $results = $query->groupBy('user_id')
             ->orderByDesc('total_exams')
             ->orderByDesc('average_marks')
             ->take(10)

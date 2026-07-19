@@ -9,6 +9,8 @@ export default function Leaderboard() {
     const [leaderboard, setLeaderboard] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [downloadingStudentId, setDownloadingStudentId] = useState(null);
+    const [courses, setCourses] = useState([]);
+    const [courseFilter, setCourseFilter] = useState('');
 
     const handleDownloadStudentResults = async (student) => {
         if (!student.registration_id || student.registration_id === 'N/A') {
@@ -38,14 +40,31 @@ export default function Leaderboard() {
     };
 
     useEffect(() => {
+        const fetchCourses = async () => {
+            const token = localStorage.getItem('auth_token');
+            if (!token) return;
+            try {
+                const res = await axios.get('/api/courses', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setCourses(res.data);
+            } catch (error) {
+                console.error("Error fetching courses", error);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    useEffect(() => {
         const fetchLeaderboard = async () => {
+            setIsLoading(true);
             const token = localStorage.getItem('auth_token');
             if (!token) return;
 
             try {
-                const res = await axios.get('/api/leaderboard', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const config = { headers: { Authorization: `Bearer ${token}` } };
+                const url = courseFilter ? `/api/leaderboard?course_id=${courseFilter}` : '/api/leaderboard';
+                const res = await axios.get(url, config);
                 setLeaderboard(res.data);
             } catch (error) {
                 console.error("Error fetching leaderboard", error);
@@ -55,7 +74,7 @@ export default function Leaderboard() {
         };
 
         fetchLeaderboard();
-    }, []);
+    }, [courseFilter]);
 
     const getRankColor = (rank) => {
         if (rank === 1) return 'bg-primary-light text-primary-hover border-primary-light-hover ';
@@ -103,6 +122,20 @@ export default function Leaderboard() {
                 </div>
 
                 <div className="bg-bg-card rounded-md shadow-sm border border-border-base transition-colors overflow-hidden">
+                    <div className="p-4 border-b border-border-base bg-bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="relative max-w-xs w-full">
+                            <select
+                                value={courseFilter}
+                                onChange={(e) => setCourseFilter(e.target.value)}
+                                className="w-full px-4 py-2 bg-bg-base border border-border-base rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-text-base transition-colors"
+                            >
+                                <option value="">All Courses</option>
+                                {courses.map(course => (
+                                    <option key={course.id} value={course.id}>{course.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
                     {isLoading ? (
                         <div className="flex justify-center items-center py-24">
                             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
