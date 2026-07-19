@@ -76,7 +76,7 @@ export default function BatchManager() {
         } else {
             setFormData({
                 name: '',
-                course_id: courses.length > 0 ? courses[0].id : '',
+                course_id: courseFilter || (courses.length > 0 ? courses[0].id : ''),
                 schedule_time: '',
                 start_date: '',
                 end_date: ''

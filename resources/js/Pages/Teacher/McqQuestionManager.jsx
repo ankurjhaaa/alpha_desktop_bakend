@@ -430,7 +430,7 @@ export default function McqQuestionManager({ paperId }) {
                                             const optText = q[`option_${opt.toLowerCase()}`];
                                             if (!optText) return null;
 
-                                            const isCorrect = q.correct_option === opt;
+                                            const isCorrect = q.correct_option?.toUpperCase() === opt;
                                             return (
                                                 <div key={opt} className={`p-2 rounded-md text-sm border ${isCorrect ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium' : 'bg-bg-base border-border-base text-text-muted '}`}>
                                                     <span className="font-bold mr-2">{opt}.</span>

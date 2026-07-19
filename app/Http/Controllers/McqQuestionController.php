@@ -35,7 +35,7 @@ class McqQuestionController extends Controller
             'option_b' => 'required|string',
             'option_c' => 'required|string',
             'option_d' => 'required|string',
-            'correct_option' => 'required|in:a,b,c,d',
+            'correct_option' => 'required|in:a,b,c,d,A,B,C,D',
             'is_active' => 'boolean',
         ]);
 
@@ -62,7 +62,7 @@ class McqQuestionController extends Controller
             'option_b' => 'sometimes|required|string',
             'option_c' => 'sometimes|required|string',
             'option_d' => 'sometimes|required|string',
-            'correct_option' => 'sometimes|required|in:a,b,c,d',
+            'correct_option' => 'sometimes|required|in:a,b,c,d,A,B,C,D',
             'is_active' => 'boolean',
         ]);
 

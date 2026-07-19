@@ -1,6 +1,11 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, pdf, Font, Image } from '@react-pdf/renderer';
 
+const capitalizeString = (str) => {
+  if (!str) return '';
+  return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+};
+
 // Define styles exactly as the flutter app (using hex colors and layout)
 const styles = StyleSheet.create({
   page: {
@@ -231,6 +236,9 @@ export const ExamResultPdfTemplate = ({ data }) => {
     batchTiming
   } = data;
   
+  const formattedStudentName = capitalizeString(studentName);
+  const formattedFatherName = capitalizeString(fatherName);
+  
   const isPass = percentage >= 50.0;
   
   const formatDate = (dateString) => {
@@ -274,7 +282,7 @@ export const ExamResultPdfTemplate = ({ data }) => {
             <View style={styles.table}>
               <View style={styles.tableRow}>
                 <Text style={styles.tableCellLabel}>Student Name</Text>
-                <Text style={styles.tableCellValue}>{studentName}</Text>
+                <Text style={styles.tableCellValue}>{formattedStudentName}</Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.tableCellLabel}>Admission No.</Text>
@@ -282,7 +290,7 @@ export const ExamResultPdfTemplate = ({ data }) => {
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.tableCellLabel}>Father's Name</Text>
-                <Text style={styles.tableCellValue}>{fatherName || 'Not Provided'}</Text>
+                <Text style={styles.tableCellValue}>{formattedFatherName || 'Not Provided'}</Text>
               </View>
               <View style={styles.tableRow}>
                 <Text style={styles.tableCellLabel}>Course</Text>
@@ -415,7 +423,7 @@ const LeaderboardPdfTemplate = ({ data }) => {
               <View key={index} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 10, borderBottomWidth: 1, borderBottomColor: '#f1f5f9', backgroundColor: index % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
                 <Text style={{ width: '8%', fontSize: 9, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#0f172a', textAlign: 'center' }}>{`#${index + 1}`}</Text>
                 <View style={{ width: '37%' }}>
-                  <Text style={{ fontSize: 9, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#0f172a' }}>{student.student_name || 'N/A'}</Text>
+                  <Text style={{ fontSize: 9, fontFamily: 'Helvetica', fontWeight: 'bold', color: '#0f172a' }}>{capitalizeString(student.student_name) || 'N/A'}</Text>
                   <Text style={{ fontSize: 7, color: '#64748b', marginTop: 2 }}>{student.registration_id || student.student_email || 'N/A'}</Text>
                 </View>
                 <View style={{ width: '30%' }}>
@@ -482,13 +490,13 @@ const FilteredResultsPdfTemplate = ({ data }) => {
     <Document>
       {data.map((result, index) => {
         const examName = result.exam_title;
-        const studentName = result.student_name;
+        const studentName = capitalizeString(result.student_name);
         const regNumber = result.registration_id;
         const score = result.score;
         const total = result.total_questions;
         const percentage = result.percentage;
         const examDate = result.date;
-        const fatherName = result.father_name;
+        const fatherName = capitalizeString(result.father_name);
         const course = result.course;
         const batch = result.batch;
         const batchTiming = result.batchTiming;

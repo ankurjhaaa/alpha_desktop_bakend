@@ -3,11 +3,39 @@ import { Head } from '@inertiajs/react';
 import TeacherLayout from '../../Layouts/TeacherLayout';
 import { Trophy, Medal, Star, TrendingUp, Download } from 'lucide-react';
 import axios from 'axios';
-import { downloadLeaderboardPdf } from '../../Core/Utils/PdfGenerator';
+import { downloadLeaderboardPdf, downloadFilteredResultsPdf } from '../../Core/Utils/PdfGenerator';
 
 export default function Leaderboard() {
     const [leaderboard, setLeaderboard] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [downloadingStudentId, setDownloadingStudentId] = useState(null);
+
+    const handleDownloadStudentResults = async (student) => {
+        if (!student.registration_id || student.registration_id === 'N/A') {
+            alert('Cannot download results: Student has no Registration ID');
+            return;
+        }
+
+        setDownloadingStudentId(student.user_id);
+        const token = localStorage.getItem('auth_token');
+        
+        try {
+            const url = `/api/results?download=true&search=${encodeURIComponent(student.registration_id)}`;
+            const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
+            
+            if (!res.data || res.data.length === 0) {
+                alert('No exam results found for this student.');
+                return;
+            }
+
+            await downloadFilteredResultsPdf(res.data);
+        } catch (error) {
+            console.error("Error downloading student results PDF", error);
+            alert("Failed to download PDF. Please try again.");
+        } finally {
+            setDownloadingStudentId(null);
+        }
+    };
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
@@ -112,7 +140,7 @@ export default function Leaderboard() {
                                                 )}
                                             </div>
                                             <div className="ml-3 sm:ml-4">
-                                                <div className={`font-semibold text-text-base ${isTop3 ? 'text-lg sm:text-xl' : 'text-base'}`}>
+                                                <div className={`font-semibold text-text-base capitalize ${isTop3 ? 'text-lg sm:text-xl' : 'text-base'}`}>
                                                     {student.student_name}
                                                 </div>
                                                 <div className="flex flex-col sm:flex-row sm:items-center text-text-muted text-xs sm:text-sm mt-0.5 space-y-1 sm:space-y-0 sm:space-x-3">
@@ -133,11 +161,25 @@ export default function Leaderboard() {
                                             </div>
                                         </div>
 
-                                        <div className="ml-4 text-right">
-                                            <div className={`font-black ${isTop3 ? 'text-2xl text-primary ' : 'text-xl text-text-base '}`}>
-                                                {student.average_marks ? `${Math.round(student.average_marks)}%` : '0%'}
+                                        <div className="ml-4 flex items-center space-x-3.5">
+                                            <div className="text-right">
+                                                <div className={`font-black ${isTop3 ? 'text-2xl text-primary ' : 'text-xl text-text-base '}`}>
+                                                    {student.average_marks ? `${Math.round(student.average_marks)}%` : '0%'}
+                                                </div>
+                                                <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Avg Score</div>
                                             </div>
-                                            <div className="text-xs text-text-muted uppercase tracking-wider font-semibold">Avg Score</div>
+                                            <button
+                                                onClick={() => handleDownloadStudentResults(student)}
+                                                disabled={downloadingStudentId === student.user_id}
+                                                className={`p-2 bg-primary-light hover:bg-primary-light-hover text-primary rounded-md transition-colors border border-primary-light-hover flex items-center justify-center shrink-0 ${downloadingStudentId === student.user_id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                title="Download Student's Exam Papers"
+                                            >
+                                                {downloadingStudentId === student.user_id ? (
+                                                    <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                                ) : (
+                                                    <Download className="w-5 h-5" />
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
                                 );
