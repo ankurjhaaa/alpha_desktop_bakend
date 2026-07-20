@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 2. Create 4 Courses with Topics
+        /*
         $coursesData = [
             [
                 'name' => 'DCA',
@@ -139,5 +140,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             MaterialSeeder::class,
         ]);
+        */
     }
 }

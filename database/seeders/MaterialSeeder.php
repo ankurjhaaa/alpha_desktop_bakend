@@ -12,6 +12,7 @@ class MaterialSeeder extends Seeder
      */
     public function run(): void
     {
+        /*
         // Check if there are any batches available
         $batches = \App\Models\Batch::all();
 
@@ -36,5 +37,6 @@ class MaterialSeeder extends Seeder
                 'file_id' => null,
             ]);
         }
+        */
     }
 }

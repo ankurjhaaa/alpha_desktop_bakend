@@ -123,14 +123,16 @@ export default function StudentsPage() {
 
         setIsSubmitting(true);
         const token = localStorage.getItem('auth_token');
-        const config = { headers: { 
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
-        }};
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        };
 
         try {
             const submitData = new FormData();
-            
+
             submitData.append('name', formData.name);
             submitData.append('email', formData.email);
             if (formData.password) submitData.append('password', formData.password);
@@ -147,7 +149,7 @@ export default function StudentsPage() {
                 submitData.append('batch_ids', '');
             }
             submitData.append('is_active', '1');
-            
+
             if (formData.profile_image) {
                 submitData.append('profile_image', formData.profile_image);
             }
@@ -258,8 +260,8 @@ export default function StudentsPage() {
                                 </tr>
                             ) : (
                                 students.map((student) => (
-                                    <tr 
-                                        key={student.id} 
+                                    <tr
+                                        key={student.id}
                                         className="border-b border-border-base hover:bg-bg-base cursor-pointer select-none transition-colors"
                                         onDoubleClick={() => router.visit(`/teacher/students/${student.id}`)}
                                         title="Double click to view profile"
